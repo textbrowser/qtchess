@@ -1,0 +1,277 @@
+<ui version="4.0" >
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>211</width>
+    <height>625</height>
+   </rect>
+  </property>
+  <property name="font" >
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle" >
+   <string>QtChess</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QHBoxLayout" >
+    <item>
+     <widget class="QFrame" name="boardFrame" >
+      <property name="frameShape" >
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow" >
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" />
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" >
+      <item>
+       <widget class="QGroupBox" name="groupBox" >
+        <property name="title" >
+         <string>Clocks</string>
+        </property>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="label" >
+           <property name="font" >
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text" >
+            <string>Player</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QTimeEdit" name="playerClock" >
+           <property name="readOnly" >
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat" >
+            <string>hh:mm:ss</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="label_2" >
+           <property name="font" >
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text" >
+            <string>Opponent</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QTimeEdit" name="opponentClock" >
+           <property name="font" >
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="readOnly" >
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat" >
+            <string>hh:mm:ss</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2" >
+        <property name="title" >
+         <string>History</string>
+        </property>
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QTableWidget" name="history" >
+           <property name="minimumSize" >
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="selectionMode" >
+            <enum>QAbstractItemView::NoSelection</enum>
+           </property>
+           <property name="selectionBehavior" >
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="cornerButtonEnabled" >
+            <bool>false</bool>
+           </property>
+           <property name="columnCount" >
+            <number>2</number>
+           </property>
+           <column>
+            <property name="text" >
+             <string>Beige</string>
+            </property>
+           </column>
+           <column>
+            <property name="text" >
+             <string>Crimson</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>211</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File" >
+    <property name="font" >
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_New_Game" />
+    <addaction name="separator" />
+    <addaction name="action_Quit" />
+   </widget>
+   <widget class="QMenu" name="menu_Setup" >
+    <property name="font" >
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="title" >
+     <string>&amp;Setup</string>
+    </property>
+    <addaction name="action_Connection_Configuration" />
+   </widget>
+   <widget class="QMenu" name="menu_View" >
+    <property name="font" >
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="title" >
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_Actual_Size" />
+    <addaction name="action_Three_Fourths_Size" />
+   </widget>
+   <widget class="QMenu" name="menu_Help" >
+    <property name="font" >
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="windowTitle" >
+     <string>QtChess</string>
+    </property>
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About" />
+    <addaction name="separator" />
+    <addaction name="action_Help" />
+   </widget>
+   <addaction name="menu_File" />
+   <addaction name="menu_Setup" />
+   <addaction name="menu_View" />
+   <addaction name="menu_Help" />
+  </widget>
+  <action name="action_New_Game" >
+   <property name="text" >
+    <string>&amp;New Game</string>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Quit" >
+   <property name="text" >
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Connection_Configuration" >
+   <property name="text" >
+    <string>&amp;Connection Configuration</string>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Actual_Size" >
+   <property name="text" >
+    <string>&amp;Actual Size</string>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Three_Fourths_Size" >
+   <property name="text" >
+    <string>&amp;Three-Fourths Size</string>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_About" >
+   <property name="text" >
+    <string>&amp;About</string>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="action_Help" >
+   <property name="text" >
+    <string>&amp;Help</string>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>playerClock</tabstop>
+  <tabstop>opponentClock</tabstop>
+  <tabstop>history</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
