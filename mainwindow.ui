@@ -177,8 +177,8 @@
     <property name="title" >
      <string>&amp;View</string>
     </property>
-    <addaction name="action_Actual_Size" />
-    <addaction name="action_Three_Fourths_Size" />
+    <addaction name="action_Large_Size" />
+    <addaction name="action_Normal_Size" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="font" >
@@ -226,9 +226,9 @@
     </font>
    </property>
   </action>
-  <action name="action_Actual_Size" >
+  <action name="action_Large_Size" >
    <property name="text" >
-    <string>&amp;Actual Size</string>
+    <string>&amp;Large Size</string>
    </property>
    <property name="font" >
     <font>
@@ -236,9 +236,9 @@
     </font>
    </property>
   </action>
-  <action name="action_Three_Fourths_Size" >
+  <action name="action_Normal_Size" >
    <property name="text" >
-    <string>&amp;Three-Fourths Size</string>
+    <string>&amp;Normal Size</string>
    </property>
    <property name="font" >
     <font>

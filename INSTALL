@@ -4,6 +4,6 @@ Executable
    if necessary.
 
 Plugin
-1. Copy the libQtChess.so (libQtChess.dylib) to your desired destination.
+1. Copy the QtChess library to your desired destination.
 2. Apply appropriate permissions to the aforementioned file,
    if necessary.

@@ -71,7 +71,7 @@ bool qtchess_validate::isKingChecked(const struct move_s current_move)
   int i = 0, j = 0, I = -1, J = -1;
   bool isChecked = false;
 
-  for(i = 0; i < NSQUARES; i++)
+  for(i = 0; i < NSQUARES && I == -1 && J == -1; i++)
     for(j = 0; j < NSQUARES; j++)
       if(chess->getMyColor() == WHITE)
 	{
@@ -79,6 +79,7 @@ bool qtchess_validate::isKingChecked(const struct move_s current_move)
 	    {
 	      I = i;
 	      J = j;
+	      break;
 	    }
 	}
       else
@@ -87,15 +88,19 @@ bool qtchess_validate::isKingChecked(const struct move_s current_move)
 	    {
 	      I = i;
 	      J = j;
+	      break;
 	    }
 	}
 
   if(I != -1 && J != -1)
-    for(i = 0; i < NSQUARES; i++)
+    for(i = 0; i < NSQUARES && !isChecked; i++)
       for(j = 0; j < NSQUARES; j++)
 	if(isValidMove(j, i, J, I, chess->board[i][j]) != INVALID)
 	  if(i == current_move.y2 && j == current_move.x2)
-	    isChecked = true;
+	    {
+	      isChecked = true;
+	      break;
+	    }
 
   return isChecked;
 }

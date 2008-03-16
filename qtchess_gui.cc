@@ -53,9 +53,9 @@ void qtchess_gui::init(void)
   connect(ui.action_Connection_Configuration,
 	  SIGNAL(triggered(void)), this, SLOT(setup(void)));
 #endif
-  connect(ui.action_Actual_Size,
+  connect(ui.action_Large_Size,
 	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
-  connect(ui.action_Three_Fourths_Size,
+  connect(ui.action_Normal_Size,
 	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
   connect(ui.action_About,
 	  SIGNAL(triggered(void)), this, SLOT(about(void)));
@@ -117,7 +117,7 @@ void qtchess_gui::slotChangeSize(void)
 
   name = action->text();
 
-  if(name.contains(tr("Actual")))
+  if(name.contains(tr("Large")))
     {
       if(denominator == 1.0)
 	return;
@@ -133,7 +133,7 @@ void qtchess_gui::slotChangeSize(void)
       ui.history->scrollToBottom();
       ui.boardFrame->setFocus();
     }
-  else if(name.contains(tr("Three-Fourths")))
+  else if(name.contains(tr("Normal")))
     {
       if(denominator == 4.0 / 3.0)
 	return;
