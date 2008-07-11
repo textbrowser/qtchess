@@ -177,8 +177,6 @@
     <property name="title" >
      <string>&amp;View</string>
     </property>
-    <addaction name="action_Large_Size" />
-    <addaction name="action_Normal_Size" />
    </widget>
    <widget class="QMenu" name="menu_Help" >
     <property name="font" >
@@ -219,26 +217,6 @@
   <action name="action_Connection_Configuration" >
    <property name="text" >
     <string>&amp;Connection Configuration</string>
-   </property>
-   <property name="font" >
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-  </action>
-  <action name="action_Large_Size" >
-   <property name="text" >
-    <string>&amp;Large Size</string>
-   </property>
-   <property name="font" >
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-  </action>
-  <action name="action_Normal_Size" >
-   <property name="text" >
-    <string>&amp;Normal Size</string>
    </property>
    <property name="font" >
     <font>

@@ -44,13 +44,13 @@ class openglWid: public QGLWidget
   openglWid(QWidget *);
   void reinit(void);
   void newGame(void);
+  void paintGL(void);
   void rescale(const double);
+  void resizeGL(int, int);
+  void initializeGL(void);
   void showValidMoves(void);
   void highlightSquare(const double, const double);
   void mousePressEvent(QMouseEvent *);
-  virtual void paintGL(void);
-  virtual void initializeGL(void);
-  virtual void resizeGL(int, int);
 
  private:
 

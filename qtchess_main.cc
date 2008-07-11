@@ -112,6 +112,8 @@ int main(int argc, char *argv[])
   return rc;
 }
 
+#else
+
 #endif
 
 void cleanup(void)

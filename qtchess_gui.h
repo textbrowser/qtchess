@@ -224,6 +224,7 @@ class qtchess_gui: public QMainWindow
   int exec(void);
   void init(void);
   void display(void);
+  void closeEvent(QCloseEvent *);
   void initClocks(void);
   void stopTimers(const int);
   void startTimers(const int);
@@ -235,7 +236,6 @@ class qtchess_gui: public QMainWindow
   void showDisconnect(const bool);
   void showNewGameInfo(void);
   void notifyConnection(const QString &);
-  virtual void closeEvent(QCloseEvent *);
 #ifndef QTCHESS_PLUGIN
   qtchess_setup_dialog *getSetupDialog(void);
 #endif
@@ -251,6 +251,8 @@ class qtchess_gui: public QMainWindow
   QLabel *statusLabel;
   QTimer *playert;
   QTimer *opponentt;
+  QAction *action_Large_Size;
+  QAction *action_Normal_Size;
   openglWid *glboard;
   Ui_mainWindow ui;
   qtchess_help_dialog *help_dialog;

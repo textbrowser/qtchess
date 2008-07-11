@@ -31,6 +31,8 @@ void qtchess_gui::setStatusText(const QString &str)
 
 void qtchess_gui::init(void)
 {
+  QActionGroup *ag1 = 0;
+
   ui.setupUi(this);
   setWindowTitle(tr("QtChess"));
   denominator = 4.0 / 3.0;
@@ -42,6 +44,23 @@ void qtchess_gui::init(void)
   if((statusLabel = new QLabel(tr("Status: Ready"))) == NULL)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
 
+  if((ag1 = new QActionGroup(this)) == 0)
+    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+
+  if((action_Large_Size = new QAction("&Large Size", this)) == 0)
+    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+
+  if((action_Normal_Size = new QAction("&Normal Size", this)) == 0)
+    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+
+  ag1->setExclusive(true);
+  ag1->addAction(action_Large_Size);
+  ag1->addAction(action_Normal_Size);
+  ui.menu_View->addAction(action_Large_Size);
+  ui.menu_View->addAction(action_Normal_Size);
+  action_Large_Size->setCheckable(true);
+  action_Normal_Size->setCheckable(true);
+  action_Normal_Size->setChecked(true);
   statusLabel->setMargin(0);
   statusLabel->setFrameStyle(QFrame::NoFrame);
   statusBar()->setSizeGripEnabled(false);
@@ -53,9 +72,9 @@ void qtchess_gui::init(void)
   connect(ui.action_Connection_Configuration,
 	  SIGNAL(triggered(void)), this, SLOT(setup(void)));
 #endif
-  connect(ui.action_Large_Size,
+  connect(action_Large_Size,
 	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
-  connect(ui.action_Normal_Size,
+  connect(action_Normal_Size,
 	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
   connect(ui.action_About,
 	  SIGNAL(triggered(void)), this, SLOT(about(void)));
@@ -163,8 +182,9 @@ void qtchess_gui::about(void)
      tr("About"),
      tr("QtChess Version 3.12.\n"
 	"Copyright (c) 2003, 2004, 2006, 2007, 2008 "
-	"Alexis Megas.\n\n"
-	"Please visit http://qtchess.sourceforge.net for more information."),
+	"Slurpy McNash.\n\n"
+	"Please visit http://qtchess.sourceforge.net for project "
+	"information."),
      QMessageBox::Ok | QMessageBox::Default);
 }
 
