@@ -14,7 +14,7 @@ void qtchess_comm::updateBoard(void)
   char buffer[BUFFER_SIZE];
 
 #ifndef QTCHESS_PLUGIN
-  while(clientConnection != NULL && clientConnection->canReadLine())
+  while(clientConnection != 0 && clientConnection->canReadLine())
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -237,7 +237,7 @@ void qtchess_comm::sendMove(const struct move_s current_move)
 qtchess_comm::qtchess_comm(void)
 {
 #ifndef QTCHESS_PLUGIN
-  clientConnection = NULL;
+  clientConnection = 0;
   connect(&listening_sock, SIGNAL(newConnection()), this,
 	  SLOT(acceptConnection()));
 #endif
@@ -249,7 +249,7 @@ void qtchess_comm::acceptConnection(void)
   if(!listening_sock.hasPendingConnections())
     return;
 
-  if((clientConnection = listening_sock.nextPendingConnection()) == NULL)
+  if((clientConnection = listening_sock.nextPendingConnection()) == 0)
     return;
 
   connect(clientConnection, SIGNAL(readyRead()), this, SLOT(updateBoard()));

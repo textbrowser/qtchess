@@ -70,7 +70,7 @@ void qtchess::quit(const char *message_text, const int exit_code)
   ** Print the exit message.
   */
 
-  if(message_text != NULL)
+  if(message_text != 0)
     (void) fprintf(stderr, "%s\n", message_text);
 
   quit_program(exit_code);

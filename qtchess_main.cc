@@ -42,10 +42,10 @@ void quit_program(int);
 ** -- Globals --
 */
 
-qtchess *chess = NULL;
-qtchess_gui *gui = NULL;
-qtchess_comm *comm = NULL;
-QApplication *qapp = NULL;
+qtchess *chess = 0;
+qtchess_gui *gui = 0;
+qtchess_comm *comm = 0;
+QApplication *qapp = 0;
 
 /*
 ** -- Main --
@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
 
   QApplication::setColorSpec(QApplication::CustomColor);
 
-  if((qapp = new QApplication(argc, argv)) == NULL)
+  if((qapp = new(std::nothrow) QApplication(argc, argv)) == 0)
     {
       (void) fprintf(stderr, "Memory allocation failure.\n");
       return EXIT_FAILURE;
     }
 
-  if((chess = new qtchess()) == NULL)
+  if((chess = new(std::nothrow) qtchess()) == 0)
     {
       (void) fprintf(stderr, "Memory allocation failure.\n");
       return EXIT_FAILURE;
@@ -73,10 +73,10 @@ int main(int argc, char *argv[])
 
   chess->init();
 
-  if((gui = new qtchess_gui()) == NULL)
+  if((gui = new(std::nothrow) qtchess_gui()) == 0)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
 
-  if((comm = new qtchess_comm()) == NULL)
+  if((comm = new(std::nothrow) qtchess_comm()) == 0)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
 
   /*
@@ -118,19 +118,19 @@ int main(int argc, char *argv[])
 
 void cleanup(void)
 {
-  if(comm != NULL)
+  if(comm != 0)
     comm->quit();
 
-  if(gui != NULL)
+  if(gui != 0)
     {
       delete gui;
-      gui = NULL;
+      gui = 0;
     }
 
-  if(chess != NULL)
+  if(chess != 0)
     {
       delete chess;
-      chess = NULL;
+      chess = 0;
     }
 }
 
