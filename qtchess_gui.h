@@ -180,30 +180,30 @@ class qtchess_gui: public QMainWindow
 
   qtchess_gui(void)
     {
-      help_dialog = NULL;
+      help_dialog = 0;
 #ifndef QTCHESS_PLUGIN
-      setup_dialog = NULL;
+      setup_dialog = 0;
 #endif
-      promote_dialog = NULL;
+      promote_dialog = 0;
     }
 
   ~qtchess_gui()
     {
-      if(help_dialog != NULL)
+      if(help_dialog != 0)
 	delete help_dialog;
 
 #ifndef QTCHESS_PLUGIN
-      if(setup_dialog != NULL)
+      if(setup_dialog != 0)
 	delete setup_dialog;
 #endif
 
-      if(promote_dialog != NULL)
+      if(promote_dialog != 0)
 	delete promote_dialog;
 
-      if(playert != NULL)
+      if(playert != 0)
 	delete playert;
 
-      if(opponentt != NULL)
+      if(opponentt != 0)
 	delete opponentt;
 
 #ifdef _DEBUG_
