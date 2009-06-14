@@ -29,14 +29,18 @@ QString qtchess_validate::findDeparture(const int X1,
 
   for(i = 0; i < NSQUARES; i++)
     if(chess->board[i][Y1] == piece)
-      if(isValidMove(Y1, i, Y2, X2, piece) != INVALID)
-	if(Y1 == Y2 && ((X2 < X1 && i > X2) || (X2 > X1 && i < X2)))
-	  continue;
-	else
+      {
+	if(isValidMove(Y1, i, Y2, X2, piece) != INVALID)
 	  {
-	    fcount += 1;
-	    break;
+	    if(Y1 == Y2 && ((X2 < X1 && i > X2) || (X2 > X1 && i < X2)))
+	      continue;
+	    else
+	      {
+		fcount += 1;
+		break;
+	      }
 	  }
+      }
 
   /*
   ** Same file? Use the rank of the departure square.
@@ -44,14 +48,18 @@ QString qtchess_validate::findDeparture(const int X1,
 
   for(i = 0; i < NSQUARES; i++)
     if(chess->board[X1][i] == piece)
-      if(isValidMove(i, X1, Y2, X2, piece) != INVALID)
-	if(X1 == X2 && ((Y2 < Y1 && i > Y2) || (Y2 > Y1 && i < Y2)))
-	  continue;
-	else
+      {
+	if(isValidMove(i, X1, Y2, X2, piece) != INVALID)
 	  {
-	    rcount += 1;
-	    break;
+	    if(X1 == X2 && ((Y2 < Y1 && i > Y2) || (Y2 > Y1 && i < Y2)))
+	      continue;
+	    else
+	      {
+		rcount += 1;
+		break;
+	      }
 	  }
+      }
 
   if(fcount > 0 && rcount > 0)
     (void) snprintf(departure, sizeof(departure), "%c%d", (char) (97 + X1),
@@ -96,11 +104,13 @@ bool qtchess_validate::isKingChecked(const struct move_s current_move)
     for(i = 0; i < NSQUARES && !isChecked; i++)
       for(j = 0; j < NSQUARES; j++)
 	if(isValidMove(j, i, J, I, chess->board[i][j]) != INVALID)
-	  if(i == current_move.y2 && j == current_move.x2)
-	    {
-	      isChecked = true;
-	      break;
-	    }
+	  {
+	    if(i == current_move.y2 && j == current_move.x2)
+	      {
+		isChecked = true;
+		break;
+	      }
+	  }
 
   return isChecked;
 }

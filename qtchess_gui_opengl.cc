@@ -104,10 +104,12 @@ void openglWid::paintGL(void)
 	*/
 
 	if(!qtchess_validate::isEmpty(chess->board[i][j]))
-	  if(qtchess_validate::isWhite(chess->board[i][j]))
-	    glColor3f(0.96, 0.96, 0.86);
-	  else
-	    glColor3f(0.65, 0.16, 0.16);
+	  {
+	    if(qtchess_validate::isWhite(chess->board[i][j]))
+	      glColor3f(0.96, 0.96, 0.86);
+	    else
+	      glColor3f(0.65, 0.16, 0.16);
+	  }
 
 	if(qtchess_validate::isBishop(chess->board[i][j]))
 	  {
