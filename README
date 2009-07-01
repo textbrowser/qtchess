@@ -1,8 +1,0 @@
-1. Do not forget to set the following environment variables prior
-   to running qmake and make:
-   a. QTDIR (/usr/local/qt)
-   b. QMAKESPEC ($QTDIR/mkspecs/freebsd-g++)
-   c. LD_LIBRARY_PATH ($QTDIR/lib)
-2. Building QtChess as a plugin:
-   a. Follow the instructions in step 1
-   b. Run qmake -o Makefile qtchess.[shared | static]-plugin.pro

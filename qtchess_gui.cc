@@ -178,20 +178,28 @@ void qtchess_gui::display(void)
 
 void qtchess_gui::about(void)
 {
-  (void) QMessageBox::information
-    (this,
-     tr("About"),
-     tr("QtChess Version 3.12.\n"
-	"Copyright (c) 2003, 2004, 2006, 2007, 2008 "
-	"Slurpy McNash.\n\n"
-	"Please visit http://qtchess.sourceforge.net for project "
-	"information."),
-     QMessageBox::Ok | QMessageBox::Default);
+  QMessageBox mb(this);
+
+  mb.setWindowTitle(tr("QtChess: About"));
+  mb.setTextFormat(Qt::RichText);
+  mb.setText("<html>QtChess Version 3.13.<br>"
+	     "Copyright (c) 2003, 2004, 2006, 2007, 2008, 2009 "
+	     "Slurpy McNash."
+	     "<hr>"
+	     "Please visit <a href=\"http://qtchess.sourceforge.net\">"
+	     "http://qtchess.sourceforge.net</a> for "
+	     "project information.<br>"
+	     "For release notes, please visit "
+	     "<a href=\"http://qtchess.sourceforge.net/release_news.html\">"
+	     "http://qtchess.sourceforge.net/release_news.html</a>.");
+  mb.setStandardButtons(QMessageBox::Ok);
+  mb.setIconPixmap(QPixmap("./chess.png"));
+  mb.exec();
 }
 
 void qtchess_gui::showErrorMsg(const char *message)
 {
-  (void) QMessageBox::critical(this, tr("Error"), tr(message),
+  (void) QMessageBox::critical(this, tr("QtChess: Error"), tr(message),
 			       QMessageBox::Ok,
 			       QMessageBox::Default);
 }
@@ -284,7 +292,7 @@ void qtchess_gui::showGameOver(const int turn)
   (void) turn;
   (void) QMessageBox::information
     (this,
-     tr("Game Over"),
+     tr("QtChess: Game Over"),
      tr("Game Over. Please enjoy another game."),
      QMessageBox::Ok | QMessageBox::Default);
 }
@@ -299,7 +307,7 @@ void qtchess_gui::showDisconnect(const bool showMsg)
 
   if(showMsg)
     (void) QMessageBox::information(this,
-				    tr("Error"),
+				    tr("QtChess: Error"),
 				    tr("Peer has disconnected."),
 				    QMessageBox::Ok | QMessageBox::Default);
 }
