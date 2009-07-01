@@ -139,7 +139,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Promote</string>
+        <string>&amp;Promote</string>
        </property>
       </widget>
      </item>
