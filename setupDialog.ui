@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>185</height>
+    <height>218</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -110,6 +110,16 @@
         <string>Local IP Address</string>
        </property>
       </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Allowed IP Address</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="allowedHost"/>
      </item>
     </layout>
    </item>
@@ -230,6 +240,7 @@
   <tabstop>port</tabstop>
   <tabstop>rhost</tabstop>
   <tabstop>rport</tabstop>
+  <tabstop>allowedHost</tabstop>
   <tabstop>ok</tabstop>
   <tabstop>disconnect</tabstop>
   <tabstop>cancel</tabstop>

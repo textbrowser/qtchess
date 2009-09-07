@@ -1,4 +1,10 @@
 /*
+** -- Qt Includes --
+*/
+
+#include <QtDebug>
+
+/*
 ** -- Local Includes --
 */
 
@@ -14,7 +20,10 @@ void qtchess_comm::updateBoard(void)
   char buffer[BUFFER_SIZE];
 
 #ifndef QTCHESS_PLUGIN
-  while(clientConnection != 0 && clientConnection->canReadLine())
+  int ntries = 1;
+
+  while(clientConnection != 0 && clientConnection->canReadLine() &&
+	ntries <= 5)
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -22,12 +31,15 @@ void qtchess_comm::updateBoard(void)
 	{
 	  QApplication::restoreOverrideCursor();
 	  chess->updateBoard(buffer);
+	  break;
 	}
       else
 	QApplication::restoreOverrideCursor();
+
+      ntries += 1;
     }
 #else
-  (void) buffer;
+  Q_UNUSED(buffer);
 #endif
 }
 
@@ -41,6 +53,7 @@ void qtchess_comm::init(void)
 
   setListen();
   gui->getSetupDialog()->getHostField()->setText("127.0.0.1");
+  gui->getSetupDialog()->getAllowedHostField()->setText("0.0.0.0");
 #else
   connected = true;
 #endif
@@ -74,6 +87,9 @@ bool qtchess_comm::isReady(void)
 void qtchess_comm::setListen(void)
 {
 #ifndef QTCHESS_PLUGIN
+  if(listening_sock.isListening())
+    return;
+
   listening_sock.setMaxPendingConnections(1);
 
   /*
@@ -138,22 +154,41 @@ void qtchess_comm::connectRemotely(void)
   QString str1 = "", str2 = "";
   quint16 remotePort = 0;
 
-  str1 = gui->getSetupDialog()->getRHostField()->text();
-  str1 = str1.trimmed();
-  str2 = gui->getSetupDialog()->getRPortField()->text();
-  str2 = str2.trimmed();
+  str1 = gui->getSetupDialog()->getRHostField()->text().trimmed();
+  str2 = gui->getSetupDialog()->getRPortField()->text().trimmed();
   remotePort = (quint16) str2.toInt();
   QApplication::setOverrideCursor(Qt::WaitCursor);
   send_sock.connectToHost(str1, remotePort);
 
-  if(!send_sock.waitForConnected(10000))
-    {
-      if(send_sock.isOpen())
-	send_sock.close();
+  for(int i = 0; i < 2; i++)
+    if(i == 0)
+      {
+	if(!send_sock.waitForConnected(10000))
+	  {
+	    if(send_sock.isOpen())
+	      send_sock.close();
 
-      QApplication::restoreOverrideCursor();
-      return;
-    }
+	    QApplication::restoreOverrideCursor();
+	    setConnected(false);
+	    return;
+	  }
+	else
+	  break;
+      }
+    else
+      {
+	if(send_sock.waitForDisconnected(10000))
+	  {
+	    if(send_sock.isOpen())
+	      send_sock.close();
+
+	    QApplication::restoreOverrideCursor();
+	    setConnected(false);
+	    return;
+	  }
+	else
+	  break;
+      }
 
   QApplication::restoreOverrideCursor();
 #endif
@@ -240,6 +275,10 @@ qtchess_comm::qtchess_comm(void)
   clientConnection = 0;
   connect(&listening_sock, SIGNAL(newConnection()), this,
 	  SLOT(acceptConnection()));
+  connect(&send_sock,
+	  SIGNAL(disconnected()),
+	  this,
+	  SLOT(clientDisconnected()));
 #endif
 }
 
@@ -252,6 +291,25 @@ void qtchess_comm::acceptConnection(void)
   if((clientConnection = listening_sock.nextPendingConnection()) == 0)
     return;
 
+  /*
+  ** Acceptable peer?
+  */
+
+  if(!gui->getSetupDialog()->getAllowedHostField()->text().trimmed().isEmpty())
+    {
+      QString str(gui->getSetupDialog()->
+		  getAllowedHostField()->text().trimmed());
+
+      if(str != clientConnection->peerAddress().toString().trimmed())
+	{
+	  clientConnection->deleteLater();
+	  clientConnection->abort();
+	  clientConnection = 0;
+	  return;
+	}
+    }
+
+  setConnected(true);
   connect(clientConnection, SIGNAL(readyRead()), this, SLOT(updateBoard()));
   connect(clientConnection, SIGNAL(disconnected()), this,
 	  SLOT(clientDisconnected()));
@@ -270,7 +328,14 @@ void qtchess_comm::acceptConnection(void)
 void qtchess_comm::clientDisconnected(void)
 {
 #ifndef QTCHESS_PLUGIN
-  clientConnection->deleteLater();
+  QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
+
+  if(socket)
+    if(socket != &send_sock && clientConnection)
+      {
+	clientConnection->deleteLater();
+	clientConnection = 0;
+      }
 #endif
   chess->setTurn(-1);
   chess->setFirst(-1);
@@ -279,5 +344,4 @@ void qtchess_comm::clientDisconnected(void)
   setListen();
 #endif
   disconnectRemotely();
-  gui->showDisconnect(true);
 }

@@ -95,6 +95,7 @@ class qtchess_setup_dialog: public QDialog
   QLineEdit *getPortField(void);
   QLineEdit *getRHostField(void);
   QLineEdit *getRPortField(void);
+  QLineEdit *getAllowedHostField(void);
   qtchess_setup_dialog(QWidget *);
 
  private:
