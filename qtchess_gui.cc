@@ -297,19 +297,13 @@ void qtchess_gui::showGameOver(const int turn)
      QMessageBox::Ok | QMessageBox::Default);
 }
 
-void qtchess_gui::showDisconnect(const bool showMsg)
+void qtchess_gui::showDisconnect(void)
 {
 #ifndef QTCHESS_PLUGIN
   setup_dialog->disconnectedState();
 #endif
   stopTimers(PLAYER_TIMER);
   stopTimers(OPPONENT_TIMER);
-
-  if(showMsg)
-    (void) QMessageBox::information(this,
-				    tr("QtChess: Error"),
-				    tr("Peer has disconnected."),
-				    QMessageBox::Ok | QMessageBox::Default);
 }
 
 void qtchess_gui::showNewGameInfo(void)
