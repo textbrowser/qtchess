@@ -429,7 +429,6 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   char to_let[2];
   char insertX[3];
   char from_position[2];
-  QString departure = "";
   QTableWidgetItem *item = 0;
 
   (void) memset(hist, 0, sizeof(hist));
@@ -505,37 +504,25 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
 			    to_let, current_move.x2 + 1);
 	}
       else if(qtchess_validate::isRook(current_move.piece))
-	{
-	  departure = current_move.departure;
-	  (void) snprintf(hist, sizeof(hist),
-			  "%s%s%s%s%d", "R",
-			  departure.toLatin1().data(), insertX,
-			  to_let, current_move.x2 + 1);
-	}
+	(void) snprintf(hist, sizeof(hist),
+			"%s%s%s%s%d", "R",
+			current_move.departure, insertX,
+			to_let, current_move.x2 + 1);
       else if(qtchess_validate::isBishop(current_move.piece))
-	{
-	  departure = current_move.departure;
-	  (void) snprintf(hist, sizeof(hist),
-			  "%s%s%s%s%d", "B",
-			  departure.toLatin1().data(), insertX,
-			  to_let, current_move.x2 + 1);
-	}
+	(void) snprintf(hist, sizeof(hist),
+			"%s%s%s%s%d", "B",
+			current_move.departure, insertX,
+			to_let, current_move.x2 + 1);
       else if(qtchess_validate::isQueen(current_move.piece))
-	{
-	  departure = current_move.departure;
-	  (void) snprintf(hist, sizeof(hist),
-			  "%s%s%s%s%d", "Q",
-			  departure.toLatin1().data(), insertX,
-			  to_let, current_move.x2 + 1);
-	}
+	(void) snprintf(hist, sizeof(hist),
+			"%s%s%s%s%d", "Q",
+			current_move.departure, insertX,
+			to_let, current_move.x2 + 1);
       else
-	{
-	  departure = current_move.departure;
-	  (void) snprintf(hist, sizeof(hist),
-			  "%s%s%s%s%d", "N",
-			  departure.toLatin1().data(), insertX,
-			  to_let, current_move.x2 + 1);
-	}
+	(void) snprintf(hist, sizeof(hist),
+			"%s%s%s%s%d", "N",
+			current_move.departure, insertX,
+			to_let, current_move.x2 + 1);
     }
 
   /*
@@ -600,16 +587,19 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   connect(ui.ok, SIGNAL(clicked()), this, SLOT(ok_cb(void)));
   setMinimumWidth(600);
   setMinimumHeight(300);
-  ui.text->append(tr("Please do not connect to the same process.\n\n"
-		     "Beige always moves first.\n\n"
+  ui.text->append(tr("Please do not connect to the same process.\n"
+		     "Beige always moves first.\n"
 		     "King is allowed to move to a threatened square, "
-		     "unless castling.\n\n"
+		     "unless castling.\n"
 		     "To move a piece, first click it and then click "
-		     "the desired destination.\n\n"
+		     "the desired destination.\n"
 		     "To view a selected piece's valid moves, "
-		     "double-click the selected piece.\n\n"
+		     "double-click the selected piece.\n"
 		     "Moves are prohibited until connections have been "
-		     "established."));
+		     "established.\n"
+		     "An empty Allowed IP Address value will allow any "
+		     "peer to connect."
+		     ));
 }
 
 void qtchess_gui::startTimers(const int which)
