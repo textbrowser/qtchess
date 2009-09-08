@@ -145,7 +145,7 @@ void qtchess_comm::disconnectRemotely(void)
   chess->setFirst(-1);
   chess->setMyColor(-1);
   setConnected(false);
-  gui->showDisconnect(false);
+  gui->showDisconnect();
 }
 
 void qtchess_comm::connectRemotely(void)

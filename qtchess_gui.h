@@ -234,7 +234,7 @@ class qtchess_gui: public QMainWindow
   void showGameOver(const int);
   void setStatusText(const QString &);
   void addHistoryMove(const struct move_s, const int);
-  void showDisconnect(const bool);
+  void showDisconnect(void);
   void showNewGameInfo(void);
   void notifyConnection(const QString &);
 #ifndef QTCHESS_PLUGIN
