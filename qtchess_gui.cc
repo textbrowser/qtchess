@@ -598,7 +598,9 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
 		     "Moves are prohibited until connections have been "
 		     "established.\n"
 		     "An empty Allowed IP Address value will allow any "
-		     "peer to connect."
+		     "peer to connect.\n"
+		     "To prevent peer connections, please set the "
+		     "Allowed IP Address to 0.0.0.0."
 		     ));
 }
 
