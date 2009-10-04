@@ -1015,7 +1015,7 @@ void openglWid::reinit(void)
   PAWN_WIDTH = 18;
   PAWN_HEIGHT = 24;
   PAWN_X_OFFSET = 30;
-  PAWN_Y_OFFSET = 4;  
+  PAWN_Y_OFFSET = 5;  
   BISHOP_WIDTH = 42;
   BISHOP_HEIGHT = 68;
   BISHOP_X_OFFSET = 20;
