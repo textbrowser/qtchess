@@ -238,7 +238,7 @@ void qtchess_gui::newGame(void)
 
   chess->init();
   gui->getGLBoard()->newGame();
-  gui->getGLBoard()->updateGL();      
+  gui->getGLBoard()->updateGL();
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
