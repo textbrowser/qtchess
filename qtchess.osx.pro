@@ -6,6 +6,7 @@ QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall
 QMAKE_LFLAGS_RELEASE =
 QMAKE_LFLAGS_RPATH =
+ICON            = chess.icns
 
 FORMS		=	helpDialog.ui \
 			mainwindow.ui \
