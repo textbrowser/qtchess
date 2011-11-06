@@ -1,9 +1,9 @@
 # Define installer name.
 Name "QtChess Installer"
-outFile "QtChess-Installer-3.15.exe"
+outFile "QtChess-Installer.exe"
 
 # Install directory.
-installDir C:\QtChess-3.15
+installDir C:\QtChess
 
 DirText "Please choose an installation directory for QtChess."
 
@@ -19,7 +19,7 @@ file .\release\*.dll
 file .\release\QtChess.exe
 
 # Define uninstaller name.
-writeUninstaller $INSTDIR\QtChess-Uninstaller-3.15.exe
+writeUninstaller $INSTDIR\QtChess-Uninstaller.exe
 
 # Default section end.
 sectionEnd
