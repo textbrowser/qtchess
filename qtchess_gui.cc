@@ -21,7 +21,10 @@ extern QApplication *qapp;
 
 int qtchess_gui::exec(void)
 {
-  return qapp->exec();
+  if(qapp)
+    return qapp->exec();
+  else
+    return -1;
 }
 
 void qtchess_gui::setStatusText(const QString &str)
@@ -42,17 +45,37 @@ void qtchess_gui::init(void)
 #endif
 
   if((statusLabel = new(std::nothrow) QLabel(tr("Status: Ready"))) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
   if((ag1 = new(std::nothrow) QActionGroup(this)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
   if((action_Large_Size = new(std::nothrow) QAction("&Large Size", this)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
   if((action_Normal_Size = new(std::nothrow) QAction("&Normal Size",
 						     this)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
   ag1->setExclusive(true);
   ag1->addAction(action_Large_Size);
@@ -95,27 +118,51 @@ void qtchess_gui::init(void)
     }
 
   if((help_dialog = new(std::nothrow) qtchess_help_dialog(this)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
 #ifndef QTCHESS_PLUGIN
   if((setup_dialog = new(std::nothrow) qtchess_setup_dialog(this)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 #endif
 
   if((promote_dialog = new(std::nothrow) qtchess_promote_dialog(this)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
   if((glboard = new(std::nothrow) openglWid(ui.boardFrame)) == 0)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(-1);
+    }
 
   /*
   ** Add the OpenGL board.
   */
 
-  glboard->rescale(denominator);
-  glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
-		  (int) (0.75 * OPEN_GL_DIMENSION));
-  ui.boardFrame->setFixedSize(glboard->size());
+  if(glboard)
+    {
+      glboard->rescale(denominator);
+      glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
+		      (int) (0.75 * OPEN_GL_DIMENSION));
+      ui.boardFrame->setFixedSize(glboard->size());
+    }
+
   ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   ui.history->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   ui.boardFrame->hide();
@@ -127,7 +174,8 @@ void qtchess_gui::init(void)
 
 void qtchess_gui::slotShowValidMoves(void)
 {
-  glboard->showValidMoves();
+  if(glboard)
+    glboard->showValidMoves();
 }
 
 void qtchess_gui::slotChangeSize(void)
@@ -143,10 +191,15 @@ void qtchess_gui::slotChangeSize(void)
 	return;
 
       denominator = 1.0;
-      glboard->reinit();
-      glboard->rescale(denominator);
-      glboard->resize(OPEN_GL_DIMENSION, OPEN_GL_DIMENSION);
-      ui.boardFrame->setFixedSize(glboard->size());
+
+      if(glboard)
+	{
+	  glboard->reinit();
+	  glboard->rescale(denominator);
+	  glboard->resize(OPEN_GL_DIMENSION, OPEN_GL_DIMENSION);
+	  ui.boardFrame->setFixedSize(glboard->size());
+	}
+
       ui.boardFrame->hide();
       ui.boardFrame->show();
       resize(sizeHint());
@@ -159,11 +212,16 @@ void qtchess_gui::slotChangeSize(void)
 	return;
 
       denominator = 4.0 / 3.0;
-      glboard->reinit();
-      glboard->rescale(denominator);
-      glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
-		      (int) (0.75 * OPEN_GL_DIMENSION));
-      ui.boardFrame->setFixedSize(glboard->size());
+
+      if(glboard)
+	{
+	  glboard->reinit();
+	  glboard->rescale(denominator);
+	  glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
+			  (int) (0.75 * OPEN_GL_DIMENSION));
+	  ui.boardFrame->setFixedSize(glboard->size());
+	}
+
       ui.boardFrame->hide();
       ui.boardFrame->show();
       resize(sizeHint());
@@ -182,9 +240,9 @@ void qtchess_gui::about(void)
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
-  mb.setText("<html>QtChess Version 3.15.<br>"
-	     "Copyright (c) 2003, 2004, 2006, 2007, 2008, 2009 "
-	     "Slurpy McNash."
+  mb.setText("<html>QtChess Version 3.16.<br>"
+	     "Copyright (c) 2003, 2004, 2006, 2007, 2008, 2009, 2011 "
+	     "Boomerang."
 	     "<hr>"
 	     "Please visit <a href=\"http://qtchess.sourceforge.net\">"
 	     "http://qtchess.sourceforge.net</a> for "
@@ -199,25 +257,33 @@ void qtchess_gui::about(void)
 
 void qtchess_gui::showErrorMsg(const char *message)
 {
-  (void) QMessageBox::critical(this, tr("QtChess: Error"), tr(message),
-			       QMessageBox::Ok,
-			       QMessageBox::Default);
+  QMessageBox::critical(this, tr("QtChess: Error"), tr(message),
+			QMessageBox::Ok,
+			QMessageBox::Default);
 }
 
 void qtchess_gui::help(void)
 {
-  help_dialog->setup();
+  if(help_dialog)
+    help_dialog->setup();
 }
 
 void qtchess_gui::quit(void)
 {
-  chess->quit(0, EXIT_SUCCESS);
+  if(chess)
+    chess->quit(0, EXIT_SUCCESS);
+  else
+    ::exit(-1);
 }
 
 void qtchess_gui::closeEvent(QCloseEvent *e)
 {
-  (void) e;
-  chess->quit(0, EXIT_SUCCESS);
+  Q_UNUSED(e);
+
+  if(chess)
+    chess->quit(0, EXIT_SUCCESS);
+  else
+    ::exit(-1);
 }
 
 void qtchess_gui::newGame(void)
@@ -225,24 +291,32 @@ void qtchess_gui::newGame(void)
   int i = 0, j = 0;
   struct move_s current_move;
 
-  if(chess->getFirst() == -1)
+  if(chess && chess->getFirst() == -1)
     {
       showErrorMsg("Please start a game first.");
       return;
     }
-  else if(chess->getFirst() != I_AM_FIRST)
+  else if(chess && chess->getFirst() != I_AM_FIRST)
     {
       showErrorMsg("Only the first player may initiate a new game.");
       return;
     }
 
-  chess->init();
-  gui->getGLBoard()->newGame();
-  gui->getGLBoard()->updateGL();
+  if(chess)
+    chess->init();
+
+  if(gui && gui->getGLBoard())
+    {
+      gui->getGLBoard()->newGame();
+      gui->getGLBoard()->updateGL();
+    }
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
-      current_move.board[i][j] = chess->board[i][j];
+      if(chess)
+	current_move.board[i][j] = chess->board[i][j];
+      else
+	current_move.board[i][j] = -1;
 
   current_move.x1 = current_move.x2 = current_move.y1 =
     current_move.y2 = current_move.r_x1 =
@@ -250,7 +324,10 @@ void qtchess_gui::newGame(void)
     current_move.r_y2 = current_move.piece =
     current_move.rook = -1;
   current_move.promoted = current_move.pawn_2 = 0;
-  comm->sendMove(current_move);
+
+  if(comm)
+    comm->sendMove(current_move);
+
   clearHistory();
   initClocks();
 
@@ -258,14 +335,20 @@ void qtchess_gui::newGame(void)
   ** Careful here. Set this after calling sendMove().
   */
 
-  chess->setTurn(MY_TURN);
+  if(chess)
+    chess->setTurn(MY_TURN);
 }
 
 #ifndef QTCHESS_PLUGIN
 void qtchess_gui::setup(void)
 {
-  setup_dialog->getRHostField()->setFocus();
-  setup_dialog->exec();
+  if(setup_dialog)
+    {
+      if(setup_dialog->getRHostField())
+	setup_dialog->getRHostField()->setFocus();
+
+      setup_dialog->exec();
+    }
 }
 #endif
 
@@ -289,8 +372,8 @@ void qtchess_gui::notifyConnection(const QString &address)
 
 void qtchess_gui::showGameOver(const int turn)
 {
-  (void) turn;
-  (void) QMessageBox::information
+  Q_UNUSED(turn);
+  QMessageBox::information
     (this,
      tr("QtChess: Game Over"),
      tr("Game Over. Please enjoy another game."),
@@ -300,7 +383,8 @@ void qtchess_gui::showGameOver(const int turn)
 void qtchess_gui::showDisconnect(void)
 {
 #ifndef QTCHESS_PLUGIN
-  setup_dialog->disconnectedState();
+  if(setup_dialog)
+    setup_dialog->disconnectedState();
 #endif
   stopTimers(PLAYER_TIMER);
   stopTimers(OPPONENT_TIMER);
@@ -321,26 +405,8 @@ void qtchess_setup_dialog::ok_cb(void)
   if(str1.length() == 0 || str2.length() == 0)
     return;
 
-  comm->connectRemotely();
-
-  if(comm->isSet())
-    {
-      ui.ok->setEnabled(false);
-      ui.rhost->setReadOnly(true);
-      ui.rport->setReadOnly(true);
-      ui.rhost->setEnabled(true);
-      ui.rport->setEnabled(true);
-      ui.disconnect->setEnabled(true);
-    }
-  else
-    {
-      ui.ok->setEnabled(true);
-      ui.rhost->setReadOnly(false);
-      ui.rport->setReadOnly(false);
-      ui.rhost->setEnabled(true);
-      ui.rport->setEnabled(true);
-      ui.disconnect->setEnabled(false);
-    }
+  if(comm)
+    comm->connectRemotely();
 }
 
 void qtchess_setup_dialog::close_cb(void)
@@ -350,7 +416,7 @@ void qtchess_setup_dialog::close_cb(void)
 
 void qtchess_setup_dialog::disconnect_cb(void)
 {
-  if(comm->isSet())
+  if(comm && comm->isSet())
     {
       comm->disconnectRemotely();
 
@@ -374,9 +440,16 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
 {
   ui.setupUi(this);
   ui.disconnect->setEnabled(false);
-  connect(ui.cancel, SIGNAL(clicked()), this, SLOT(close_cb(void)));
-  connect(ui.ok, SIGNAL(clicked()), this, SLOT(ok_cb(void)));
-  connect(ui.disconnect, SIGNAL(clicked()), this, SLOT(disconnect_cb(void)));
+  connect(ui.cancel, SIGNAL(clicked(void)), this, SLOT(close_cb(void)));
+  connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
+  connect(ui.disconnect, SIGNAL(clicked(void)), this,
+	  SLOT(disconnect_cb(void)));
+  connect(ui.ipv4, SIGNAL(clicked(void)), this,
+	  SLOT(slotProtocolChanged(void)));
+  connect(ui.ipv6, SIGNAL(clicked(void)), this,
+	  SLOT(slotProtocolChanged(void)));
+  connect(comm, SIGNAL(connectedToClient(void)),
+	  this, SLOT(slotConnectedToClient(void)));
 }
 
 QLineEdit *qtchess_setup_dialog::getHostField(void)
@@ -402,6 +475,30 @@ QLineEdit *qtchess_setup_dialog::getRPortField(void)
 QLineEdit *qtchess_setup_dialog::getAllowedHostField(void)
 {
   return ui.allowedHost;
+}
+
+void qtchess_setup_dialog::slotProtocolChanged(void)
+{
+  if(sender() == ui.ipv4)
+    {
+      ui.host->setText(QHostAddress(QHostAddress::LocalHost).toString());
+      ui.allowedHost->setText("0.0.0.0");
+    }
+  else
+    {
+      ui.host->setText(QHostAddress(QHostAddress::LocalHostIPv6).toString());
+      ui.allowedHost->setText("::");
+    }
+}
+
+void qtchess_setup_dialog::slotConnectedToClient(void)
+{
+  ui.ok->setEnabled(false);
+  ui.rhost->setReadOnly(true);
+  ui.rport->setReadOnly(true);
+  ui.rhost->setEnabled(true);
+  ui.rport->setEnabled(true);
+  ui.disconnect->setEnabled(true);
 }
 
 #endif
@@ -431,98 +528,98 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   char from_position[2];
   QTableWidgetItem *item = 0;
 
-  (void) memset(hist, 0, sizeof(hist));
-  (void) memset(to_let, 0, sizeof(to_let));
-  (void) memset(insertX, 0, sizeof(insertX));
-  (void) memset(from_position, 0, sizeof(from_position));
+  memset(hist, 0, sizeof(hist));
+  memset(to_let, 0, sizeof(to_let));
+  memset(insertX, 0, sizeof(insertX));
+  memset(from_position, 0, sizeof(from_position));
   to_let[0] = (char) (97 + current_move.y2);
   from_position[0] = (char) (97 + current_move.y1);
 
 #ifdef _DEBUG_
-  (void) fprintf(stderr, "from_position = %s, to_let = %s\n",
-		 from_position, to_let);
+  fprintf(stderr, "from_position = %s, to_let = %s\n",
+	  from_position, to_let);
 #endif
 
   if(current_move.promoted)
     {
-      if(chess->wasPieceWon())
-	(void) snprintf(insertX, sizeof(insertX), "%s%s", from_position, "x");
+      if(chess && chess->wasPieceWon())
+	snprintf(insertX, sizeof(insertX), "%s%s", from_position, "x");
 
       if(qtchess_validate::isRook(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%dR", insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%dR", insertX,
+		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isBishop(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%dB", insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%dB", insertX,
+		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isQueen(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%dQ", insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%dQ", insertX,
+		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isKnight(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%dN", insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%dN", insertX,
+		 to_let, current_move.x2 + 1);
     }
   else
     {
-      if(chess->wasPieceWon())
-	(void) snprintf(insertX, sizeof(insertX), "%s", "x");
+      if(chess && chess->wasPieceWon())
+	snprintf(insertX, sizeof(insertX), "%s", "x");
 
       if(qtchess_validate::isKing(current_move.piece))
 	{
 	  if(current_move.r_x1 != -1)
 	    {
 	      if(current_move.y2 == 6)
-		(void) snprintf(hist, sizeof(hist),
-				"%s%s%s%d 0-0", "K", insertX,
-				to_let, current_move.x2 + 1);
+		snprintf(hist, sizeof(hist),
+			 "%s%s%s%d 0-0", "K", insertX,
+			 to_let, current_move.x2 + 1);
 	      else
-		(void) snprintf(hist, sizeof(hist),
-				"%s%s%s%d 0-0-0", "K", insertX,
-				to_let, current_move.x2 + 1);
+		snprintf(hist, sizeof(hist),
+			 "%s%s%s%d 0-0-0", "K", insertX,
+			 to_let, current_move.x2 + 1);
 	    }
 	  else
-	    (void) snprintf(hist, sizeof(hist),
-			    "%s%s%s%d", "K", insertX,
-			    to_let, current_move.x2 + 1);
+	    snprintf(hist, sizeof(hist),
+		     "%s%s%s%d", "K", insertX,
+		     to_let, current_move.x2 + 1);
 	}
       else if(qtchess_validate::isPawn(current_move.piece))
 	{
-	  if(chess->wasPieceWon())
-	    (void) snprintf(insertX, sizeof(insertX), "%s%s",
-			    from_position, "x");
+	  if(chess && chess->wasPieceWon())
+	    snprintf(insertX, sizeof(insertX), "%s%s",
+		     from_position, "x");
 
 	  if(current_move.enpassant)
-	    (void) snprintf(hist, sizeof(hist),
-			    "%s%s%d e.p.", insertX,
-			    to_let, current_move.x2 + 1);
+	    snprintf(hist, sizeof(hist),
+		     "%s%s%d e.p.", insertX,
+		     to_let, current_move.x2 + 1);
 	  else
-	    (void) snprintf(hist, sizeof(hist),
-			    "%s%s%d", insertX,
-			    to_let, current_move.x2 + 1);
+	    snprintf(hist, sizeof(hist),
+		     "%s%s%d", insertX,
+		     to_let, current_move.x2 + 1);
 	}
       else if(qtchess_validate::isRook(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%s%s%d", "R",
-			current_move.departure, insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%s%s%d", "R",
+		 current_move.departure, insertX,
+		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isBishop(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%s%s%d", "B",
-			current_move.departure, insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%s%s%d", "B",
+		 current_move.departure, insertX,
+		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isQueen(current_move.piece))
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%s%s%d", "Q",
-			current_move.departure, insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%s%s%d", "Q",
+		 current_move.departure, insertX,
+		 to_let, current_move.x2 + 1);
       else
-	(void) snprintf(hist, sizeof(hist),
-			"%s%s%s%s%d", "N",
-			current_move.departure, insertX,
-			to_let, current_move.x2 + 1);
+	snprintf(hist, sizeof(hist),
+		 "%s%s%s%s%d", "N",
+		 current_move.departure, insertX,
+		 to_let, current_move.x2 + 1);
     }
 
   /*
@@ -530,7 +627,7 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   */
 
   if(current_move.isOppKingThreat)
-    (void) strncat(hist, "+", sizeof(hist) - 1);
+    strncat(hist, "+", sizeof(hist) - 1);
 
   if((item = new(std::nothrow) QTableWidgetItem(tr(hist))) != 0)
     {
@@ -566,7 +663,7 @@ qtchess_promote_dialog::qtchess_promote_dialog(QWidget *parent):
   QDialog(parent)
 {
   ui.setupUi(this);
-  connect(ui.ok, SIGNAL(clicked()), this, SLOT(ok_cb(void)));
+  connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
 }
 
 void qtchess_help_dialog::ok_cb(void)
@@ -584,7 +681,7 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   QDialog(parent)
 {
   ui.setupUi(this);
-  connect(ui.ok, SIGNAL(clicked()), this, SLOT(ok_cb(void)));
+  connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
   setMinimumWidth(600);
   setMinimumHeight(300);
   ui.text->append(tr("Please do not connect to the same process.\n"
@@ -606,23 +703,25 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
 
 void qtchess_gui::startTimers(const int which)
 {
-  (void) which;
+  Q_UNUSED(which);
 }
 
 void qtchess_gui::stopTimers(const int which)
 {
-  (void) which;
+  Q_UNUSED(which);
 }
 
 void qtchess_gui::updatePlayer(void)
 {
-  if(comm->isReady() && chess->getTurn() == MY_TURN && !chess->isGameOver())
+  if(comm && chess &&
+     comm->isReady() && chess->getTurn() == MY_TURN && !chess->isGameOver())
     ui.playerClock->setTime(ui.playerClock->time().addSecs(1));
 }
 
 void qtchess_gui::updateOpponent(void)
 {
-  if(comm->isReady() && chess->getTurn() == THEIR_TURN && !chess->isGameOver())
+  if(comm && chess &&
+     comm->isReady() && chess->getTurn() == THEIR_TURN && !chess->isGameOver())
     ui.opponentClock->setTime(ui.opponentClock->time().addSecs(1));
 }
 

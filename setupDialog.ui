@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>218</height>
+    <height>287</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -36,13 +36,33 @@
     <number>9</number>
    </property>
    <item>
-    <layout class="QGridLayout">
-     <property name="margin">
-      <number>0</number>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Nework Layer Protocol</string>
      </property>
-     <property name="spacing">
-      <number>6</number>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QRadioButton" name="ipv4">
+        <property name="text">
+         <string>IPv4</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="ipv6">
+        <property name="text">
+         <string>IPv6</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="_2">
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="font">
@@ -241,6 +261,8 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>ipv4</tabstop>
+  <tabstop>ipv6</tabstop>
   <tabstop>host</tabstop>
   <tabstop>port</tabstop>
   <tabstop>rhost</tabstop>

@@ -17,10 +17,9 @@ extern QApplication *qapp;
 
 void qtchess_comm::updateBoard(void)
 {
-  char buffer[BUFFER_SIZE];
-
 #ifndef QTCHESS_PLUGIN
   int ntries = 1;
+  char buffer[BUFFER_SIZE];
 
   while(clientConnection != 0 && clientConnection->canReadLine() &&
 	ntries <= 5)
@@ -30,7 +29,10 @@ void qtchess_comm::updateBoard(void)
       if(clientConnection->readLine(buffer, (qint64) sizeof(buffer)) != -1)
 	{
 	  QApplication::restoreOverrideCursor();
-	  chess->updateBoard(buffer);
+
+	  if(chess)
+	    chess->updateBoard(buffer);
+
 	  break;
 	}
       else
@@ -38,8 +40,6 @@ void qtchess_comm::updateBoard(void)
 
       ntries += 1;
     }
-#else
-  Q_UNUSED(buffer);
 #endif
 }
 
@@ -52,8 +52,14 @@ void qtchess_comm::init(void)
     listening_sock.close();
 
   setListen();
-  gui->getSetupDialog()->getHostField()->setText("127.0.0.1");
-  gui->getSetupDialog()->getAllowedHostField()->setText("0.0.0.0");
+
+  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getHostField())
+    gui->getSetupDialog()->getHostField()->setText
+      (QHostAddress(QHostAddress::LocalHost).toString());
+
+  if(gui && gui->getSetupDialog() &&
+     gui->getSetupDialog()->getAllowedHostField())
+    gui->getSetupDialog()->getAllowedHostField()->setText("0.0.0.0");
 #else
   connected = true;
 #endif
@@ -97,18 +103,23 @@ void qtchess_comm::setListen(void)
   */
 
   if(!listening_sock.listen())
-    chess->quit("listen() failure.", EXIT_FAILURE);
+    if(chess)
+      chess->quit("listen() failure.", EXIT_FAILURE);
 
   /*
   ** Save the port number.
   */
 
-  gui->getSetupDialog()->getPortField()->setText
-    (QString::number(listening_sock.serverPort()));
-  gui->setStatusText
-    ("Status: Local Port " + QString::number(listening_sock.serverPort()));
+  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
+    gui->getSetupDialog()->getPortField()->setText
+      (QString::number(listening_sock.serverPort()));
+
+  if(gui)
+    gui->setStatusText
+      ("Status: Local Port " + QString::number(listening_sock.serverPort()));
 #else
-  gui->setStatusText("Status: Ready");
+  if(gui)
+    gui->setStatusText("Status: Ready");
 #endif
 }
 
@@ -141,11 +152,17 @@ void qtchess_comm::disconnectRemotely(void)
     send_sock.close();
 #endif
 
-  chess->setTurn(-1);
-  chess->setFirst(-1);
-  chess->setMyColor(-1);
+  if(chess)
+    {
+      chess->setTurn(-1);
+      chess->setFirst(-1);
+      chess->setMyColor(-1);
+    }
+
   setConnected(false);
-  gui->showDisconnect();
+
+  if(gui)
+    gui->showDisconnect();
 }
 
 void qtchess_comm::connectRemotely(void)
@@ -154,52 +171,19 @@ void qtchess_comm::connectRemotely(void)
   QString str1 = "", str2 = "";
   quint16 remotePort = 0;
 
-  str1 = gui->getSetupDialog()->getRHostField()->text().trimmed();
-  str2 = gui->getSetupDialog()->getRPortField()->text().trimmed();
-  remotePort = (quint16) str2.toInt();
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  send_sock.connectToHost(str1, remotePort);
-
-  for(int i = 0; i < 2; i++)
-    if(i == 0)
-      {
-	if(!send_sock.waitForConnected(10000))
-	  {
-	    if(send_sock.isOpen())
-	      send_sock.close();
-
-	    QApplication::restoreOverrideCursor();
-	    setConnected(false);
-	    return;
-	  }
-	else
-	  break;
-      }
-    else
-      {
-	if(send_sock.waitForDisconnected(10000))
-	  {
-	    if(send_sock.isOpen())
-	      send_sock.close();
-
-	    QApplication::restoreOverrideCursor();
-	    setConnected(false);
-	    return;
-	  }
-	else
-	  break;
-      }
-
-  QApplication::restoreOverrideCursor();
-#endif
-  setConnected(true);
-
-  if(chess->getFirst() == -1)
+  if(gui)
     {
-      chess->setTurn(MY_TURN);
-      chess->setFirst(I_AM_FIRST);
-      chess->setMyColor(WHITE);
+      if(gui->getSetupDialog() && gui->getSetupDialog()->getRHostField())
+	str1 = gui->getSetupDialog()->getRHostField()->text().trimmed();
+
+      if(gui->getSetupDialog() && gui->getSetupDialog()->getRPortField())
+	str2 = gui->getSetupDialog()->getRPortField()->text().trimmed();
     }
+
+  remotePort = (quint16) str2.toInt();
+  send_sock.abort();
+  send_sock.connectToHost(str1, remotePort);
+#endif
 }
 
 void qtchess_comm::sendMove(const struct move_s current_move)
@@ -217,32 +201,32 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   ** Copy the structure.
   */
 
-  (void) memset(buffer, 0, sizeof(buffer));
-  (void) snprintf(buffer, sizeof(buffer),
-		  "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %s ",
-		  current_move.x1,
-		  current_move.x2,
-		  current_move.y1,
-		  current_move.y2,
-		  current_move.r_x1,
-		  current_move.r_x2,
-		  current_move.r_y1,
-		  current_move.r_y2,
-		  current_move.piece,
-		  current_move.rook,
-		  current_move.promoted,
-		  current_move.pawn_2,
-		  current_move.enpassant,
-		  current_move.isOppKingThreat,
-		  current_move.departure);
+  memset(buffer, 0, sizeof(buffer));
+  snprintf(buffer, sizeof(buffer),
+	   "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %s ",
+	   current_move.x1,
+	   current_move.x2,
+	   current_move.y1,
+	   current_move.y2,
+	   current_move.r_x1,
+	   current_move.r_x2,
+	   current_move.r_y1,
+	   current_move.r_y2,
+	   current_move.piece,
+	   current_move.rook,
+	   current_move.promoted,
+	   current_move.pawn_2,
+	   current_move.enpassant,
+	   current_move.isOppKingThreat,
+	   current_move.departure);
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
       {
-	(void) memset(numstr, 0, sizeof(numstr));
-	(void) snprintf(numstr, sizeof(numstr), "%d ",
-			current_move.board[i][j]);
-	(void) strcat(buffer, numstr);
+	memset(numstr, 0, sizeof(numstr));
+	snprintf(numstr, sizeof(numstr), "%d ",
+		 current_move.board[i][j]);
+	strcat(buffer, numstr);
       }
 
   /*
@@ -250,7 +234,7 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   */
 
   buffer[strlen(buffer) - 1] = '\0';
-  (void) strcat(buffer, "\n");
+  strcat(buffer, "\n");
 
 #ifndef QTCHESS_PLUGIN
   QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -258,12 +242,16 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   if(send_sock.write(buffer, (qint64) strlen(buffer)) == -1)
     {
       QApplication::restoreOverrideCursor();
-      gui->showErrorMsg("Move could not be delivered.");
+
+      if(gui)
+	gui->showErrorMsg("Move could not be delivered.");
     }
   else
     {
       QApplication::restoreOverrideCursor();
-      chess->setTurn(THEIR_TURN);
+
+      if(chess)
+	chess->setTurn(THEIR_TURN);
     }
 #else
 #endif
@@ -273,12 +261,20 @@ qtchess_comm::qtchess_comm(void)
 {
 #ifndef QTCHESS_PLUGIN
   clientConnection = 0;
-  connect(&listening_sock, SIGNAL(newConnection()), this,
-	  SLOT(acceptConnection()));
+  connect(&listening_sock, SIGNAL(newConnection(void)), this,
+	  SLOT(acceptConnection(void)));
   connect(&send_sock,
-	  SIGNAL(disconnected()),
+	  SIGNAL(connected(void)),
 	  this,
-	  SLOT(clientDisconnected()));
+	  SIGNAL(connectedToClient(void)));
+  connect(&send_sock,
+	  SIGNAL(connected(void)),
+	  this,
+	  SLOT(slotClientConnected(void)));
+  connect(&send_sock,
+	  SIGNAL(disconnected(void)),
+	  this,
+	  SLOT(clientDisconnected(void)));
 #endif
 }
 
@@ -295,28 +291,34 @@ void qtchess_comm::acceptConnection(void)
   ** Acceptable peer?
   */
 
-  if(!gui->getSetupDialog()->getAllowedHostField()->text().trimmed().isEmpty())
+  if(gui && gui->getSetupDialog() &&
+     gui->getSetupDialog()->getAllowedHostField() &&
+     !gui->getSetupDialog()->getAllowedHostField()->text().trimmed().isEmpty())
     {
       QString str(gui->getSetupDialog()->
 		  getAllowedHostField()->text().trimmed());
 
-      if(str != clientConnection->peerAddress().toString().trimmed())
+      if(clientConnection &&
+	 str != clientConnection->peerAddress().toString().trimmed())
 	{
-	  clientConnection->deleteLater();
 	  clientConnection->abort();
-	  clientConnection = 0;
+	  clientConnection->deleteLater();
 	  return;
 	}
     }
 
   setConnected(true);
-  connect(clientConnection, SIGNAL(readyRead()), this, SLOT(updateBoard()));
-  connect(clientConnection, SIGNAL(disconnected()), this,
-	  SLOT(clientDisconnected()));
-  gui->notifyConnection(clientConnection->peerAddress().toString());
+  connect(clientConnection, SIGNAL(readyRead(void)), this,
+	  SLOT(updateBoard(void)));
+  connect(clientConnection, SIGNAL(disconnected(void)), this,
+	  SLOT(clientDisconnected(void)));
+
+  if(gui && clientConnection)
+    gui->notifyConnection(clientConnection->peerAddress().toString());
+
   listening_sock.close();
 
-  if(chess->getFirst() == -1)
+  if(chess && chess->getFirst() == -1)
     {
       chess->setTurn(THEIR_TURN);
       chess->setFirst(THEY_ARE_FIRST);
@@ -325,6 +327,18 @@ void qtchess_comm::acceptConnection(void)
 }
 #endif
 
+void qtchess_comm::slotClientConnected(void)
+{
+  setConnected(true);
+
+  if(chess && chess->getFirst() == -1)
+    {
+      chess->setTurn(MY_TURN);
+      chess->setFirst(I_AM_FIRST);
+      chess->setMyColor(WHITE);
+    }
+}
+
 void qtchess_comm::clientDisconnected(void)
 {
 #ifndef QTCHESS_PLUGIN
@@ -332,14 +346,14 @@ void qtchess_comm::clientDisconnected(void)
 
   if(socket)
     if(socket != &send_sock && clientConnection)
-      {
-	clientConnection->deleteLater();
-	clientConnection = 0;
-      }
+      clientConnection->deleteLater();
 #endif
-  chess->setTurn(-1);
-  chess->setFirst(-1);
-  chess->setMyColor(-1);
+  if(chess)
+    {
+      chess->setTurn(-1);
+      chess->setFirst(-1);
+      chess->setMyColor(-1);
+    }
 #ifndef QTCHESS_PLUGIN
   setListen();
 #endif

@@ -119,6 +119,8 @@ class qtchess_setup_dialog: public QDialog
   void ok_cb(void);
   void close_cb(void);
   void disconnect_cb(void);
+  void slotProtocolChanged(void);
+  void slotConnectedToClient(void);
 };
 #endif
 
@@ -186,6 +188,8 @@ class qtchess_gui: public QMainWindow
       setup_dialog = 0;
 #endif
       promote_dialog = 0;
+      playert = 0;
+      opponentt = 0;
     }
 
   ~qtchess_gui()
@@ -208,7 +212,7 @@ class qtchess_gui: public QMainWindow
 	delete opponentt;
 
 #ifdef _DEBUG_
-      (void) fprintf(stderr, "~qtchess_gui()\n");
+      fprintf(stderr, "~qtchess_gui()\n");
 #endif
     }
 

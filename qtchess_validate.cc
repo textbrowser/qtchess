@@ -21,7 +21,10 @@ QString qtchess_validate::findDeparture(const int X1,
   ** This function is primarily used for recording moves.
   */
 
-  (void) memset(departure, 0, sizeof(departure));
+  memset(departure, 0, sizeof(departure));
+
+  if(!chess)
+    return QString("XX");
 
   /*
   ** Same rank? Use the file of the departure square.
@@ -62,12 +65,12 @@ QString qtchess_validate::findDeparture(const int X1,
       }
 
   if(fcount > 0 && rcount > 0)
-    (void) snprintf(departure, sizeof(departure), "%c%d", (char) (97 + X1),
-		    Y1 + 1);
+    snprintf(departure, sizeof(departure), "%c%d", (char) (97 + X1),
+	     Y1 + 1);
   else if(fcount > 0)
     departure[0] = (char) (97 + X1);
   else if(rcount > 0)
-    (void) snprintf(departure, sizeof(departure), "%d", Y1 + 1);
+    snprintf(departure, sizeof(departure), "%d", Y1 + 1);
   else
     departure[0] = (char) (97 + X1);
 
@@ -78,6 +81,9 @@ bool qtchess_validate::isKingChecked(const struct move_s current_move)
 {
   int i = 0, j = 0, I = -1, J = -1;
   bool isChecked = false;
+
+  if(!chess)
+    return isChecked;
 
   for(i = 0; i < NSQUARES && I == -1 && J == -1; i++)
     for(j = 0; j < NSQUARES; j++)
@@ -124,12 +130,13 @@ bool qtchess_validate::isThreatened(const int x, const int y, int color)
   ** Determine if the given opponent threatens a certain square.
   */
 
-  for(i = 0; i < NSQUARES; i++)
-    for(j = 0; j < NSQUARES; j++)
-      if(!isEmpty(chess->board[i][j]))
-	if(isColor(chess->board[i][j], color))
-	  if(isValidMove(j, i, y, x, chess->board[i][j]) != INVALID)
-	    return true;
+  if(chess)
+    for(i = 0; i < NSQUARES; i++)
+      for(j = 0; j < NSQUARES; j++)
+	if(!isEmpty(chess->board[i][j]))
+	  if(isColor(chess->board[i][j], color))
+	    if(isValidMove(j, i, y, x, chess->board[i][j]) != INVALID)
+	      return true;
 
   return false;
 }
@@ -251,14 +258,17 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
   struct move_s move;
 
 #ifdef _DEBUG_
-  (void) fprintf(stderr,
-		 "col_from = %d, "
-		 "col_to = %d, "
-		 "row_from = %d, "
-		 "row_to = %d, "
-		 "piece = %d\n",
-		 col_from, col_to, row_from, row_to, piece);
+  fprintf(stderr,
+	  "col_from = %d, "
+	  "col_to = %d, "
+	  "row_from = %d, "
+	  "row_to = %d, "
+	  "piece = %d\n",
+	  col_from, col_to, row_from, row_to, piece);
 #endif
+
+  if(!chess)
+    return rc;
 
   /*
   ** 7
@@ -349,8 +359,8 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	if(move.pawn_2)
 	  {
 #ifdef _DEBUG_
-	    (void) fprintf(stderr, "move.x1 = %d, move.x2 = %d\n",
-			   move.x1, move.x2);
+	    fprintf(stderr, "move.x1 = %d, move.x2 = %d\n",
+		    move.x1, move.x2);
 #endif
 
 	    if(row_from == 3 && row_to == 2 && col_to == move.y1)
@@ -430,8 +440,8 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	if(move.pawn_2)
 	  {
 #ifdef _DEBUG_
-	    (void) fprintf(stderr, "move.x1 = %d, move.x2 = %d\n",
-			   move.x1, move.x2);
+	    fprintf(stderr, "move.x1 = %d, move.x2 = %d\n",
+		    move.x1, move.x2);
 #endif
 
 	    if(row_from == 4 && row_to == 5 && col_to == move.y1)
@@ -450,7 +460,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	if(row_from == row_to)
 	  {
 #ifdef _DEBUG_
-	    (void) fprintf(stderr, "Rook: horizontal move.\n");
+	    fprintf(stderr, "Rook: horizontal move.\n");
 #endif
 	    if(col_from + 1 == col_to)
 	      {
@@ -521,7 +531,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	if(col_from == col_to)
 	  {
 #ifdef _DEBUG_
-	    (void) fprintf(stderr, "Rook: vertical move.\n");
+	    fprintf(stderr, "Rook: vertical move.\n");
 #endif
 	    if(row_from + 1 == row_to)
 	      {

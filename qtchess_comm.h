@@ -17,6 +17,7 @@ extern "C"
 */
 
 #ifndef QTCHESS_PLUGIN
+#include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
 #endif
@@ -47,7 +48,7 @@ class qtchess_comm: public QObject
   ~qtchess_comm()
     {
 #ifdef _DEBUG_
-      (void) fprintf(stderr, "~qtchess_comm()\n");
+      fprintf(stderr, "~qtchess_comm()\n");
 #endif
     }
 
@@ -71,7 +72,7 @@ class qtchess_comm: public QObject
 #ifndef QTCHESS_PLUGIN
   QTcpServer listening_sock;
   QTcpSocket send_sock;
-  QTcpSocket *clientConnection;
+  QPointer<QTcpSocket> clientConnection;
 #endif
 
   /*
@@ -85,6 +86,12 @@ class qtchess_comm: public QObject
   void acceptConnection(void);
 #endif
   void clientDisconnected(void);
+  void slotClientConnected(void);
+
+#ifndef QTCHESS_PLUGIN
+ signals:
+  void connectedToClient(void);
+#endif
 };
 
 #endif

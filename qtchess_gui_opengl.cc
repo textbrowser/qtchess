@@ -79,7 +79,8 @@ void openglWid::paintGL(void)
 	*/
 
 	if(showValid)
-	  if(qtchess_validate::isValidMove
+	  if(chess &&
+	     qtchess_validate::isValidMove
 	     ((int) point_selected.y,
 	      (int) point_selected.x,
 	      j, i,
@@ -103,7 +104,7 @@ void openglWid::paintGL(void)
 	** Draw the pieces.
 	*/
 
-	if(!qtchess_validate::isEmpty(chess->board[i][j]))
+	if(chess && !qtchess_validate::isEmpty(chess->board[i][j]))
 	  {
 	    if(qtchess_validate::isWhite(chess->board[i][j]))
 	      glColor3f(0.96, 0.96, 0.86);
@@ -111,7 +112,7 @@ void openglWid::paintGL(void)
 	      glColor3f(0.65, 0.16, 0.16);
 	  }
 
-	if(qtchess_validate::isBishop(chess->board[i][j]))
+	if(chess && qtchess_validate::isBishop(chess->board[i][j]))
 	  {
 	    glBegin(GL_POLYGON);
 	    glVertex2d(x + BISHOP_X_OFFSET,
@@ -185,7 +186,7 @@ void openglWid::paintGL(void)
 		       20 / denominator);
 	    glEnd();
 	  }
-	else if(qtchess_validate::isKing(chess->board[i][j]))
+	else if(chess && qtchess_validate::isKing(chess->board[i][j]))
 	  {
 	    glRectd(x + KING_X_OFFSET, y + KING_Y_OFFSET,
 		    x + KING_X_OFFSET + KING_B_WIDTH,
@@ -303,7 +304,7 @@ void openglWid::paintGL(void)
 		       KING_BT_HEIGHT + KING_HEIGHT);
 	    glEnd();
 	  }
-	else if(qtchess_validate::isQueen(chess->board[i][j]))
+	else if(chess && qtchess_validate::isQueen(chess->board[i][j]))
 	  {
 	    glRectd(x + QUEEN_X_OFFSET, y + QUEEN_Y_OFFSET,
 		    x + QUEEN_X_OFFSET + QUEEN_B_WIDTH,
@@ -438,7 +439,7 @@ void openglWid::paintGL(void)
 		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
 	    glEnd();
 	  }
-	else if(qtchess_validate::isKnight(chess->board[i][j]))
+	else if(chess && qtchess_validate::isKnight(chess->board[i][j]))
 	  {
 	    glBegin(GL_POLYGON);
 	    glVertex2d(x + KNIGHT_X_OFFSET, y + KNIGHT_Y_OFFSET);
@@ -499,7 +500,7 @@ void openglWid::paintGL(void)
 		       42 / denominator);
 	    glEnd();
 	  }
-	else if(qtchess_validate::isRook(chess->board[i][j]))
+	else if(chess && qtchess_validate::isRook(chess->board[i][j]))
 	  {
 	    glRectd(x + ROOK_X_OFFSET,
 		    y + ROOK_Y_OFFSET,
@@ -547,7 +548,7 @@ void openglWid::paintGL(void)
 		       ROOK_T_HEIGHT);
 	    glEnd();
 	  }
-	else if(qtchess_validate::isPawn(chess->board[i][j]))
+	else if(chess && qtchess_validate::isPawn(chess->board[i][j]))
 	  {
 	    glRectd(x + PAWN_X_OFFSET,
 		    y + PAWN_Y_OFFSET,
@@ -634,9 +635,9 @@ void openglWid::paintGL(void)
   */
 
 #ifdef _DEBUG_
-  if(mouse_pressed && found)
+  if(chess && mouse_pressed && found)
 #else
-  if(mouse_pressed && found && chess->isReady())
+  if(chess && mouse_pressed && found && chess->isReady())
 #endif
     {
       /*
@@ -735,14 +736,19 @@ void openglWid::paintGL(void)
 	     !qtchess_validate::isKing(chess->board[I][J]))
 	    {
 	      current_move.promoted = 1;
-	      gui->getPromoteDialog()->setup();
+
+	      if(gui && gui->getPromoteDialog())
+		gui->getPromoteDialog()->setup();
 #ifdef _DEBUG_
-	      (void) fprintf
-		(stderr, "currentItem() = %d\n",
-		 gui->getPromoteDialog()->getMenu()->currentItem());
+	      if(gui && gui->getPromoteDialog())
+		fprintf
+		  (stderr, "currentItem() = %d\n",
+		   gui->getPromoteDialog()->getMenu()->currentItem());
 #endif
 
-	      if(gui->getPromoteDialog()->getMenu()->currentIndex() == 0)
+	      if(gui && gui->getPromoteDialog() &&
+		 gui->getPromoteDialog()->getMenu() &&
+		 gui->getPromoteDialog()->getMenu()->currentIndex() == 0)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
@@ -751,7 +757,9 @@ void openglWid::paintGL(void)
 		  else
 		    chess->board[I][J] = current_move.piece = BISHOP_WHITE;
 		}
-	      else if(gui->getPromoteDialog()->getMenu()->currentIndex() == 1)
+	      else if(gui && gui->getPromoteDialog() &&
+		      gui->getPromoteDialog()->getMenu() &&
+		      gui->getPromoteDialog()->getMenu()->currentIndex() == 1)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
@@ -760,7 +768,9 @@ void openglWid::paintGL(void)
 		  else
 		    chess->board[I][J] = current_move.piece = KNIGHT_WHITE;
 		}
-	      else if(gui->getPromoteDialog()->getMenu()->currentIndex() == 2)
+	      else if(gui && gui->getPromoteDialog() &&
+		      gui->getPromoteDialog()->getMenu() &&
+		      gui->getPromoteDialog()->getMenu()->currentIndex() == 2)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
@@ -786,8 +796,8 @@ void openglWid::paintGL(void)
 	  if(rc == VALID_CASTLE)
 	    {
 #ifdef _DEBUG_
-	      (void) fprintf(stderr, "Castling.\n");
-	      (void) fprintf(stderr, "I = %d, J = %d\n", I, J);
+	      fprintf(stderr, "Castling.\n");
+	      fprintf(stderr, "I = %d, J = %d\n", I, J);
 #endif
 	      if(I == 2 && J == 7) // Rook #1 Black
 		{
@@ -846,11 +856,12 @@ void openglWid::paintGL(void)
 	    EMPTY_SQUARE;
 	  origPiece = chess->board[I][J];
 	  chess->board[I][J] = EMPTY_SQUARE;
-	  (void) snprintf
+	  snprintf
 	    (current_move.departure, sizeof(current_move.departure), "%s",
 	     qtchess_validate::findDeparture
 	     ((int) point_selected.x, (int) point_selected.y,
 	      I, J, origPiece).toLatin1().data());
+
 	  chess->board[I][J] = origPiece;
 
 	  for(i = 0; i < NSQUARES; i++)
@@ -877,9 +888,10 @@ void openglWid::paintGL(void)
 	  else
 	    current_move.isOppKingThreat = 0;
 
-	  gui->addHistoryMove
-	    (current_move,
-	     qtchess_validate::isWhite(current_move.piece) ? WHITE : BLACK);
+	  if(gui)
+	    gui->addHistoryMove
+	      (current_move,
+	       qtchess_validate::isWhite(current_move.piece) ? WHITE : BLACK);
 
 	  /*
 	  ** Send the move.
@@ -888,16 +900,19 @@ void openglWid::paintGL(void)
 #ifdef _DEBUG_
 	  for(i = 0; i < NSQUARES; i++)
 	    for(j = 0; j < NSQUARES; j++)
-	      (void) fprintf(stderr, "i = %d, j = %d, board[%d][%d] = %d\n",
-			     i, j, i, j, chess->board[i][j]);
+	      fprintf(stderr, "i = %d, j = %d, board[%d][%d] = %d\n",
+		      i, j, i, j, chess->board[i][j]);
 #endif
+	  if(comm)
+	    comm->sendMove(current_move);
 
-	  comm->sendMove(current_move);
 	  updateGL();
+
 	  chess->setGameOver(game_over);
 
 	  if(game_over)
-	    gui->showGameOver(chess->getTurn());
+	    if(gui)
+	      gui->showGameOver(chess->getTurn());
 
 	  return;
 	}
@@ -920,14 +935,16 @@ void openglWid::paintGL(void)
 void openglWid::initializeGL(void)
 {
   /*
-  ** Initiaze OpenGL "stuff".
+  ** Initiaze OpenGL.
   */
 
   /*
   ** Set a white background color.
   */
 
-  (void) gui->getUI().boardFrame->palette();
+  if(gui)
+    gui->getUI().boardFrame->palette();
+
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glShadeModel(GL_FLAT);
 }
@@ -945,14 +962,19 @@ void openglWid::resizeGL(int w, int h)
 
 void openglWid::mousePressEvent(QMouseEvent *e)
 {
-  if(e->type() == QEvent::MouseButtonDblClick)
+  if(e && e->type() == QEvent::MouseButtonDblClick)
     showValidMoves();
   else
     {
       showValid = false;
       mouse_pressed += 1;
-      point_pressed.x = e->x();
-      point_pressed.y = height() - e->y();
+
+      if(e)
+	{
+	  point_pressed.x = e->x();
+	  point_pressed.y = height() - e->y();
+	}
+
       updateGL();
     }
 }

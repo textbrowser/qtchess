@@ -12,14 +12,14 @@ extern void quit_program(int);
 bool qtchess::isReady(void)
 {
 #ifdef _DEBUG_
-  if(comm->isReady())
-    (void) fprintf(stderr, "Communications are ready.\n");
+  if(comm && comm->isReady())
+    fprintf(stderr, "Communications are ready.\n");
 
   if(getTurn() == MY_TURN)
-    (void) fprintf(stderr, "It's my turn to play!\n");
+    fprintf(stderr, "It's my turn to play!\n");
 #endif
 
-  return comm->isReady() && (getTurn() == MY_TURN);
+  return comm && comm->isReady() && (getTurn() == MY_TURN);
 }
 
 void qtchess::init(void)
@@ -60,8 +60,8 @@ void qtchess::init(void)
     last_opponent_move.r_y2 = last_opponent_move.piece =
     last_opponent_move.rook = -1;
   last_opponent_move.promoted = last_opponent_move.pawn_2 = 0;
-  (void) memset(last_opponent_move.departure, 0,
-		sizeof(last_opponent_move.departure));
+  memset(last_opponent_move.departure, 0,
+	 sizeof(last_opponent_move.departure));
 }
 
 void qtchess::quit(const char *message_text, const int exit_code)
@@ -71,7 +71,7 @@ void qtchess::quit(const char *message_text, const int exit_code)
   */
 
   if(message_text != 0)
-    (void) fprintf(stderr, "%s\n", message_text);
+    fprintf(stderr, "%s\n", message_text);
 
   quit_program(exit_code);
 }
@@ -105,8 +105,8 @@ void qtchess::updateBoard(char *buffer)
   current_move.pawn_2 = list[11].toInt();
   current_move.enpassant = list[12].toInt();
   current_move.isOppKingThreat = list[13].toInt();
-  (void) snprintf(current_move.departure, sizeof(current_move.departure),
-		  "%s", list[14].toLatin1().data());
+  snprintf(current_move.departure, sizeof(current_move.departure),
+	   "%s", list[14].toLatin1().data());
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
@@ -126,15 +126,24 @@ void qtchess::updateBoard(char *buffer)
       init();
       setGameOver(false);
       setTurn(THEIR_TURN);
-      gui->getGLBoard()->updateGL();
-      gui->clearHistory();
-      gui->showNewGameInfo();
-      gui->initClocks();
+
+      if(gui)
+	{
+	  if(gui->getGLBoard())
+	    gui->getGLBoard()->updateGL();
+
+	  gui->clearHistory();
+	  gui->showNewGameInfo();
+	  gui->initClocks();
+	}
     }
   else
     {
-      gui->stopTimers(OPPONENT_TIMER);
-      gui->startTimers(PLAYER_TIMER);
+      if(gui)
+	{
+	  gui->stopTimers(OPPONENT_TIMER);
+	  gui->startTimers(PLAYER_TIMER);
+	}
 
       if(getMyColor() == BLACK)
 	color = WHITE;
@@ -173,14 +182,19 @@ void qtchess::updateBoard(char *buffer)
 #ifdef _DEBUG_
       for(i = 0; i < NSQUARES; i++)
 	for(j = 0; j < NSQUARES; j++)
-	  (void) fprintf(stderr, "i = %d, j = %d, board[%d][%d] = %d\n",
-			 i, j, i, j, board[i][j]);
+	  fprintf(stderr, "i = %d, j = %d, board[%d][%d] = %d\n",
+		  i, j, i, j, board[i][j]);
 #endif
 
-      gui->addHistoryMove(current_move, color);
-      gui->getGLBoard()->updateGL();
+      if(gui)
+	{
+	  gui->addHistoryMove(current_move, color);
 
-      if(game_over)
+	  if(gui->getGLBoard())
+	    gui->getGLBoard()->updateGL();
+	}
+
+      if(gui && game_over)
 	{
 	  gui->showGameOver(getTurn());
 	  gui->stopTimers(PLAYER_TIMER);
