@@ -299,7 +299,7 @@ void qtchess_comm::acceptConnection(void)
 		  getAllowedHostField()->text().trimmed());
 
       if(clientConnection &&
-	 str != clientConnection->peerAddress().toString().trimmed())
+	 QHostAddress(str) != clientConnection->peerAddress())
 	{
 	  clientConnection->abort();
 	  clientConnection->deleteLater();
