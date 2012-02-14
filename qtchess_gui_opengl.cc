@@ -743,7 +743,7 @@ void openglWid::paintGL(void)
 	      if(gui && gui->getPromoteDialog())
 		fprintf
 		  (stderr, "currentItem() = %d\n",
-		   gui->getPromoteDialog()->getMenu()->currentItem());
+		   gui->getPromoteDialog()->getMenu()->currentIndex());
 #endif
 
 	      if(gui && gui->getPromoteDialog() &&
@@ -956,7 +956,7 @@ void openglWid::resizeGL(int w, int h)
   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluOrtho2D(0.0, w, 0.0, h);
+  glOrtho(0.0, w, 0.0, h, -1.0, 1.0);
   glMatrixMode(GL_MODELVIEW);
 }
 
