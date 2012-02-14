@@ -17,7 +17,6 @@ extern QApplication *qapp;
 
 void qtchess_comm::updateBoard(void)
 {
-#ifndef QTCHESS_PLUGIN
   int ntries = 1;
   char buffer[BUFFER_SIZE];
 
@@ -40,12 +39,10 @@ void qtchess_comm::updateBoard(void)
 
       ntries += 1;
     }
-#endif
 }
 
 void qtchess_comm::init(void)
 {
-#ifndef QTCHESS_PLUGIN
   connected = false;
 
   if(listening_sock.isListening())
@@ -60,9 +57,6 @@ void qtchess_comm::init(void)
   if(gui && gui->getSetupDialog() &&
      gui->getSetupDialog()->getAllowedHostField())
     gui->getSetupDialog()->getAllowedHostField()->setText("0.0.0.0");
-#else
-  connected = true;
-#endif
 }
 
 bool qtchess_comm::isSet(void)
@@ -77,14 +71,10 @@ bool qtchess_comm::isReady(void)
 {
   if(isSet())
     {
-#ifndef QTCHESS_PLUGIN
       if(send_sock.isOpen() && !listening_sock.isListening())
 	return true;
       else
 	return false;
-#else
-      return true;
-#endif
     }
   else
     return false;
@@ -92,7 +82,6 @@ bool qtchess_comm::isReady(void)
 
 void qtchess_comm::setListen(void)
 {
-#ifndef QTCHESS_PLUGIN
   if(listening_sock.isListening())
     return;
 
@@ -117,15 +106,10 @@ void qtchess_comm::setListen(void)
   if(gui)
     gui->setStatusText
       ("Status: Local Port " + QString::number(listening_sock.serverPort()));
-#else
-  if(gui)
-    gui->setStatusText("Status: Ready");
-#endif
 }
 
 void qtchess_comm::quit(void)
 {
-#ifndef QTCHESS_PLUGIN
   /*
   ** Terminate all communications.
   */
@@ -135,7 +119,6 @@ void qtchess_comm::quit(void)
 
   if(listening_sock.isListening())
     listening_sock.close();
-#endif
 
   setConnected(false);
 }
@@ -147,10 +130,8 @@ void qtchess_comm::setConnected(const bool connected_arg)
 
 void qtchess_comm::disconnectRemotely(void)
 {
-#ifndef QTCHESS_PLUGIN
   if(send_sock.isOpen())
     send_sock.close();
-#endif
 
   if(chess)
     {
@@ -167,7 +148,6 @@ void qtchess_comm::disconnectRemotely(void)
 
 void qtchess_comm::connectRemotely(void)
 {
-#ifndef QTCHESS_PLUGIN
   QString str1 = "", str2 = "";
   quint16 remotePort = 0;
 
@@ -183,7 +163,6 @@ void qtchess_comm::connectRemotely(void)
   remotePort = (quint16) str2.toInt();
   send_sock.abort();
   send_sock.connectToHost(str1, remotePort);
-#endif
 }
 
 void qtchess_comm::sendMove(const struct move_s current_move)
@@ -192,10 +171,8 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   char buffer[BUFFER_SIZE];
   char numstr[32];
 
-#ifndef QTCHESS_PLUGIN
   if(!send_sock.isOpen())
     return;
-#endif
 
   /*
   ** Copy the structure.
@@ -236,7 +213,6 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   buffer[strlen(buffer) - 1] = '\0';
   strcat(buffer, "\n");
 
-#ifndef QTCHESS_PLUGIN
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
   if(send_sock.write(buffer, (qint64) strlen(buffer)) == -1)
@@ -253,13 +229,10 @@ void qtchess_comm::sendMove(const struct move_s current_move)
       if(chess)
 	chess->setTurn(THEIR_TURN);
     }
-#else
-#endif
 }
 
 qtchess_comm::qtchess_comm(void)
 {
-#ifndef QTCHESS_PLUGIN
   clientConnection = 0;
   connect(&listening_sock, SIGNAL(newConnection(void)), this,
 	  SLOT(acceptConnection(void)));
@@ -275,10 +248,8 @@ qtchess_comm::qtchess_comm(void)
 	  SIGNAL(disconnected(void)),
 	  this,
 	  SLOT(clientDisconnected(void)));
-#endif
 }
 
-#ifndef QTCHESS_PLUGIN
 void qtchess_comm::acceptConnection(void)
 {
   if(!listening_sock.hasPendingConnections())
@@ -325,7 +296,6 @@ void qtchess_comm::acceptConnection(void)
       chess->setMyColor(BLACK);
     }
 }
-#endif
 
 void qtchess_comm::slotClientConnected(void)
 {
@@ -341,21 +311,19 @@ void qtchess_comm::slotClientConnected(void)
 
 void qtchess_comm::clientDisconnected(void)
 {
-#ifndef QTCHESS_PLUGIN
   QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
 
   if(socket)
     if(socket != &send_sock && clientConnection)
       clientConnection->deleteLater();
-#endif
+
   if(chess)
     {
       chess->setTurn(-1);
       chess->setFirst(-1);
       chess->setMyColor(-1);
     }
-#ifndef QTCHESS_PLUGIN
+
   setListen();
-#endif
   disconnectRemotely();
 }

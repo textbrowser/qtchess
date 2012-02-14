@@ -15,9 +15,7 @@
 
 #include "qtchess.h"
 #include "ui_helpDialog.h"
-#ifndef QTCHESS_PLUGIN
 #include "ui_setupDialog.h"
-#endif
 #include "ui_mainwindow.h"
 #include "ui_promotionDialog.h"
 #include "qtchess_gui_opengl.h"
@@ -74,7 +72,6 @@ class qtchess_help_dialog: public QDialog
   void ok_cb(void);
 };
 
-#ifndef QTCHESS_PLUGIN
 class qtchess_setup_dialog: public QDialog
 {
   Q_OBJECT
@@ -122,7 +119,6 @@ class qtchess_setup_dialog: public QDialog
   void slotProtocolChanged(void);
   void slotConnectedToClient(void);
 };
-#endif
 
 class qtchess_promote_dialog: public QDialog
 {
@@ -184,9 +180,7 @@ class qtchess_gui: public QMainWindow
   qtchess_gui(void)
     {
       help_dialog = 0;
-#ifndef QTCHESS_PLUGIN
       setup_dialog = 0;
-#endif
       promote_dialog = 0;
       playert = 0;
       opponentt = 0;
@@ -197,10 +191,8 @@ class qtchess_gui: public QMainWindow
       if(help_dialog != 0)
 	delete help_dialog;
 
-#ifndef QTCHESS_PLUGIN
       if(setup_dialog != 0)
 	delete setup_dialog;
-#endif
 
       if(promote_dialog != 0)
 	delete promote_dialog;
@@ -241,9 +233,7 @@ class qtchess_gui: public QMainWindow
   void showDisconnect(void);
   void showNewGameInfo(void);
   void notifyConnection(const QString &);
-#ifndef QTCHESS_PLUGIN
   qtchess_setup_dialog *getSetupDialog(void);
-#endif
   qtchess_promote_dialog *getPromoteDialog(void);
 
  private:
@@ -261,9 +251,7 @@ class qtchess_gui: public QMainWindow
   openglWid *glboard;
   Ui_mainWindow ui;
   qtchess_help_dialog *help_dialog;
-#ifndef QTCHESS_PLUGIN
   qtchess_setup_dialog *setup_dialog;
-#endif
   qtchess_promote_dialog *promote_dialog;
 
   /*
@@ -279,9 +267,7 @@ class qtchess_gui: public QMainWindow
   void help(void);
   void quit(void);
   void about(void);
-#ifndef QTCHESS_PLUGIN
   void setup(void);
-#endif
   void newGame(void);
   void updatePlayer(void);
   void slotChangeSize(void);

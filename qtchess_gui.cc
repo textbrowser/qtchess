@@ -39,10 +39,7 @@ void qtchess_gui::init(void)
   ui.setupUi(this);
   setWindowTitle(tr("QtChess"));
   denominator = 4.0 / 3.0;
-
-#ifndef QTCHESS_PLUGIN
   ui.menu_Setup->setVisible(false);
-#endif
 
   if((statusLabel = new(std::nothrow) QLabel(tr("Status: Ready"))) == 0)
     {
@@ -92,10 +89,8 @@ void qtchess_gui::init(void)
   connect(ui.action_New_Game, SIGNAL(triggered(void)), this,
 	  SLOT(newGame(void)));
   connect(ui.action_Quit, SIGNAL(triggered(void)), this, SLOT(quit(void)));
-#ifndef QTCHESS_PLUGIN
   connect(ui.action_Connection_Configuration,
 	  SIGNAL(triggered(void)), this, SLOT(setup(void)));
-#endif
   connect(action_Large_Size,
 	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
   connect(action_Normal_Size,
@@ -125,7 +120,6 @@ void qtchess_gui::init(void)
 	::exit(-1);
     }
 
-#ifndef QTCHESS_PLUGIN
   if((setup_dialog = new(std::nothrow) qtchess_setup_dialog(this)) == 0)
     {
       if(chess)
@@ -133,7 +127,6 @@ void qtchess_gui::init(void)
       else
 	::exit(-1);
     }
-#endif
 
   if((promote_dialog = new(std::nothrow) qtchess_promote_dialog(this)) == 0)
     {
@@ -339,7 +332,6 @@ void qtchess_gui::newGame(void)
     chess->setTurn(MY_TURN);
 }
 
-#ifndef QTCHESS_PLUGIN
 void qtchess_gui::setup(void)
 {
   if(setup_dialog)
@@ -350,14 +342,11 @@ void qtchess_gui::setup(void)
       setup_dialog->exec();
     }
 }
-#endif
 
-#ifndef QTCHESS_PLUGIN
 qtchess_setup_dialog *qtchess_gui::getSetupDialog(void)
 {
   return setup_dialog;
 }
-#endif
 
 qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void)
 {
@@ -382,10 +371,9 @@ void qtchess_gui::showGameOver(const int turn)
 
 void qtchess_gui::showDisconnect(void)
 {
-#ifndef QTCHESS_PLUGIN
   if(setup_dialog)
     setup_dialog->disconnectedState();
-#endif
+
   stopTimers(PLAYER_TIMER);
   stopTimers(OPPONENT_TIMER);
 }
@@ -394,7 +382,6 @@ void qtchess_gui::showNewGameInfo(void)
 {
 }
 
-#ifndef QTCHESS_PLUGIN
 void qtchess_setup_dialog::ok_cb(void)
 {
   QString str1 = "", str2 = "";
@@ -500,8 +487,6 @@ void qtchess_setup_dialog::slotConnectedToClient(void)
   ui.rport->setEnabled(true);
   ui.disconnect->setEnabled(true);
 }
-
-#endif
 
 void qtchess_gui::clearHistory(void)
 {

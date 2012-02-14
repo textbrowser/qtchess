@@ -16,11 +16,9 @@ extern "C"
 ** -- Qt Includes --
 */
 
-#ifndef QTCHESS_PLUGIN
 #include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
-#endif
 
 /*
 ** -- Local Includes --
@@ -69,11 +67,9 @@ class qtchess_comm: public QObject
   */
 
   bool connected;
-#ifndef QTCHESS_PLUGIN
   QTcpServer listening_sock;
   QTcpSocket send_sock;
   QPointer<QTcpSocket> clientConnection;
-#endif
 
   /*
   ** -- Methods --
@@ -82,16 +78,12 @@ class qtchess_comm: public QObject
  private slots:
 
   void updateBoard(void);
-#ifndef QTCHESS_PLUGIN
   void acceptConnection(void);
-#endif
   void clientDisconnected(void);
   void slotClientConnected(void);
 
-#ifndef QTCHESS_PLUGIN
  signals:
   void connectedToClient(void);
-#endif
 };
 
 #endif

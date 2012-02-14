@@ -51,8 +51,6 @@ QApplication *qapp = 0;
 ** -- Main --
 */
 
-#ifndef QTCHESS_PLUGIN
-
 int main(int argc, char *argv[])
 {
   int rc = 0;
@@ -111,10 +109,6 @@ int main(int argc, char *argv[])
   cleanup();
   return rc;
 }
-
-#else
-
-#endif
 
 void cleanup(void)
 {
