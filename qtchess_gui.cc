@@ -671,8 +671,6 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   setMinimumHeight(300);
   ui.text->append(tr("Please do not connect to the same process.\n"
 		     "Beige always moves first.\n"
-		     "King is allowed to move to a threatened square, "
-		     "unless castling.\n"
 		     "To move a piece, first click it and then click "
 		     "the desired destination.\n"
 		     "To view a selected piece's valid moves, "
