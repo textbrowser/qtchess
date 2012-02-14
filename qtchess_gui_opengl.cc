@@ -88,11 +88,37 @@ void openglWid::paintGL(void)
 	      [(int) point_selected.x]
 	      [(int) point_selected.y]) != INVALID)
 	    {
-	      glColor3f(1.2, 2.05, 0.75);
-	      glRectd((double) x + 1,
-		      (double) y + 1,
-		      px + (i + 1) * block_size - 1,
-		      py + (j + 1) * block_size - 1);
+	      bool isValid = true;
+
+	      if(qtchess_validate::isKing
+		 (chess->board
+		  [(int) point_selected.x][(int) point_selected.y]))
+		{
+		  int piece1 = chess->board[i][j];
+		  int piece2 = chess->board
+		    [(int) point_selected.x][(int) point_selected.y];
+
+		  chess->board[i][j] = piece2;
+		  chess->board
+		    [(int) point_selected.x][(int) point_selected.y] =
+		    EMPTY_SQUARE;
+		  isValid = !qtchess_validate::isThreatened
+		    (i, j, qtchess_validate::color(piece2) == BLACK ?
+		     WHITE : BLACK);
+		  chess->board[i][j] = piece1;
+		  chess->board
+		    [(int) point_selected.x][(int) point_selected.y] =
+		    piece2;
+		}
+
+	      if(isValid)
+		{
+		  glColor3f(1.2, 2.05, 0.75);
+		  glRectd((double) x + 1,
+			  (double) y + 1,
+			  px + (i + 1) * block_size - 1,
+			  py + (j + 1) * block_size - 1);
+		}
 	    }
 
 	if((i + j) % 2 != 0)
@@ -634,6 +660,29 @@ void openglWid::paintGL(void)
   ** Highlight the selected square.
   */
 
+  bool isValid = true;
+
+  if(qtchess_validate::isKing
+     (chess->board
+      [(int) point_selected.x][(int) point_selected.y]))
+    {
+      int piece1 = chess->board[I][J];
+      int piece2 = chess->board
+	[(int) point_selected.x][(int) point_selected.y];
+
+      chess->board[I][J] = piece2;
+      chess->board
+	[(int) point_selected.x][(int) point_selected.y] =
+	EMPTY_SQUARE;
+      isValid = !qtchess_validate::isThreatened
+	(I, J, qtchess_validate::color(piece2) == BLACK ?
+	 WHITE : BLACK);
+      chess->board[I][J] = piece1;
+      chess->board
+	[(int) point_selected.x][(int) point_selected.y] =
+	piece2;
+    }
+
 #ifdef _DEBUG_
   if(chess && mouse_pressed && found)
 #else
@@ -680,7 +729,7 @@ void openglWid::paintGL(void)
 	  mouse_pressed = 1;
 	  glColor3f(0.0, 1.0, 0.0);
 	}
-      else if(mouse_pressed == 2 &&
+      else if(mouse_pressed == 2 && isValid &&
 	      (rc = qtchess_validate::isValidMove
 	       ((int) point_selected.y,
 		(int) point_selected.x,
