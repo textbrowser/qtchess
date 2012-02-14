@@ -14,6 +14,7 @@
 
 namespace qtchess_validate
 {
+  int color(const int);
   int isValidMove(const int, const int, const int, const int, const int);
   bool isKing(const int);
   bool isPawn(const int);

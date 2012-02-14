@@ -141,6 +141,14 @@ bool qtchess_validate::isThreatened(const int x, const int y, int color)
   return false;
 }
 
+int qtchess_validate::color(const int piece)
+{
+  if(isBlack(piece))
+    return BLACK;
+  else
+    return WHITE;
+}
+
 bool qtchess_validate::isColor(const int piece, const int color)
 {
   if(color == BLACK)
