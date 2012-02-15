@@ -88,7 +88,6 @@ class qtchess_setup_dialog: public QDialog
   */
 
   qtchess_setup_dialog(void);
-  void disconnectedState(void);
   QLineEdit *getHostField(void) const;
   QLineEdit *getPortField(void) const;
   QLineEdit *getRHostField(void) const;
@@ -116,12 +115,12 @@ class qtchess_setup_dialog: public QDialog
 
  private slots:
 
-  void ok_cb(void);
   void close_cb(void);
+  void connect_cb(void);
   void slotListen(void);
-  void disconnect_cb(void);
   void slotProtocolChanged(void);
   void slotConnectedToClient(void);
+  void slotDisconnectedFromClient(void);
 };
 
 class qtchess_promote_dialog: public QDialog

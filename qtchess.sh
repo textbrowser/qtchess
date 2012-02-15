@@ -1,13 +1,11 @@
 #!/bin/sh
 
-ostype="`uname -s`"
-
-if [ $ostype = "Darwin" ]
+if [ -x /usr/local/qtchess/QtChess ]
 then
-    open /Applications/QtChess.d/QtChess.app &
-else
     cd /usr/local/qtchess
-    ./QtChess &
+    ./QtChess $* &
+else
+    exit 1
 fi
 
 exit 0

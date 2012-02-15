@@ -54,7 +54,8 @@ void qtchess_comm::init(void)
 
   if(gui && gui->getSetupDialog() &&
      gui->getSetupDialog()->getAllowedHostField())
-    gui->getSetupDialog()->getAllowedHostField()->setText("0.0.0.0");
+    gui->getSetupDialog()->getAllowedHostField()->setText
+      (QHostAddress(QHostAddress::LocalHost).toString());
 }
 
 bool qtchess_comm::isSet(void) const
@@ -69,7 +70,9 @@ bool qtchess_comm::isReady(void) const
 {
   if(isSet())
     {
-      if(send_sock.isOpen() && !listening_sock.isListening())
+      if(send_sock.state() == QAbstractSocket::ConnectedState &&
+	 clientConnection &&
+	 clientConnection->state() == QAbstractSocket::ConnectedState)
 	return true;
       else
 	return false;
@@ -103,10 +106,6 @@ void qtchess_comm::setListen(void)
   if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
     gui->getSetupDialog()->getPortField()->setText
       (QString::number(listening_sock.serverPort()));
-
-  if(gui)
-    gui->setStatusText
-      ("Status: Local Port " + QString::number(listening_sock.serverPort()));
 }
 
 void qtchess_comm::quit(void)
@@ -115,12 +114,8 @@ void qtchess_comm::quit(void)
   ** Terminate all communications.
   */
 
-  if(send_sock.isOpen())
-    send_sock.close();
-
-  if(listening_sock.isListening())
-    listening_sock.close();
-
+  send_sock.close();
+  listening_sock.close();
   setConnected(false);
 }
 
@@ -131,8 +126,7 @@ void qtchess_comm::setConnected(const bool connected_arg)
 
 void qtchess_comm::disconnectRemotely(void)
 {
-  if(send_sock.isOpen())
-    send_sock.close();
+  send_sock.close();
 
   if(chess)
     {
@@ -181,7 +175,7 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   char buffer[BUFFER_SIZE];
   char numstr[32];
 
-  if(!send_sock.isOpen())
+  if(send_sock.state() != QAbstractSocket::ConnectedState)
     return;
 
   /*
@@ -243,7 +237,6 @@ void qtchess_comm::sendMove(const struct move_s current_move)
 
 qtchess_comm::qtchess_comm(void)
 {
-  clientConnection = 0;
   connect(&listening_sock, SIGNAL(newConnection(void)), this,
 	  SLOT(acceptConnection(void)));
   connect(&send_sock,
@@ -258,6 +251,10 @@ qtchess_comm::qtchess_comm(void)
 	  SIGNAL(disconnected(void)),
 	  this,
 	  SLOT(clientDisconnected(void)));
+  connect(&send_sock,
+	  SIGNAL(disconnected(void)),
+	  this,
+	  SIGNAL(disconnectedFromClient(void)));
 }
 
 void qtchess_comm::acceptConnection(void)
@@ -265,8 +262,17 @@ void qtchess_comm::acceptConnection(void)
   if(!listening_sock.hasPendingConnections())
     return;
 
-  if((clientConnection = listening_sock.nextPendingConnection()) == 0)
+  QTcpSocket *socket = listening_sock.nextPendingConnection();
+
+  if(!socket)
     return;
+  else if(clientConnection)
+    {
+      socket->close();
+      socket->deleteLater();
+    }
+  else
+    clientConnection = socket;
 
   /*
   ** Acceptable peer?
@@ -297,8 +303,6 @@ void qtchess_comm::acceptConnection(void)
   if(gui && clientConnection)
     gui->notifyConnection(clientConnection->peerAddress().toString());
 
-  listening_sock.close();
-
   if(chess && chess->getFirst() == -1)
     {
       chess->setTurn(THEIR_TURN);
@@ -323,9 +327,8 @@ void qtchess_comm::clientDisconnected(void)
 {
   QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
 
-  if(socket)
-    if(socket != &send_sock && clientConnection)
-      clientConnection->deleteLater();
+  if(socket == clientConnection)
+    clientConnection->deleteLater();
 
   if(chess)
     {
@@ -334,8 +337,10 @@ void qtchess_comm::clientDisconnected(void)
       chess->setMyColor(-1);
     }
 
-  setListen();
-  disconnectRemotely();
+  setConnected(false);
+
+  if(gui && socket == clientConnection)
+    gui->setStatusText(tr("Status: Ready"));
 }
 
 bool qtchess_comm::isListening(void) const
@@ -346,4 +351,9 @@ bool qtchess_comm::isListening(void) const
 void qtchess_comm::stopListening(void)
 {
   listening_sock.close();
+}
+
+bool qtchess_comm::isConnectedRemotely(void) const
+{
+  return send_sock.state() == QAbstractSocket::ConnectedState;
 }

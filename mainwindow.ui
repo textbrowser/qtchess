@@ -158,7 +158,7 @@
      <x>0</x>
      <y>0</y>
      <width>233</width>
-     <height>28</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -223,10 +223,16 @@
    <property name="font">
     <font/>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="action_Quit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="action_Connection_Configuration">
@@ -235,6 +241,9 @@
    </property>
    <property name="font">
     <font/>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="action_About">

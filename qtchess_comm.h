@@ -53,6 +53,7 @@ class qtchess_comm: public QObject
   bool isSet(void) const;
   bool isReady(void) const;
   bool isListening(void) const;
+  bool isConnectedRemotely(void) const;
   void init(void);
   void quit(void);
   void sendMove(const struct move_s);
@@ -86,6 +87,7 @@ class qtchess_comm: public QObject
 
  signals:
   void connectedToClient(void);
+  void disconnectedFromClient(void);
 };
 
 #endif
