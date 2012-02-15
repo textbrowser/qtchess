@@ -50,13 +50,15 @@ class qtchess_comm: public QObject
 #endif
     }
 
-  bool isSet(void);
-  bool isReady(void);
+  bool isSet(void) const;
+  bool isReady(void) const;
+  bool isListening(void) const;
   void init(void);
   void quit(void);
   void sendMove(const struct move_s);
   void setListen(void);
   void setConnected(const bool);
+  void stopListening(void);
   void connectRemotely(void);
   void disconnectRemotely(void);
 

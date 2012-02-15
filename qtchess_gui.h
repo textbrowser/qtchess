@@ -29,6 +29,7 @@
 #include <QTextEdit>
 #include <QTimeEdit>
 #include <QCloseEvent>
+#include <QHostAddress>
 
 /*
 ** -- Class(es) --
@@ -88,11 +89,13 @@ class qtchess_setup_dialog: public QDialog
 
   qtchess_setup_dialog(void);
   void disconnectedState(void);
-  QLineEdit *getHostField(void);
-  QLineEdit *getPortField(void);
-  QLineEdit *getRHostField(void);
-  QLineEdit *getRPortField(void);
-  QLineEdit *getAllowedHostField(void);
+  QLineEdit *getHostField(void) const;
+  QLineEdit *getPortField(void) const;
+  QLineEdit *getRHostField(void) const;
+  QLineEdit *getRPortField(void) const;
+  QLineEdit *getRScopeIdField(void) const;
+  QLineEdit *getAllowedHostField(void) const;
+  QHostAddress getListeningAddress(void) const;
   qtchess_setup_dialog(QWidget *);
 
  private:
@@ -115,6 +118,7 @@ class qtchess_setup_dialog: public QDialog
 
   void ok_cb(void);
   void close_cb(void);
+  void slotListen(void);
   void disconnect_cb(void);
   void slotProtocolChanged(void);
   void slotConnectedToClient(void);
@@ -137,7 +141,7 @@ class qtchess_promote_dialog: public QDialog
   void setup(void);
   qtchess_promote_dialog(QWidget *);
 
-  QComboBox *getMenu(void)
+  QComboBox *getMenu(void) const
     {
       return ui.menu;
     }
@@ -208,12 +212,12 @@ class qtchess_gui: public QMainWindow
 #endif
     }
 
-  openglWid *getGLBoard(void)
+  openglWid *getGLBoard(void) const
     {
       return glboard;
     }
 
-  Ui_mainWindow getUI(void)
+  Ui_mainWindow getUI(void) const
     {
       return ui;
     }
@@ -233,8 +237,8 @@ class qtchess_gui: public QMainWindow
   void showDisconnect(void);
   void showNewGameInfo(void);
   void notifyConnection(const QString &);
-  qtchess_setup_dialog *getSetupDialog(void);
-  qtchess_promote_dialog *getPromoteDialog(void);
+  qtchess_setup_dialog *getSetupDialog(void) const;
+  qtchess_promote_dialog *getPromoteDialog(void) const;
 
  private:
 

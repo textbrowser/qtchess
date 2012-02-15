@@ -343,12 +343,12 @@ void qtchess_gui::setup(void)
     }
 }
 
-qtchess_setup_dialog *qtchess_gui::getSetupDialog(void)
+qtchess_setup_dialog *qtchess_gui::getSetupDialog(void) const
 {
   return setup_dialog;
 }
 
-qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void)
+qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
 {
   return promote_dialog;
 }
@@ -414,8 +414,7 @@ void qtchess_setup_dialog::disconnect_cb(void)
 
 void qtchess_setup_dialog::disconnectedState(void)
 {
-  ui.ok->setEnabled(true);
-  ui.disconnect->setEnabled(false);
+  ui.ok->setText(tr("&Connect"));
   ui.rhost->setReadOnly(false);
   ui.rport->setReadOnly(false);
   ui.rhost->setEnabled(true);
@@ -426,42 +425,79 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
   QDialog(parent)
 {
   ui.setupUi(this);
-  ui.disconnect->setEnabled(false);
+  ui.lScopeId->setEnabled(false);
+  ui.rScopeId->setEnabled(false);
   connect(ui.cancel, SIGNAL(clicked(void)), this, SLOT(close_cb(void)));
   connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
-  connect(ui.disconnect, SIGNAL(clicked(void)), this,
-	  SLOT(disconnect_cb(void)));
   connect(ui.ipv4, SIGNAL(clicked(void)), this,
 	  SLOT(slotProtocolChanged(void)));
   connect(ui.ipv6, SIGNAL(clicked(void)), this,
 	  SLOT(slotProtocolChanged(void)));
+  connect(ui.listen, SIGNAL(clicked(void)), this,
+	  SLOT(slotListen(void)));
   connect(comm, SIGNAL(connectedToClient(void)),
 	  this, SLOT(slotConnectedToClient(void)));
 }
 
-QLineEdit *qtchess_setup_dialog::getHostField(void)
+QLineEdit *qtchess_setup_dialog::getHostField(void) const
 {
   return ui.host;
 }
 
-QLineEdit *qtchess_setup_dialog::getPortField(void)
+QLineEdit *qtchess_setup_dialog::getPortField(void) const
 {
   return ui.port;
 }
 
-QLineEdit *qtchess_setup_dialog::getRHostField(void)
+QLineEdit *qtchess_setup_dialog::getRHostField(void) const
 {
   return ui.rhost;
 }
 
-QLineEdit *qtchess_setup_dialog::getRPortField(void)
+QLineEdit *qtchess_setup_dialog::getRPortField(void) const
 {
   return ui.rport;
 }
 
-QLineEdit *qtchess_setup_dialog::getAllowedHostField(void)
+QLineEdit *qtchess_setup_dialog::getRScopeIdField(void) const
+{
+  return ui.rScopeId;
+}
+
+QLineEdit *qtchess_setup_dialog::getAllowedHostField(void) const
 {
   return ui.allowedHost;
+}
+
+void qtchess_setup_dialog::slotListen(void)
+{
+  if(comm)
+    {
+      if(comm->isListening())
+	comm->stopListening();
+      else
+	comm->setListen();
+
+      bool state = comm->isListening();
+
+      ui.host->setReadOnly(state);
+      ui.ipv4->setEnabled(!state);
+      ui.ipv6->setEnabled(!state);
+
+      if(ui.ipv6->isChecked())
+	ui.lScopeId->setReadOnly(state);
+
+      if(state)
+	ui.listen->setText(tr("&Stop Listening"));
+      else
+	{
+	  ui.port->clear();
+	  ui.listen->setText(tr("&Listen"));
+
+	  if(gui)
+	    gui->setStatusText(tr("Status: Ready"));
+	}
+    }
 }
 
 void qtchess_setup_dialog::slotProtocolChanged(void)
@@ -470,22 +506,44 @@ void qtchess_setup_dialog::slotProtocolChanged(void)
     {
       ui.host->setText(QHostAddress(QHostAddress::LocalHost).toString());
       ui.allowedHost->setText("0.0.0.0");
+      ui.lScopeId->clear();
+      ui.lScopeId->setEnabled(false);
+      ui.rScopeId->clear();
+      ui.rScopeId->setEnabled(false);
     }
   else
     {
       ui.host->setText(QHostAddress(QHostAddress::LocalHostIPv6).toString());
+      ui.lScopeId->setText
+	(QHostAddress(QHostAddress::LocalHostIPv6).scopeId());
       ui.allowedHost->setText("::");
+      ui.lScopeId->setEnabled(true);
+      ui.rScopeId->setEnabled(true);
     }
 }
 
 void qtchess_setup_dialog::slotConnectedToClient(void)
 {
-  ui.ok->setEnabled(false);
+  ui.ok->setText(tr("&Disconnect"));
   ui.rhost->setReadOnly(true);
   ui.rport->setReadOnly(true);
   ui.rhost->setEnabled(true);
   ui.rport->setEnabled(true);
-  ui.disconnect->setEnabled(true);
+}
+
+QHostAddress qtchess_setup_dialog::getListeningAddress(void) const
+{
+  QHostAddress address;
+
+  if(ui.ipv4->isChecked())
+    address.setAddress(ui.host->text().trimmed());
+  else
+    {
+      address.setAddress(ui.host->text().trimmed());
+      address.setScopeId(ui.lScopeId->text().trimmed());
+    }
+
+  return address;
 }
 
 void qtchess_gui::clearHistory(void)

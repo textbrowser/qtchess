@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>287</height>
+    <width>486</width>
+    <height>291</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -85,9 +85,6 @@
      <item row="3" column="1">
       <widget class="QLineEdit" name="rport"/>
      </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="rhost"/>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
        <property name="font">
@@ -109,13 +106,6 @@
        </property>
        <property name="text">
         <string>Remote Port</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="host">
-       <property name="readOnly">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -145,6 +135,40 @@
      </item>
      <item row="4" column="1">
       <widget class="QLineEdit" name="allowedHost"/>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="rhost"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Scope ID</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="rScopeId"/>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLineEdit" name="host"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Scope ID</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lScopeId"/>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -190,6 +214,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="listen">
+       <property name="text">
+        <string>&amp;Listen</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="ok">
        <property name="minimumSize">
         <size>
@@ -204,24 +235,6 @@
        </property>
        <property name="text">
         <string>&amp;Connect</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="disconnect">
-       <property name="minimumSize">
-        <size>
-         <width>115</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>&amp;Disconnect</string>
        </property>
       </widget>
      </item>
@@ -264,12 +277,14 @@
   <tabstop>ipv4</tabstop>
   <tabstop>ipv6</tabstop>
   <tabstop>host</tabstop>
+  <tabstop>lScopeId</tabstop>
   <tabstop>port</tabstop>
   <tabstop>rhost</tabstop>
+  <tabstop>rScopeId</tabstop>
   <tabstop>rport</tabstop>
   <tabstop>allowedHost</tabstop>
+  <tabstop>listen</tabstop>
   <tabstop>ok</tabstop>
-  <tabstop>disconnect</tabstop>
   <tabstop>cancel</tabstop>
  </tabstops>
  <resources/>

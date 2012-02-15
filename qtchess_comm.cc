@@ -48,8 +48,6 @@ void qtchess_comm::init(void)
   if(listening_sock.isListening())
     listening_sock.close();
 
-  setListen();
-
   if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getHostField())
     gui->getSetupDialog()->getHostField()->setText
       (QHostAddress(QHostAddress::LocalHost).toString());
@@ -59,7 +57,7 @@ void qtchess_comm::init(void)
     gui->getSetupDialog()->getAllowedHostField()->setText("0.0.0.0");
 }
 
-bool qtchess_comm::isSet(void)
+bool qtchess_comm::isSet(void) const
 {
   if(connected)
     return true;
@@ -67,7 +65,7 @@ bool qtchess_comm::isSet(void)
     return false;
 }
 
-bool qtchess_comm::isReady(void)
+bool qtchess_comm::isReady(void) const
 {
   if(isSet())
     {
@@ -91,9 +89,12 @@ void qtchess_comm::setListen(void)
   ** Listen!
   */
 
-  if(!listening_sock.listen())
-    if(chess)
-      chess->quit("listen() failure.", EXIT_FAILURE);
+  QHostAddress address(QHostAddress::Any);
+
+  if(gui && gui->getSetupDialog())
+    address = gui->getSetupDialog()->getListeningAddress();
+
+  listening_sock.listen(address);
 
   /*
   ** Save the port number.
@@ -148,7 +149,7 @@ void qtchess_comm::disconnectRemotely(void)
 
 void qtchess_comm::connectRemotely(void)
 {
-  QString str1 = "", str2 = "";
+  QString str1 = "", str2 = "", scopeId = "";
   quint16 remotePort = 0;
 
   if(gui)
@@ -158,11 +159,20 @@ void qtchess_comm::connectRemotely(void)
 
       if(gui->getSetupDialog() && gui->getSetupDialog()->getRPortField())
 	str2 = gui->getSetupDialog()->getRPortField()->text().trimmed();
+
+      if(gui->getSetupDialog() && gui->getSetupDialog()->getRScopeIdField())
+	scopeId = gui->getSetupDialog()->getRScopeIdField()->text().trimmed();
     }
 
   remotePort = (quint16) str2.toInt();
+
+  QHostAddress address(str1);
+
+  if(!scopeId.isEmpty())
+    address.setScopeId(scopeId);
+
   send_sock.abort();
-  send_sock.connectToHost(str1, remotePort);
+  send_sock.connectToHost(address, remotePort);
 }
 
 void qtchess_comm::sendMove(const struct move_s current_move)
@@ -326,4 +336,14 @@ void qtchess_comm::clientDisconnected(void)
 
   setListen();
   disconnectRemotely();
+}
+
+bool qtchess_comm::isListening(void) const
+{
+  return listening_sock.isListening();
+}
+
+void qtchess_comm::stopListening(void)
+{
+  listening_sock.close();
 }
