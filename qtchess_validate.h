@@ -32,6 +32,6 @@ namespace qtchess_validate
   bool isKingChecked(const struct move_s);
   QString findDeparture(const int, const int, const int, const int,
 			const int);
-};
+}
 
 #endif
