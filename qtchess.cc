@@ -135,6 +135,7 @@ void qtchess::updateBoard(char *buffer)
 	  gui->clearHistory();
 	  gui->showNewGameInfo();
 	  gui->initClocks();
+	  gui->update();
 	}
     }
   else
@@ -192,6 +193,8 @@ void qtchess::updateBoard(char *buffer)
 
 	  if(gui->getGLBoard())
 	    gui->getGLBoard()->updateGL();
+
+	  gui->update();
 	}
 
       if(gui && game_over)

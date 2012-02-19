@@ -57,7 +57,8 @@ void qtchess_gui::init(void)
 	::exit(EXIT_FAILURE);
     }
 
-  if((action_Large_Size = new(std::nothrow) QAction("&Large Size", this)) == 0)
+  if((action_Large_Size = new(std::nothrow) QAction(tr("&Large Size"),
+						    this)) == 0)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -65,7 +66,9 @@ void qtchess_gui::init(void)
 	::exit(EXIT_FAILURE);
     }
 
-  if((action_Normal_Size = new(std::nothrow) QAction("&Normal Size",
+  action_Large_Size->setData("L");
+
+  if((action_Normal_Size = new(std::nothrow) QAction(tr("&Normal Size"),
 						     this)) == 0)
     {
       if(chess)
@@ -74,6 +77,7 @@ void qtchess_gui::init(void)
 	::exit(EXIT_FAILURE);
     }
 
+  action_Normal_Size->setData("N");
   ag1->setExclusive(true);
   ag1->addAction(action_Large_Size);
   ag1->addAction(action_Normal_Size);
@@ -173,12 +177,13 @@ void qtchess_gui::slotShowValidMoves(void)
 
 void qtchess_gui::slotChangeSize(void)
 {
-  QAction *action = qobject_cast<QAction *>(sender());
-  QString name = "";
+  QAction *action = qobject_cast<QAction *> (sender());
+  QString data = "";
 
-  name = action->text();
+  if(action)
+    data = action->data().toString();
 
-  if(name.contains(tr("Large")))
+  if(data == "L")
     {
       if(denominator == 1.0)
 	return;
@@ -199,7 +204,7 @@ void qtchess_gui::slotChangeSize(void)
       ui.history->scrollToBottom();
       ui.boardFrame->setFocus();
     }
-  else if(name.contains(tr("Normal")))
+  else if(data == "N")
     {
       if(denominator == 4.0 / 3.0)
 	return;
@@ -547,8 +552,8 @@ void qtchess_gui::clearHistory(void)
 {
   QStringList list;
 
-  list.append("Beige");
-  list.append("Crimson");
+  list.append(tr("Beige"));
+  list.append(tr("Crimson"));
   ui.history->clear();
   ui.history->setRowCount(0);
   ui.history->setColumnCount(0);
@@ -735,7 +740,7 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
 		     "An empty Allowed IP Address value will allow any "
 		     "peer to connect.\n"
 		     "To prevent peer connections, please set the "
-		     "Allowed IP Address to 0.0.0.0."
+		     "Allowed IP Address to 0.0.0.0 (:: for IPv6)."
 		     ));
 }
 

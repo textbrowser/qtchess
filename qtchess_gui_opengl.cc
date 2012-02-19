@@ -1077,6 +1077,7 @@ void openglWid::rescale(const double denominatorArg)
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
   updateGL();
+  update();
 }
 
 void openglWid::reinit(void)
