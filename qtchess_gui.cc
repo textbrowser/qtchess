@@ -24,7 +24,7 @@ int qtchess_gui::exec(void)
   if(qapp)
     return qapp->exec();
   else
-    return -1;
+    return EXIT_FAILURE;
 }
 
 void qtchess_gui::setStatusText(const QString &str)
@@ -46,7 +46,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   if((ag1 = new(std::nothrow) QActionGroup(this)) == 0)
@@ -54,7 +54,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   if((action_Large_Size = new(std::nothrow) QAction("&Large Size", this)) == 0)
@@ -62,7 +62,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   if((action_Normal_Size = new(std::nothrow) QAction("&Normal Size",
@@ -71,7 +71,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   ag1->setExclusive(true);
@@ -117,7 +117,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   if((setup_dialog = new(std::nothrow) qtchess_setup_dialog(this)) == 0)
@@ -125,7 +125,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   if((promote_dialog = new(std::nothrow) qtchess_promote_dialog(this)) == 0)
@@ -133,7 +133,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   if((glboard = new(std::nothrow) openglWid(ui.boardFrame)) == 0)
@@ -141,7 +141,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(-1);
+	::exit(EXIT_FAILURE);
     }
 
   /*
@@ -266,7 +266,7 @@ void qtchess_gui::quit(void)
   if(chess)
     chess->quit(0, EXIT_SUCCESS);
   else
-    ::exit(-1);
+    ::exit(EXIT_FAILURE);
 }
 
 void qtchess_gui::closeEvent(QCloseEvent *e)
@@ -276,7 +276,7 @@ void qtchess_gui::closeEvent(QCloseEvent *e)
   if(chess)
     chess->quit(0, EXIT_SUCCESS);
   else
-    ::exit(-1);
+    ::exit(EXIT_FAILURE);
 }
 
 void qtchess_gui::newGame(void)
