@@ -955,6 +955,7 @@ void openglWid::paintGL(void)
 	    comm->sendMove(current_move);
 
 	  updateGL();
+	  update();
 	  chess->setGameOver(game_over);
 
 	  if(game_over)
