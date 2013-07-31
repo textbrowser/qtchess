@@ -3,7 +3,7 @@ LANGUAGE	= C++
 CONFIG		+= qt warn_on release
 QT		+= network opengl
 QMAKE_CLEAN	+= QtChess
-QMAKE_CXXFLAGS  += -Wall -Wextra -Werror
+QMAKE_CXXFLAGS  += -Wall -Wextra -Werror -Wstack-protector -fPIE -fstack-protector-all -pie
 
 FORMS		=	helpDialog.ui \
 			mainwindow.ui \
