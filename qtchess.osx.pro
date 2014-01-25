@@ -1,31 +1,34 @@
-TEMPLATE	= app
-LANGUAGE	= C++
-CONFIG		+= qt warn_on release app_bundle
+CONFIG		+= app_bundle qt release warn_on
+ICON            = chess.icns
+LANGUAGE        = C++
 QT		+= network opengl
 QMAKE_CLEAN	+= QtChess
-QMAKE_CXXFLAGS  += -Wall -Wextra -Werror -Wstack-protector -fPIE -fstack-protector-all -pie
-QMAKE_LFLAGS_RELEASE =
-QMAKE_LFLAGS_RPATH =
-ICON            = chess.icns
+QMAKE_CXXFLAGS  += -fPIE -fstack-protector-all -fwrapv \
+                   -mtune=generic -pie -O3 \
+                   -Wall -Wcast-align -Wcast-qual \
+                   -Werror -Wextra \
+                   -Woverloaded-virtual -Wpointer-arith \
+                   -Wstack-protector -Wstrict-overflow=4
+TEMPLATE        = app
 
-FORMS		=	helpDialog.ui \
-			mainwindow.ui \
-			setupDialog.ui \
-			promotionDialog.ui
+FORMS		= helpDialog.ui \
+                  mainwindow.ui \
+                  promotionDialog.ui \
+                  setupDialog.ui
 
-HEADERS		=	qtchess.h \
-			qtchess_gui.h \
-			qtchess_comm.h \
-			qtchess_defs.h \
-			qtchess_validate.h \
-			qtchess_gui_opengl.h
+HEADERS		= qtchess.h \
+                  qtchess_comm.h \
+                  qtchess_defs.h \
+                  qtchess_gui.h \
+                  qtchess_gui_opengl.h \
+                  qtchess_validate.h
 
-SOURCES		=	qtchess.cc \
-			qtchess_gui.cc \
-			qtchess_comm.cc \
-			qtchess_main.cc \
-			qtchess_validate.cc \
-			qtchess_gui_opengl.cc
+SOURCES		= qtchess.cc \
+                  qtchess_comm.cc \
+                  qtchess_gui.cc \
+                  qtchess_gui_opengl.cc \
+                  qtchess_main.cc \
+                  qtchess_validate.cc
 
 TARGET		= QtChess
 PROJECTNAME	= QtChess
