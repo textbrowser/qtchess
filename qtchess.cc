@@ -76,11 +76,14 @@ void qtchess::quit(const char *message_text, const int exit_code)
   quit_program(exit_code);
 }
 
-void qtchess::updateBoard(char *buffer)
+void qtchess::updateBoard(const QByteArray &buffer)
 {
-  int i = 0, j = 0, x = 15, color = 0;
-  int nonEmptyNow = 0, nonEmptyThen = 0;
-  QStringList list = QString(buffer).split(" ");
+  QList<QByteArray> list = buffer.trimmed().split(' ');
+
+  if(list.size() < 15 + NSQUARES * NSQUARES)
+    return;
+
+  int color = 0, i = 0, j = 0, nonEmptyNow = 0, nonEmptyThen = 0, x = 15;
   struct move_s current_move;
 
   /*
@@ -106,7 +109,7 @@ void qtchess::updateBoard(char *buffer)
   current_move.enpassant = list[12].toInt();
   current_move.isOppKingThreat = list[13].toInt();
   snprintf(current_move.departure, sizeof(current_move.departure),
-	   "%s", list[14].toLatin1().data());
+	   "%s", list[14].constData());
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)

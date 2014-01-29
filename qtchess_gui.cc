@@ -686,7 +686,7 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   */
 
   if(current_move.isOppKingThreat)
-    strncat(hist, "+", sizeof(hist) - 1);
+    strncat(hist, "+", sizeof(hist) - strlen(hist) - 1);
 
   if((item = new(std::nothrow) QTableWidgetItem(tr(hist))) != 0)
     {

@@ -137,7 +137,7 @@ class qtchess
   bool isConnected(void);
   void init(void);
   void quit(const char *, const int);
-  void updateBoard(char *);
+  void updateBoard(const QByteArray &buffer);
 
  private:
 

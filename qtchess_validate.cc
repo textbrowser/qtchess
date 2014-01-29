@@ -24,7 +24,7 @@ QString qtchess_validate::findDeparture(const int X1,
   memset(departure, 0, sizeof(departure));
 
   if(!chess)
-    return QString("XX");
+    return "XX";
 
   /*
   ** Same rank? Use the file of the departure square.
@@ -74,7 +74,7 @@ QString qtchess_validate::findDeparture(const int X1,
   else
     departure[0] = (char) (97 + X1);
 
-  return QString(departure);
+  return departure;
 }
 
 bool qtchess_validate::isKingChecked(const struct move_s current_move)

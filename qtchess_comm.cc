@@ -18,14 +18,16 @@ extern QApplication *qapp;
 void qtchess_comm::updateBoard(void)
 {
   int ntries = 1;
-  char buffer[BUFFER_SIZE];
 
   while(clientConnection != 0 && clientConnection->canReadLine() &&
 	ntries <= 5)
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
-      if(clientConnection->readLine(buffer, (qint64) sizeof(buffer)) != -1)
+      QByteArray buffer(BUFFER_SIZE, 0);
+
+      if(clientConnection->
+	 readLine(buffer.data(), (qint64) buffer.length()) != -1)
 	{
 	  QApplication::restoreOverrideCursor();
 
@@ -171,55 +173,51 @@ void qtchess_comm::connectRemotely(void)
 
 void qtchess_comm::sendMove(const struct move_s current_move)
 {
-  int i = 0, j = 0;
-  char buffer[BUFFER_SIZE];
-  char numstr[32];
-
   if(send_sock.state() != QAbstractSocket::ConnectedState)
     return;
+
+  QString buffer;
+  int i = 0, j = 0;
 
   /*
   ** Copy the structure.
   */
 
-  memset(buffer, 0, sizeof(buffer));
-  snprintf(buffer, sizeof(buffer),
-	   "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %s ",
-	   current_move.x1,
-	   current_move.x2,
-	   current_move.y1,
-	   current_move.y2,
-	   current_move.r_x1,
-	   current_move.r_x2,
-	   current_move.r_y1,
-	   current_move.r_y2,
-	   current_move.piece,
-	   current_move.rook,
-	   current_move.promoted,
-	   current_move.pawn_2,
-	   current_move.enpassant,
-	   current_move.isOppKingThreat,
-	   current_move.departure);
+  buffer = QString("%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 ").
+    arg(current_move.x1).
+    arg(current_move.x2).
+    arg(current_move.y1).
+    arg(current_move.y2).
+    arg(current_move.r_x1).
+    arg(current_move.r_x2).
+    arg(current_move.r_y1).
+    arg(current_move.r_y2).
+    arg(current_move.piece).
+    arg(current_move.rook).
+    arg(current_move.promoted).
+    arg(current_move.pawn_2).
+    arg(current_move.enpassant).
+    arg(current_move.isOppKingThreat).
+    arg(current_move.departure);
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
       {
-	memset(numstr, 0, sizeof(numstr));
-	snprintf(numstr, sizeof(numstr), "%d ",
-		 current_move.board[i][j]);
-	strcat(buffer, numstr);
+	buffer.append(QString::number(current_move.board[i][j]));
+	buffer.append(" ");
       }
 
   /*
   ** Remove the extra space.
   */
 
-  buffer[strlen(buffer) - 1] = '\0';
-  strcat(buffer, "\n");
+  buffer = buffer.trimmed();
+  buffer.append("\n");
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  if(send_sock.write(buffer, (qint64) strlen(buffer)) == -1)
+  if(send_sock.
+     write(buffer.toLatin1().constData(), (qint64) buffer.length()) == -1)
     {
       QApplication::restoreOverrideCursor();
 
