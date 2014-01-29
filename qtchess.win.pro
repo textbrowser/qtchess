@@ -1,13 +1,14 @@
 CONFIG	        += qt release warn_on
 ICON            = chess.png
 LANGUAGE        = C++
+RC_FILE		= qtchess.win.rc
 QT		+= network opengl
+TEMPLATE	= app
+
 QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual -Werror -Wextra \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstrict-overflow=4 -fwrapv -pie
-RC_FILE	= qtchess.win.rc
-TEMPLATE        = app
 
 FORMS	=	helpDialog.ui \
 		mainwindow.ui \
@@ -28,5 +29,5 @@ SOURCES	=	qtchess.cc \
                 qtchess_main.cc \
                 qtchess_validate.cc
 
-TARGET	        = QtChess
 PROJECTNAME	= QtChess
+TARGET		= QtChess

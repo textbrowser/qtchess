@@ -1,6 +1,8 @@
 CONFIG		+= qt release warn_on
 LANGUAGE        = C++
 QT		+= network opengl
+TEMPLATE        = app
+
 QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -fPIE -fstack-protector-all -fwrapv \
                    -mtune=generic -pie -O3 \
@@ -8,7 +10,6 @@ QMAKE_CXXFLAGS  += -fPIE -fstack-protector-all -fwrapv \
                    -Werror -Wextra \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstack-protector -Wstrict-overflow=4
-TEMPLATE        = app
 
 FORMS		= helpDialog.ui \
                   mainwindow.ui \
@@ -29,5 +30,5 @@ SOURCES		= qtchess.cc \
                   qtchess_main.cc \
                   qtchess_validate.cc
 
-TARGET		= QtChess
 PROJECTNAME	= QtChess
+TARGET		= QtChess
