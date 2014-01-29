@@ -109,11 +109,25 @@ void qtchess_gui::init(void)
       connect(playert, SIGNAL(timeout()), SLOT(updatePlayer(void)));
       playert->start(1000);
     }
+  else
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(EXIT_FAILURE);
+    }
 
   if((opponentt = new(std::nothrow) QTimer()) != 0)
     {
       connect(opponentt, SIGNAL(timeout()), SLOT(updateOpponent(void)));
       opponentt->start(1000);
+    }
+  else
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(EXIT_FAILURE);
     }
 
   if((help_dialog = new(std::nothrow) qtchess_help_dialog(this)) == 0)
@@ -689,6 +703,13 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
 	ui.history->setItem(ui.history->rowCount() - 1, 1, item);
 
       ui.history->scrollToBottom();
+    }
+  else
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	::exit(EXIT_FAILURE);
     }
 }
 
