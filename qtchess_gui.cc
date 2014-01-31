@@ -252,9 +252,9 @@ void qtchess_gui::about(void)
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
-  mb.setText("<html>QtChess Version 3.16.<br>"
-	     "Copyright (c) 2003, 2004, 2006, 2007, 2008, 2009, 2011, 2012 "
-	     "Miss Bombastic."
+  mb.setText("<html>QtChess Version 3.17.<br>"
+	     "Copyright (c) 2003 - 2014 "
+	     "Asparagus."
 	     "<hr>"
 	     "Please visit <a href=\"http://qtchess.sourceforge.net\">"
 	     "http://qtchess.sourceforge.net</a> for "
