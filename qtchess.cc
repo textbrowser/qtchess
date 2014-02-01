@@ -93,20 +93,39 @@ void qtchess::updateBoard(const QByteArray &buffer)
   ** Copy the information into current_move.
   */
 
-  current_move.x1 = list[0].toInt();
-  current_move.x2 = list[1].toInt();
-  current_move.y1 = list[2].toInt();
-  current_move.y2 = list[3].toInt();
-  current_move.r_x1 = list[4].toInt();
-  current_move.r_x2 = list[5].toInt();
-  current_move.r_y1 = list[6].toInt();
-  current_move.r_y2 = list[7].toInt();
+  current_move.x1 = qBound(0, list[0].toInt(), NSQUARES - 1);
+  current_move.x2 = qBound(0, list[1].toInt(), NSQUARES - 1);
+  current_move.y1 = qBound(0, list[2].toInt(), NSQUARES - 1);
+  current_move.y2 = qBound(0, list[3].toInt(), NSQUARES - 1);
+  current_move.r_x1 = qBound(-1, list[4].toInt(), NSQUARES - 1);
+  current_move.r_x2 = qBound(-1, list[5].toInt(), NSQUARES - 1);
+  current_move.r_y1 = qBound(-1, list[6].toInt(), NSQUARES - 1);
+  current_move.r_y2 = qBound(-1, list[7].toInt(), NSQUARES - 1);
   current_move.piece = list[8].toInt();
   current_move.rook = list[9].toInt();
-  current_move.promoted = list[10].toInt();
-  current_move.pawn_2 = list[11].toInt();
-  current_move.enpassant = list[12].toInt();
-  current_move.isOppKingThreat = list[13].toInt();
+
+  if(getMyColor() == BLACK)
+    {
+      if(!(current_move.piece >= 100 && current_move.piece <= 107))
+	current_move.piece = PAWN_WHITE;
+    }
+  else
+    {
+      if(!(current_move.piece >= 200 && current_move.piece <= 207))
+	current_move.piece = PAWN_BLACK;
+    }
+
+  if(!(current_move.rook == -1 ||
+       current_move.rook == ROOK1_BLACK ||
+       current_move.rook == ROOK1_WHITE ||
+       current_move.rook == ROOK2_BLACK ||
+       current_move.rook == ROOK2_WHITE))
+    current_move.rook = -1;
+
+  current_move.promoted = QVariant(list[10].toInt()).toBool();
+  current_move.pawn_2 = QVariant(list[11].toInt()).toBool();
+  current_move.enpassant = QVariant(list[12].toInt()).toBool();
+  current_move.isOppKingThreat = QVariant(list[13].toInt()).toBool();
   snprintf(current_move.departure, sizeof(current_move.departure),
 	   "%s", list[14].constData());
 
@@ -114,6 +133,13 @@ void qtchess::updateBoard(const QByteArray &buffer)
     for(j = 0; j < NSQUARES; j++)
       {
 	current_move.board[i][j] = list[x].toInt();
+
+	if(!((current_move.board[i][j] >= 100 &&
+	      current_move.board[i][j] <= 107) ||
+	     (current_move.board[i][j] >= 200 &&
+	      current_move.board[i][j] <= 207)))
+	  current_move.board[i][j] = EMPTY_SQUARE;
+
 	x += 1;
       }
 

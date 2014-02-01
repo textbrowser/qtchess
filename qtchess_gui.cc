@@ -688,7 +688,7 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
     }
 
   /*
-  ** Is the King in check?
+  ** Is the king in check?
   */
 
   if(current_move.isOppKingThreat)

@@ -874,7 +874,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		if(!chess->hasRook1Moved())
 		  {
 		    /*
-		    ** First two squares left of the King
+		    ** First two squares left of the king
 		    ** must not be threatened.
 		    */
 
@@ -895,7 +895,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		if(!chess->hasRook2Moved())
 		  {
 		    /*
-		    ** First two squares right of the King
+		    ** First two squares right of the king
 		    ** must not be threatened.
 		    */
 
@@ -959,7 +959,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		if(!chess->hasRook1Moved())
 		  {
 		    /*
-		    ** First two squares left of the King
+		    ** First two squares left of the king
 		    ** must not be threatened.
 		    */
 
@@ -980,7 +980,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		if(!chess->hasRook2Moved())
 		  {
 		    /*
-		    ** First two squares right of the King
+		    ** First two squares right of the king
 		    ** must not be threatened.
 		    */
 

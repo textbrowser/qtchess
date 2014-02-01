@@ -94,7 +94,7 @@ struct move_s
   int enpassant;
 
   /*
-  ** Is the opponent's King threatened?
+  ** Is the opponent's king threatened?
   */
 
   int isOppKingThreat;
