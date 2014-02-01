@@ -16,6 +16,8 @@
 #include "qtchess_defs.h"
 #include "qtchess_validate.h"
 
+static struct move_s emptyMoveStruct;
+
 class qtchess
 {
  public:
@@ -38,9 +40,15 @@ class qtchess
 	for(j = 0; j < NSQUARES; j++)
 	  board[i][j] = 0;
 
-      turn = -1;
       first = -1;
+      game_over = false;
+      king_has_moved = false;
+      last_opponent_move = emptyMoveStruct;
       my_color = -1;
+      rook1_has_moved = false;
+      rook2_has_moved = false;
+      turn = -1;
+      wonPiece = false;
     }
 
   int getTurn(void)

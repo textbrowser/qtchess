@@ -182,11 +182,16 @@ class qtchess_gui: public QMainWindow
 
   qtchess_gui(void)
     {
+      action_Large_Size = 0;
+      action_Normal_Size = 0;
+      denominator = 1;
+      glboard = 0;
       help_dialog = 0;
-      setup_dialog = 0;
-      promote_dialog = 0;
-      playert = 0;
       opponentt = 0;
+      playert = 0;
+      promote_dialog = 0;
+      setup_dialog = 0;
+      statusLabel = 0;
     }
 
   ~qtchess_gui()
