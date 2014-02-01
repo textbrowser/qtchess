@@ -4,12 +4,12 @@ QT		+= network opengl
 TEMPLATE        = app
 
 QMAKE_CLEAN	+= QtChess
-QMAKE_CXXFLAGS  += -fPIE -fstack-protector-all -fwrapv \
-                   -mtune=generic -pie -O3 \
-                   -Wall -Wcast-align -Wcast-qual \
+QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Werror -Wextra \
                    -Woverloaded-virtual -Wpointer-arith \
-                   -Wstack-protector -Wstrict-overflow=4
+                   -Wstack-protector -Wstrict-overflow=4 \
+                   -fPIE -fstack-protector-all -fwrapv \
+                   -mtune=generic -pie -O3
 
 FORMS		= helpDialog.ui \
                   mainwindow.ui \

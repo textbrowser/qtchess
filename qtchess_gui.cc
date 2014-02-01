@@ -29,7 +29,7 @@ int qtchess_gui::exec(void)
 
 void qtchess_gui::setStatusText(const QString &str)
 {
-  statusLabel->setText(tr(str.toAscii()));
+  statusLabel->setText(tr(str.toLatin1()));
 }
 
 void qtchess_gui::init(void)
@@ -174,8 +174,14 @@ void qtchess_gui::init(void)
       ui.boardFrame->setFixedSize(glboard->size());
     }
 
+#if QT_VERSION < 0x050000
   ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   ui.history->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+#else
+  ui.history->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  ui.history->verticalHeader()->setSectionResizeMode
+    (QHeaderView::ResizeToContents);
+#endif
   ui.boardFrame->hide();
   ui.boardFrame->show();
   resize(sizeHint());

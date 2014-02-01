@@ -176,48 +176,56 @@ void qtchess_comm::sendMove(const struct move_s current_move)
   if(send_sock.state() != QAbstractSocket::ConnectedState)
     return;
 
-  QString buffer;
+  QByteArray buffer;
   int i = 0, j = 0;
 
   /*
   ** Copy the structure.
   */
 
-  buffer = QString("%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 ").
-    arg(current_move.x1).
-    arg(current_move.x2).
-    arg(current_move.y1).
-    arg(current_move.y2).
-    arg(current_move.r_x1).
-    arg(current_move.r_x2).
-    arg(current_move.r_y1).
-    arg(current_move.r_y2).
-    arg(current_move.piece).
-    arg(current_move.rook).
-    arg(current_move.promoted).
-    arg(current_move.pawn_2).
-    arg(current_move.enpassant).
-    arg(current_move.isOppKingThreat).
-    arg(current_move.departure);
+  buffer.append(QByteArray::number(current_move.x1));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.x2));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.y1));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.y2));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.r_x1));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.r_x2));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.r_y1));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.r_y2));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.piece));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.rook));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.promoted));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.pawn_2));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.enpassant));
+  buffer.append(" ");
+  buffer.append(QByteArray::number(current_move.isOppKingThreat));
+  buffer.append(" ");
+  buffer.append(current_move.departure);
+  buffer.append(" ");
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
       {
-	buffer.append(QString::number(current_move.board[i][j]));
+	buffer.append(QByteArray::number(current_move.board[i][j]));
 	buffer.append(" ");
       }
 
-  /*
-  ** Remove the extra space.
-  */
-
-  buffer = buffer.trimmed();
   buffer.append("\n");
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  if(send_sock.
-     write(buffer.toLatin1().constData(), (qint64) buffer.length()) == -1)
+  if(send_sock.write(buffer.constData(), (qint64) buffer.length()) == -1)
     {
       QApplication::restoreOverrideCursor();
 

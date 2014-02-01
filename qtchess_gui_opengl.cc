@@ -909,7 +909,7 @@ void openglWid::paintGL(void)
 	    (current_move.departure, sizeof(current_move.departure), "%s",
 	     qtchess_validate::findDeparture
 	     ((int) point_selected.x, (int) point_selected.y,
-	      I, J, origPiece).toLatin1().data());
+	      I, J, origPiece).toLatin1().constData());
 	  chess->board[I][J] = origPiece;
 
 	  for(i = 0; i < NSQUARES; i++)

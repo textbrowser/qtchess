@@ -7,7 +7,6 @@
 extern qtchess_gui *gui;
 extern qtchess_comm *comm;
 extern QApplication *qapp;
-extern void quit_program(int);
 
 bool qtchess::isReady(void)
 {
@@ -73,12 +72,12 @@ void qtchess::quit(const char *message_text, const int exit_code)
   if(message_text != 0)
     fprintf(stderr, "%s\n", message_text);
 
-  quit_program(exit_code);
+  qapp->exit(exit_code);
 }
 
 void qtchess::updateBoard(const QByteArray &buffer)
 {
-  QList<QByteArray> list = buffer.trimmed().split(' ');
+  QList<QByteArray> list = buffer.simplified().split(' ');
 
   if(list.size() < 15 + NSQUARES * NSQUARES)
     return;
@@ -154,7 +153,9 @@ void qtchess::updateBoard(const QByteArray &buffer)
       else
 	color = BLACK;
 
-      if(qtchess_validate::isKing(board[current_move.y2][current_move.x2]))
+      if(current_move.x2 >= 0 && current_move.x2 < NSQUARES &&
+	 current_move.y2 >= 0 && current_move.y2 < NSQUARES &&
+	 qtchess_validate::isKing(board[current_move.y2][current_move.x2]))
 	{
 	  game_over = true;
 	  setGameOver(game_over);

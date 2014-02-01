@@ -32,13 +32,6 @@
 #include "qtchess.h"
 
 /*
-** -- Declarations --
-*/
-
-void cleanup(void);
-void quit_program(int);
-
-/*
 ** -- Globals --
 */
 
@@ -106,34 +99,6 @@ int main(int argc, char *argv[])
   */
 
   rc = gui->exec();
-  cleanup();
   return rc;
 }
 
-void cleanup(void)
-{
-  if(comm != 0)
-    comm->quit();
-
-  if(gui != 0)
-    {
-      delete gui;
-      gui = 0;
-    }
-
-  if(chess != 0)
-    {
-      delete chess;
-      chess = 0;
-    }
-}
-
-void quit_program(int exit_code)
-{
-  /*
-  ** Perform some cleanup.
-  */
-
-  cleanup();
-  exit(exit_code);
-}
