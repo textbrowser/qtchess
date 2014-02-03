@@ -33,3 +33,8 @@ SOURCES		= qtchess.cc \
 
 PROJECTNAME	= QtChess
 TARGET		= QtChess
+
+macdeployqt.path  = QtChess.app
+macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
+
+INSTALLS	= macdeployqt
