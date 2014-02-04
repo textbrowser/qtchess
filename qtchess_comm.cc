@@ -10,17 +10,16 @@
 
 #include "qtchess_comm.h"
 
-extern qtchess *chess;
-extern qtchess_gui *gui;
-extern qtchess_comm *comm;
 extern QApplication *qapp;
+extern qtchess *chess;
+extern qtchess_comm *comm;
+extern qtchess_gui *gui;
 
 void qtchess_comm::updateBoard(void)
 {
   int ntries = 1;
 
-  while(clientConnection != 0 && clientConnection->canReadLine() &&
-	ntries <= 5)
+  while(clientConnection && clientConnection->canReadLine() && ntries <= 5)
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -72,9 +71,9 @@ bool qtchess_comm::isReady(void) const
 {
   if(isSet())
     {
-      if(send_sock.state() == QAbstractSocket::ConnectedState &&
-	 clientConnection &&
-	 clientConnection->state() == QAbstractSocket::ConnectedState)
+      if(clientConnection &&
+	 clientConnection->state() == QAbstractSocket::ConnectedState &&
+	 send_sock.state() == QAbstractSocket::ConnectedState)
 	return true;
       else
 	return false;
@@ -145,7 +144,7 @@ void qtchess_comm::disconnectRemotely(void)
 
 void qtchess_comm::connectRemotely(void)
 {
-  QString str1 = "", str2 = "", scopeId = "";
+  QString scopeId = "", str1 = "", str2 = "";
   quint16 remotePort = 0;
 
   if(gui)
@@ -276,6 +275,7 @@ void qtchess_comm::acceptConnection(void)
     {
       socket->close();
       socket->deleteLater();
+      return;
     }
   else
     clientConnection = socket;
@@ -286,7 +286,8 @@ void qtchess_comm::acceptConnection(void)
 
   if(gui && gui->getSetupDialog() &&
      gui->getSetupDialog()->getAllowedHostField() &&
-     !gui->getSetupDialog()->getAllowedHostField()->text().trimmed().isEmpty())
+     !gui->getSetupDialog()->getAllowedHostField()->text().trimmed().
+     isEmpty())
     {
       QString str(gui->getSetupDialog()->
 		  getAllowedHostField()->text().trimmed());
@@ -306,7 +307,7 @@ void qtchess_comm::acceptConnection(void)
   connect(clientConnection, SIGNAL(disconnected(void)), this,
 	  SLOT(clientDisconnected(void)));
 
-  if(gui && clientConnection)
+  if(clientConnection && gui)
     gui->notifyConnection(clientConnection->peerAddress().toString());
 
   if(chess && chess->getFirst() == -1)
@@ -334,7 +335,8 @@ void qtchess_comm::clientDisconnected(void)
   QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
 
   if(socket == clientConnection)
-    clientConnection->deleteLater();
+    if(clientConnection)
+      clientConnection->deleteLater();
 
   if(chess)
     {

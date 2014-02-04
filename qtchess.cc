@@ -5,8 +5,8 @@
 #include "qtchess.h"
 
 extern qtchess_gui *gui;
-extern qtchess_comm *comm;
 extern QApplication *qapp;
+extern qtchess_comm *comm;
 
 bool qtchess::isReady(void)
 {
@@ -93,10 +93,10 @@ void qtchess::updateBoard(const QByteArray &buffer)
   ** Copy the information into current_move.
   */
 
-  current_move.x1 = qBound(0, list[0].toInt(), NSQUARES - 1);
-  current_move.x2 = qBound(0, list[1].toInt(), NSQUARES - 1);
-  current_move.y1 = qBound(0, list[2].toInt(), NSQUARES - 1);
-  current_move.y2 = qBound(0, list[3].toInt(), NSQUARES - 1);
+  current_move.x1 = qBound(-1, list[0].toInt(), NSQUARES - 1);
+  current_move.x2 = qBound(-1, list[1].toInt(), NSQUARES - 1);
+  current_move.y1 = qBound(-1, list[2].toInt(), NSQUARES - 1);
+  current_move.y2 = qBound(-1, list[3].toInt(), NSQUARES - 1);
   current_move.r_x1 = qBound(-1, list[4].toInt(), NSQUARES - 1);
   current_move.r_x2 = qBound(-1, list[5].toInt(), NSQUARES - 1);
   current_move.r_y1 = qBound(-1, list[6].toInt(), NSQUARES - 1);
@@ -106,13 +106,13 @@ void qtchess::updateBoard(const QByteArray &buffer)
 
   if(getMyColor() == BLACK)
     {
-      if(!(current_move.piece >= 100 && current_move.piece <= 107))
-	current_move.piece = PAWN_WHITE;
+      if(!(current_move.piece >= 200 && current_move.piece <= 207))
+	current_move.piece = EMPTY_SQUARE;
     }
   else
     {
-      if(!(current_move.piece >= 200 && current_move.piece <= 207))
-	current_move.piece = PAWN_BLACK;
+      if(!(current_move.piece >= 100 && current_move.piece <= 107))
+	current_move.piece = EMPTY_SQUARE;
     }
 
   if(!(current_move.rook == -1 ||

@@ -18,58 +18,64 @@ extern "C"
 enum
 {
   BLACK = 1,
-  WHITE = 2,
-  MY_TURN = 3,
   I_AM_FIRST = 4,
+  MY_TURN = 3,
+  OPPONENT_TIMER = 8,
+  PLAYER_TIMER = 7,
   THEIR_TURN = 5,
   THEY_ARE_FIRST = 6,
-  PLAYER_TIMER = 7,
-  OPPONENT_TIMER = 8
+  WHITE = 2
 };
 
 enum
 {
-  KING_BLACK = 100,
+  BISHOP_BLACK = 100,
+  KING_BLACK,
+  KNIGHT_BLACK,
   PAWN_BLACK,
-  ROOK_BLACK,
   QUEEN_BLACK,
+  ROOK_BLACK,
   ROOK1_BLACK,
-  ROOK2_BLACK,
-  BISHOP_BLACK,
-  KNIGHT_BLACK
+  ROOK2_BLACK
 };
 
 enum
 {
-  KING_WHITE = 200,
+  BISHOP_WHITE = 200,
+  KING_WHITE,
+  KNIGHT_WHITE,
   PAWN_WHITE,
-  ROOK_WHITE,
   QUEEN_WHITE,
+  ROOK_WHITE,
   ROOK1_WHITE,
-  ROOK2_WHITE,
-  BISHOP_WHITE,
-  KNIGHT_WHITE
+  ROOK2_WHITE
 };
 
 enum
 {
-  VALID = 1,
+  EMPTY_SQUARE = 0,
   INVALID = 0,
   NSQUARES = 8,
-  EMPTY_SQUARE = 0,
+  OPEN_GL_DIMENSION = 700,
+  VALID = 1,
   VALID_CASTLE = 2,
-  VALID_PAWN_2 = 3,
   VALID_EN_PASSANT = 4,
-  OPEN_GL_DIMENSION = 700
+  VALID_PAWN_2 = 3
 };
 
 struct move_s
 {
+  char departure[3];
+  int board[NSQUARES][NSQUARES];
+  int enpassant;
+  int isOppKingThreat;
+  int pawn_2; // Did a pawn move two squares?
+  int piece;
+  int promoted;
   int x1;
   int x2;
   int y1;
   int y2;
-  int piece;
 
   /*
   ** Used for castling moves.
@@ -80,42 +86,6 @@ struct move_s
   int r_y1;
   int r_y2;
   int rook;
-
-  /*
-  ** For promotions.
-  */
-
-  int promoted;
-
-  /*
-  ** En passant.
-  */
-
-  int enpassant;
-
-  /*
-  ** Is the opponent's king threatened?
-  */
-
-  int isOppKingThreat;
-
-  /*
-  ** Pawn moved two squares?
-  */
-
-  int pawn_2;
-
-  /*
-  ** Current state of the board.
-  */
-
-  int board[NSQUARES][NSQUARES];
-
-  /*
-  ** Departure.
-  */
-
-  char departure[3];
 };
 
 #endif

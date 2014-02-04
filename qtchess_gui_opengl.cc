@@ -10,10 +10,10 @@
 
 #include "qtchess.h"
 
-extern qtchess *chess;
-extern qtchess_gui *gui;
-extern qtchess_comm *comm;
 extern QApplication *qapp;
+extern qtchess *chess;
+extern qtchess_comm *comm;
+extern qtchess_gui *gui;
 
 void openglWid::newGame(void)
 {
@@ -25,13 +25,13 @@ void openglWid::newGame(void)
 
 void openglWid::paintGL(void)
 {
-  int i = 0, j = 0, I = 0, J = 0, rc = 0, found = 0;
-  int origPiece = 0;
+  QFont font;
+  bool game_over = false;
+  double X = 0, Y = 0, x = 0, y = 0;
+  int I = 0, J = 0, found = 0, i = 0, j = 0, rc = 0;
   int nonEmptyNow = 0, nonEmptyThen = 0;
   int oldBoard[NSQUARES][NSQUARES];
-  bool game_over = false;
-  QFont font;
-  double x = 0, y = 0, X = 0, Y = 0;
+  int origPiece = 0;
   struct move_s current_move;
 
   /*

@@ -13,8 +13,8 @@ QString qtchess_validate::findDeparture(const int X1,
 					const int piece)
 {
   char departure[3];
-  int i = 0;
   int fcount = 0;
+  int i = 0;
   int rcount = 0;
 
   /*
@@ -879,7 +879,8 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		    */
 
 		    if(isEmpty(chess->board[1][7]) &&
-		       isEmpty(chess->board[2][7]))
+		       isEmpty(chess->board[2][7]) &&
+		       isEmpty(chess->board[3][7]))
 		      /*
 		      ** Now make sure these squares are
 		      ** not threatened.
@@ -964,7 +965,8 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		    */
 
 		    if(isEmpty(chess->board[1][0]) &&
-		       isEmpty(chess->board[2][0]))
+		       isEmpty(chess->board[2][0]) &&
+		       isEmpty(chess->board[3][0]))
 		      /*
 		      ** Now make sure these squares are
 		      ** not threatened.

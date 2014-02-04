@@ -32,7 +32,6 @@ class qtchess_comm: public QObject
   Q_OBJECT
 
  public:
-
   /*
   ** -- Members --
   */
@@ -50,40 +49,38 @@ class qtchess_comm: public QObject
 #endif
     }
 
-  bool isSet(void) const;
-  bool isReady(void) const;
-  bool isListening(void) const;
   bool isConnectedRemotely(void) const;
+  bool isListening(void) const;
+  bool isReady(void) const;
+  bool isSet(void) const;
+  void connectRemotely(void);
+  void disconnectRemotely(void);
   void init(void);
   void quit(void);
   void sendMove(const struct move_s);
-  void setListen(void);
   void setConnected(const bool);
+  void setListen(void);
   void stopListening(void);
-  void connectRemotely(void);
-  void disconnectRemotely(void);
 
  private:
-
   /*
   ** -- Members --
   */
 
-  bool connected;
+  QPointer<QTcpSocket> clientConnection;
   QTcpServer listening_sock;
   QTcpSocket send_sock;
-  QPointer<QTcpSocket> clientConnection;
+  bool connected;
 
   /*
   ** -- Methods --
   */
 
  private slots:
-
-  void updateBoard(void);
   void acceptConnection(void);
   void clientDisconnected(void);
   void slotClientConnected(void);
+  void updateBoard(void);
 
  signals:
   void connectedToClient(void);

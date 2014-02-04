@@ -8,16 +8,16 @@
 ** -- Qt Includes --
 */
 
-#include <QMenu>
-#include <QLabel>
 #include <QCloseEvent>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QMenu>
 
-extern qtchess *chess;
-extern qtchess_gui *gui;
-extern qtchess_comm *comm;
 extern QApplication *qapp;
+extern qtchess *chess;
+extern qtchess_comm *comm;
+extern qtchess_gui *gui;
 
 int qtchess_gui::exec(void)
 {
@@ -334,14 +334,21 @@ void qtchess_gui::newGame(void)
       if(chess)
 	current_move.board[i][j] = chess->board[i][j];
       else
-	current_move.board[i][j] = -1;
+	current_move.board[i][j] = EMPTY_SQUARE;
 
-  current_move.x1 = current_move.x2 = current_move.y1 =
-    current_move.y2 = current_move.r_x1 =
-    current_move.r_x2 = current_move.r_y1 =
-    current_move.r_y2 = current_move.piece =
-    current_move.rook = -1;
-  current_move.promoted = current_move.pawn_2 = 0;
+  current_move.piece =
+    current_move.rook =
+    current_move.r_x1 =
+    current_move.r_x2 =
+    current_move.r_y1 =
+    current_move.r_y2 =
+    current_move.x1 =
+    current_move.x2 =
+    current_move.y1 =
+    current_move.y2 = -1;
+  current_move.enpassant =
+    current_move.pawn_2 =
+    current_move.promoted = 0;
 
   if(comm)
     comm->sendMove(current_move);
@@ -570,28 +577,20 @@ QHostAddress qtchess_setup_dialog::getListeningAddress(void) const
 
 void qtchess_gui::clearHistory(void)
 {
-  QStringList list;
-
-  list.append(tr("Beige"));
-  list.append(tr("Crimson"));
-  ui.history->clear();
+  ui.history->clearContents();
   ui.history->setRowCount(0);
-  ui.history->setColumnCount(0);
   ui.history->scrollToTop();
   ui.history->horizontalScrollBar()->setValue(0);
-  ui.history->setColumnCount(list.size());
-  ui.history->setHorizontalHeaderLabels(list);
-  list.clear();
 }
 
 void qtchess_gui::addHistoryMove(const struct move_s current_move,
 				 const int color)
 {
-  char hist[512];
-  char to_let[2];
-  char insertX[3];
-  char from_position[2];
   QTableWidgetItem *item = 0;
+  char from_position[2];
+  char hist[512];
+  char insertX[3];
+  char to_let[2];
 
   memset(hist, 0, sizeof(hist));
   memset(to_let, 0, sizeof(to_let));
@@ -610,21 +609,21 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
       if(chess && chess->wasPieceWon())
 	snprintf(insertX, sizeof(insertX), "%s%s", from_position, "x");
 
-      if(qtchess_validate::isRook(current_move.piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%dR", insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isBishop(current_move.piece))
+      if(qtchess_validate::isBishop(current_move.piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%dB", insertX,
+		 to_let, current_move.x2 + 1);
+      else if(qtchess_validate::isKnight(current_move.piece))
+	snprintf(hist, sizeof(hist),
+		 "%s%s%dN", insertX,
 		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isQueen(current_move.piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%dQ", insertX,
 		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isKnight(current_move.piece))
+      if(qtchess_validate::isRook(current_move.piece))
 	snprintf(hist, sizeof(hist),
-		 "%s%s%dN", insertX,
+		 "%s%s%dR", insertX,
 		 to_let, current_move.x2 + 1);
     }
   else
@@ -632,7 +631,12 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
       if(chess && chess->wasPieceWon())
 	snprintf(insertX, sizeof(insertX), "%s", "x");
 
-      if(qtchess_validate::isKing(current_move.piece))
+      if(qtchess_validate::isBishop(current_move.piece))
+	snprintf(hist, sizeof(hist),
+		 "%s%s%s%s%d", "B",
+		 current_move.departure, insertX,
+		 to_let, current_move.x2 + 1);
+      else if(qtchess_validate::isKing(current_move.piece))
 	{
 	  if(current_move.r_x1 != -1)
 	    {
@@ -650,6 +654,11 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
 		     "%s%s%s%d", "K", insertX,
 		     to_let, current_move.x2 + 1);
 	}
+      else if(qtchess_validate::isKnight(current_move.piece))
+	snprintf(hist, sizeof(hist),
+		 "%s%s%s%s%d", "N",
+		 current_move.departure, insertX,
+		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isPawn(current_move.piece))
 	{
 	  if(chess && chess->wasPieceWon())
@@ -665,26 +674,18 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
 		     "%s%s%d", insertX,
 		     to_let, current_move.x2 + 1);
 	}
-      else if(qtchess_validate::isRook(current_move.piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "R",
-		 current_move.departure, insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isBishop(current_move.piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "B",
-		 current_move.departure, insertX,
-		 to_let, current_move.x2 + 1);
       else if(qtchess_validate::isQueen(current_move.piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "Q",
 		 current_move.departure, insertX,
 		 to_let, current_move.x2 + 1);
-      else
+      else if(qtchess_validate::isRook(current_move.piece))
 	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "N",
+		 "%s%s%s%s%d", "R",
 		 current_move.departure, insertX,
 		 to_let, current_move.x2 + 1);
+      else
+	snprintf(hist, sizeof(hist), "-----");
     }
 
   /*
@@ -709,13 +710,6 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
 	ui.history->setItem(ui.history->rowCount() - 1, 1, item);
 
       ui.history->scrollToBottom();
-    }
-  else
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	::exit(EXIT_FAILURE);
     }
 }
 
@@ -784,14 +778,16 @@ void qtchess_gui::stopTimers(const int which)
 void qtchess_gui::updatePlayer(void)
 {
   if(comm && chess &&
-     comm->isReady() && chess->getTurn() == MY_TURN && !chess->isGameOver())
+     comm->isReady() && chess->getTurn() == MY_TURN &&
+     !chess->isGameOver())
     ui.playerClock->setTime(ui.playerClock->time().addSecs(1));
 }
 
 void qtchess_gui::updateOpponent(void)
 {
   if(comm && chess &&
-     comm->isReady() && chess->getTurn() == THEIR_TURN && !chess->isGameOver())
+     comm->isReady() && chess->getTurn() == THEIR_TURN &&
+     !chess->isGameOver())
     ui.opponentClock->setTime(ui.opponentClock->time().addSecs(1));
 }
 

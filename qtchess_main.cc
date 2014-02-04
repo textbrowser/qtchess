@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2003, 2004, 2006, 2007, 2008 Alexis Megas
+** Copyright (c) 2003 - 2014 Alexis Megas
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -35,10 +35,10 @@
 ** -- Globals --
 */
 
-qtchess *chess = 0;
-qtchess_gui *gui = 0;
-qtchess_comm *comm = 0;
 QApplication *qapp = 0;
+qtchess *chess = 0;
+qtchess_comm *comm = 0;
+qtchess_gui *gui = 0;
 
 /*
 ** -- Main --
@@ -93,12 +93,6 @@ int main(int argc, char *argv[])
   */
 
   gui->display();
-
-  /*
-  ** Exit.
-  */
-
   rc = gui->exec();
   return rc;
 }
-
