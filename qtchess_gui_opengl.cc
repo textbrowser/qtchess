@@ -35,7 +35,7 @@ void openglWid::paintGL(void)
   struct move_s current_move;
 
   /*
-  ** All the drawing happens here.
+  ** All the drawing occurs here.
   */
 
   glLineWidth(2.0);
