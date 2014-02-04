@@ -9,7 +9,7 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstack-protector -Wstrict-overflow=4 \
                    -fPIE -fstack-protector-all -fwrapv \
-                   -mtune=generic -pie -O3
+                   -mtune=generic -pie
 
 FORMS		= helpDialog.ui \
                   mainwindow.ui \
