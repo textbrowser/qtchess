@@ -275,9 +275,15 @@ void qtchess_gui::about(void)
 
 void qtchess_gui::showErrorMsg(const char *message)
 {
-  QMessageBox::critical(this, tr("QtChess: Error"), tr(message),
-			QMessageBox::Ok,
-			QMessageBox::Default);
+  if(message)
+    QMessageBox::critical(this, tr("QtChess: Error"), tr(message),
+			  QMessageBox::Ok,
+			  QMessageBox::Default);
+  else
+    QMessageBox::critical(this, tr("QtChess: Error"),
+			  tr("An unknown error occurred."),
+			  QMessageBox::Ok,
+			  QMessageBox::Default);
 }
 
 void qtchess_gui::help(void)
