@@ -488,7 +488,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	if(row_from == row_to)
 	  {
 #ifdef _DEBUG_
-	    fprintf(stderr, "Rook: horizontal move.\n");
+	    fprintf(stderr, "%s", "Rook: horizontal move.\n");
 #endif
 	    if(col_from + 1 == col_to)
 	      {
@@ -583,7 +583,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	if(col_from == col_to)
 	  {
 #ifdef _DEBUG_
-	    fprintf(stderr, "Rook: vertical move.\n");
+	    fprintf(stderr, "%s", "Rook: vertical move.\n");
 #endif
 	    if(row_from + 1 == row_to)
 	      {

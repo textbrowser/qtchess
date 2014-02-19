@@ -203,7 +203,7 @@ class qtchess_gui: public QMainWindow
       delete setup_dialog;
 
 #ifdef _DEBUG_
-    fprintf(stderr, "~qtchess_gui()\n");
+    fprintf(stderr, "%s", "~qtchess_gui()\n");
 #endif
   }
 

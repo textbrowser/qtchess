@@ -258,7 +258,7 @@ void qtchess_gui::about(void)
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
-  mb.setText("<html>QtChess Version 3.17.<br>"
+  mb.setText("<html>QtChess Version 3.18.<br>"
 	     "Copyright (c) 2003 - 2014 "
 	     "Asparagus."
 	     "<hr>"

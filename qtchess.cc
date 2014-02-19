@@ -12,10 +12,10 @@ bool qtchess::isReady(void)
 {
 #ifdef _DEBUG_
   if(comm && comm->isReady())
-    fprintf(stderr, "Communications are ready.\n");
+    fprintf(stderr, "%s", "Communications are ready.\n");
 
   if(getTurn() == MY_TURN)
-    fprintf(stderr, "It's my turn to play!\n");
+    fprintf(stderr, "%s", "It's my turn to play!\n");
 #endif
 
   return comm && comm->isReady() && (getTurn() == MY_TURN);

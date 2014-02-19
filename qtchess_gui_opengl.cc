@@ -790,9 +790,8 @@ void openglWid::paintGL(void)
 		gui->getPromoteDialog()->setup();
 #ifdef _DEBUG_
 	      if(gui && gui->getPromoteDialog())
-		fprintf
-		  (stderr, "currentItem() = %d\n",
-		   gui->getPromoteDialog()->getMenu()->currentIndex());
+		fprintf(stderr, "currentItem() = %d\n",
+			gui->getPromoteDialog()->getMenu()->currentIndex());
 #endif
 
 	      if(gui && gui->getPromoteDialog() &&
@@ -845,7 +844,7 @@ void openglWid::paintGL(void)
 	  if(rc == VALID_CASTLE)
 	    {
 #ifdef _DEBUG_
-	      fprintf(stderr, "Castling.\n");
+	      fprintf(stderr, "%s", "Castling.\n");
 	      fprintf(stderr, "I = %d, J = %d\n", I, J);
 #endif
 	      if(I == 2 && J == 7) // Rook #1 Black

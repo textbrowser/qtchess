@@ -52,19 +52,19 @@ int main(int argc, char *argv[])
 
   if((qapp = new(std::nothrow) QApplication(argc, argv)) == 0)
     {
-      fprintf(stderr, "Memory allocation failure.\n");
+      fprintf(stderr, "%s", "Memory allocation failure.\n");
       return EXIT_FAILURE;
     }
 
   if(!QGLFormat::hasOpenGL())
     {
-      fprintf(stderr, "OpenGL is not supported on this system.\n");
+      fprintf(stderr, "%s", "OpenGL is not supported on this system.\n");
       return EXIT_FAILURE;
     }
 
   if((chess = new(std::nothrow) qtchess()) == 0)
     {
-      fprintf(stderr, "Memory allocation failure.\n");
+      fprintf(stderr, "%s", "Memory allocation failure.\n");
       return EXIT_FAILURE;
     }
 
