@@ -1,3 +1,5 @@
+purge.commands = rm -f *~
+
 CONFIG		+= qt release warn_on
 LANGUAGE        = C++
 QT		+= network opengl
@@ -10,6 +12,7 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Wstack-protector -Wstrict-overflow=4 \
                    -fPIE -fstack-protector-all -fwrapv \
                    -mtune=generic -pie
+QMAKE_EXTRA_TARGETS = purge
 
 FORMS		= helpDialog.ui \
                   mainwindow.ui \

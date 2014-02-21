@@ -1,3 +1,5 @@
+purge.commands = del *~
+
 CONFIG	        += qt release warn_on
 ICON            = chess.png
 LANGUAGE        = C++
@@ -9,6 +11,7 @@ QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual -Werror -Wextra \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstrict-overflow=4 -fwrapv -pie
+QMAKE_EXTRA_TARGETS = purge
 
 FORMS	=	helpDialog.ui \
 		mainwindow.ui \
