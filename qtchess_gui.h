@@ -188,19 +188,19 @@ class qtchess_gui: public QMainWindow
   ~qtchess_gui()
   {
     if(help_dialog != 0)
-      delete help_dialog;
+      help_dialog->deleteLater();
 
     if(opponentt != 0)
-      delete opponentt;
+      opponentt->deleteLater();
 
     if(playert != 0)
-      delete playert;
+      playert->deleteLater();
 
     if(promote_dialog != 0)
-      delete promote_dialog;
+      promote_dialog->deleteLater();
 
     if(setup_dialog != 0)
-      delete setup_dialog;
+      setup_dialog->deleteLater();
 
 #ifdef _DEBUG_
     fprintf(stderr, "%s", "~qtchess_gui()\n");
