@@ -1,11 +1,9 @@
 #!/bin/sh
 
-if [ -x /usr/local/qtchess/QtChess ]
+if [ -r /usr/local/qtchess/QtChess ] && [ -x /usr/local/qtchess/QtChess ]
 then
-    cd /usr/local/qtchess
-    ./QtChess $* &
+    cd /usr/local/qtchess && ./QtChess $* &
+    echo $?
 else
     exit 1
 fi
-
-exit 0
