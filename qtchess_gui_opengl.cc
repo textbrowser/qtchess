@@ -50,9 +50,9 @@ void openglWid::paintGL(void)
     for(j = 0; j < NSQUARES; j++)
       {
 	if((i + j) % 2 != 0)
-	  glColor3f(0.8, 0.7, 0.5);
+	  glColor3f((GLfloat) 0.8, (GLfloat) 0.7, (GLfloat) 0.5);
 	else
-	  glColor3f(0.5, 0.5, 0.6);
+	  glColor3f((GLfloat) 0.5, (GLfloat) 0.5, (GLfloat) 0.6);
 
 	x = px + i * block_size;
 	y = py + j * block_size;
@@ -113,7 +113,7 @@ void openglWid::paintGL(void)
 
 	      if(isValid)
 		{
-		  glColor3f(1.2, 2.05, 0.75);
+		  glColor3f((GLfloat) 1.2, (GLfloat) 2.05, (GLfloat) 0.75);
 		  glRectd((double) x + 1,
 			  (double) y + 1,
 			  px + (i + 1) * block_size - 1,
@@ -122,9 +122,9 @@ void openglWid::paintGL(void)
 	    }
 
 	if((i + j) % 2 != 0)
-	  glColor3f(0.8, 0.7, 0.5);
+	  glColor3f((GLfloat) 0.8, (GLfloat) 0.7, (GLfloat) 0.5);
 	else
-	  glColor3f(0.5, 0.5, 0.6);
+	  glColor3f((GLfloat) 0.5, (GLfloat) 0.5, (GLfloat) 0.6);
 
 	/*
 	** Draw the pieces.
@@ -133,9 +133,9 @@ void openglWid::paintGL(void)
 	if(chess && !qtchess_validate::isEmpty(chess->board[i][j]))
 	  {
 	    if(qtchess_validate::isWhite(chess->board[i][j]))
-	      glColor3f(0.96, 0.96, 0.86);
+	      glColor3f((GLfloat) 0.96, (GLfloat) 0.96, (GLfloat) 0.86);
 	    else
-	      glColor3f(0.65, 0.16, 0.16);
+	      glColor3f((GLfloat) 0.65, (GLfloat) 0.16, (GLfloat) 0.16);
 	  }
 
 	if(chess && qtchess_validate::isBishop(chess->board[i][j]))
