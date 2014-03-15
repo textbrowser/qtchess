@@ -154,13 +154,16 @@ void qtchess_gui::init(void)
 	::exit(EXIT_FAILURE);
     }
 
-  if((glboard = new(std::nothrow) openglWid(ui.boardFrame)) == 0)
+  if((glboard = new(std::nothrow) openglWid(this)) == 0)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
 	::exit(EXIT_FAILURE);
     }
+
+  if(glboard)
+    ui.boardFrame->layout()->addWidget(glboard);
 
   /*
   ** Add the OpenGL board.
@@ -171,7 +174,7 @@ void qtchess_gui::init(void)
       glboard->rescale(denominator);
       glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
 		      (int) (0.75 * OPEN_GL_DIMENSION));
-      ui.boardFrame->setFixedSize(glboard->size());
+      ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
     }
 
 #if QT_VERSION < 0x050000
@@ -215,7 +218,7 @@ void qtchess_gui::slotChangeSize(void)
 	  glboard->reinit();
 	  glboard->rescale(denominator);
 	  glboard->resize(OPEN_GL_DIMENSION, OPEN_GL_DIMENSION);
-	  ui.boardFrame->setFixedSize(glboard->size());
+	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
 	}
 
       ui.boardFrame->hide();
@@ -237,7 +240,7 @@ void qtchess_gui::slotChangeSize(void)
 	  glboard->rescale(denominator);
 	  glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
 			  (int) (0.75 * OPEN_GL_DIMENSION));
-	  ui.boardFrame->setFixedSize(glboard->size());
+	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
 	}
 
       ui.boardFrame->hide();
