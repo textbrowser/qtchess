@@ -261,7 +261,7 @@ void qtchess_gui::about(void)
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
-  mb.setText("<html>QtChess Version 3.18.<br>"
+  mb.setText("<html>QtChess Version 3.19.<br>"
 	     "Copyright (c) 2003 - 2014 "
 	     "Asparagus."
 	     "<hr>"
@@ -702,7 +702,7 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   */
 
   if(current_move.isOppKingThreat)
-    strncat(hist, "+", sizeof(hist) - strlen(hist) - 1);
+    strncat(hist, "+", sizeof(hist) - strnlen(hist, sizeof(hist) - 1) - 1);
 
   if((item = new(std::nothrow) QTableWidgetItem(tr(hist))) != 0)
     {
