@@ -608,11 +608,6 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   to_let[0] = (char) (97 + current_move.y2);
   from_position[0] = (char) (97 + current_move.y1);
 
-#ifdef _DEBUG_
-  fprintf(stderr, "from_position = %s, to_let = %s\n",
-	  from_position, to_let);
-#endif
-
   if(current_move.promoted)
     {
       if(chess && chess->wasPieceWon())

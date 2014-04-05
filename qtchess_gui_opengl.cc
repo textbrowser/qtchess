@@ -788,11 +788,6 @@ void openglWid::paintGL(void)
 
 	      if(gui && gui->getPromoteDialog())
 		gui->getPromoteDialog()->setup();
-#ifdef _DEBUG_
-	      if(gui && gui->getPromoteDialog())
-		fprintf(stderr, "currentItem() = %d\n",
-			gui->getPromoteDialog()->getMenu()->currentIndex());
-#endif
 
 	      if(gui && gui->getPromoteDialog() &&
 		 gui->getPromoteDialog()->getMenu() &&
@@ -843,10 +838,6 @@ void openglWid::paintGL(void)
 
 	  if(rc == VALID_CASTLE)
 	    {
-#ifdef _DEBUG_
-	      fprintf(stderr, "%s", "Castling.\n");
-	      fprintf(stderr, "I = %d, J = %d\n", I, J);
-#endif
 	      if(I == 2 && J == 7) // Rook #1 Black
 		{
 		  chess->board[3][7] = ROOK1_BLACK;
@@ -944,12 +935,6 @@ void openglWid::paintGL(void)
 	  ** Send the move.
 	  */
 
-#ifdef _DEBUG_
-	  for(i = 0; i < NSQUARES; i++)
-	    for(j = 0; j < NSQUARES; j++)
-	      fprintf(stderr, "i = %d, j = %d, board[%d][%d] = %d\n",
-		      i, j, i, j, chess->board[i][j]);
-#endif
 	  if(comm)
 	    comm->sendMove(current_move);
 

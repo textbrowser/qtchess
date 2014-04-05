@@ -1,3 +1,5 @@
+#include <QtDebug>
+
 /*
 ** -- Local Includes --
 */
@@ -10,14 +12,6 @@ extern qtchess_comm *comm;
 
 bool qtchess::isReady(void)
 {
-#ifdef _DEBUG_
-  if(comm && comm->isReady())
-    fprintf(stderr, "%s", "Communications are ready.\n");
-
-  if(getTurn() == MY_TURN)
-    fprintf(stderr, "%s", "It's my turn to play!\n");
-#endif
-
   return comm && comm->isReady() && (getTurn() == MY_TURN);
 }
 
@@ -70,7 +64,7 @@ void qtchess::quit(const char *message_text, const int exit_code)
   */
 
   if(message_text != 0)
-    fprintf(stderr, "%s\n", message_text);
+    qDebug() << message_text;
 
   qapp->exit(exit_code);
 }
@@ -209,13 +203,6 @@ void qtchess::updateBoard(const QByteArray &buffer)
       for(i = 0; i < NSQUARES; i++)
 	for(j = 0; j < NSQUARES; j++)
 	  board[i][j] = current_move.board[i][j];
-
-#ifdef _DEBUG_
-      for(i = 0; i < NSQUARES; i++)
-	for(j = 0; j < NSQUARES; j++)
-	  fprintf(stderr, "i = %d, j = %d, board[%d][%d] = %d\n",
-		  i, j, i, j, board[i][j]);
-#endif
 
       if(gui)
 	{

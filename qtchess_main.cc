@@ -25,6 +25,8 @@
 ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QtDebug>
+
 /*
 ** -- Local Includes --
 */
@@ -52,19 +54,19 @@ int main(int argc, char *argv[])
 
   if((qapp = new(std::nothrow) QApplication(argc, argv)) == 0)
     {
-      fprintf(stderr, "%s", "Memory allocation failure.\n");
+      qDebug() << "Memory allocation failure.";
       return EXIT_FAILURE;
     }
 
   if(!QGLFormat::hasOpenGL())
     {
-      fprintf(stderr, "%s", "OpenGL is not supported on this system.\n");
+      qDebug() << "OpenGL is not supported on this system.";
       return EXIT_FAILURE;
     }
 
   if((chess = new(std::nothrow) qtchess()) == 0)
     {
-      fprintf(stderr, "%s", "Memory allocation failure.\n");
+      qDebug() << "Memory allocation failure.";
       return EXIT_FAILURE;
     }
 

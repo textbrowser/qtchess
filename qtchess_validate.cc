@@ -267,16 +267,6 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
   int i = 0, j = 0, rc = INVALID;
   struct move_s move;
 
-#ifdef _DEBUG_
-  fprintf(stderr,
-	  "col_from = %d, "
-	  "col_to = %d, "
-	  "row_from = %d, "
-	  "row_to = %d, "
-	  "piece = %d\n",
-	  col_from, col_to, row_from, row_to, piece);
-#endif
-
   if(!chess)
     return rc;
 
@@ -377,11 +367,6 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 
 	if(move.pawn_2)
 	  {
-#ifdef _DEBUG_
-	    fprintf(stderr, "move.x1 = %d, move.x2 = %d\n",
-		    move.x1, move.x2);
-#endif
-
 	    if(row_from == 3 && row_to == 2 && col_to == move.y1)
 	      rc = VALID_EN_PASSANT;
 	  }
@@ -467,11 +452,6 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 
 	if(move.pawn_2)
 	  {
-#ifdef _DEBUG_
-	    fprintf(stderr, "move.x1 = %d, move.x2 = %d\n",
-		    move.x1, move.x2);
-#endif
-
 	    if(row_from == 4 && row_to == 5 && col_to == move.y1)
 	      rc = VALID_EN_PASSANT;
 	  }
@@ -487,9 +467,6 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 
 	if(row_from == row_to)
 	  {
-#ifdef _DEBUG_
-	    fprintf(stderr, "%s", "Rook: horizontal move.\n");
-#endif
 	    if(col_from + 1 == col_to)
 	      {
 		if(isBlack(piece))
@@ -582,9 +559,6 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 
 	if(col_from == col_to)
 	  {
-#ifdef _DEBUG_
-	    fprintf(stderr, "%s", "Rook: vertical move.\n");
-#endif
 	    if(row_from + 1 == row_to)
 	      {
 		if(isBlack(piece))

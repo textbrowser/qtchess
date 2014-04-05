@@ -201,10 +201,6 @@ class qtchess_gui: public QMainWindow
 
     if(setup_dialog != 0)
       setup_dialog->deleteLater();
-
-#ifdef _DEBUG_
-    fprintf(stderr, "%s", "~qtchess_gui()\n");
-#endif
   }
 
   Ui_mainWindow getUI(void) const

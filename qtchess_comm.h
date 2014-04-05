@@ -43,11 +43,8 @@ class qtchess_comm: public QObject
   qtchess_comm(void);
 
   ~qtchess_comm()
-    {
-#ifdef _DEBUG_
-      fprintf(stderr, "%s", "~qtchess_comm()\n");
-#endif
-    }
+  {
+  }
 
   bool isConnectedRemotely(void) const;
   bool isListening(void) const;
