@@ -46,7 +46,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if((ag1 = new(std::nothrow) QActionGroup(this)) == 0)
@@ -54,7 +54,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if((action_Large_Size = new(std::nothrow) QAction(tr("&Large Size"),
@@ -63,7 +63,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   action_Large_Size->setData("L");
@@ -74,7 +74,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   action_Normal_Size->setData("N");
@@ -104,7 +104,7 @@ void qtchess_gui::init(void)
   connect(ui.action_Help,
 	  SIGNAL(triggered(void)), this, SLOT(help(void)));
 
-  if((playert = new(std::nothrow) QTimer()) != 0)
+  if((playert = new(std::nothrow) QTimer(this)) != 0)
     {
       connect(playert, SIGNAL(timeout()), SLOT(updatePlayer(void)));
       playert->start(1000);
@@ -114,10 +114,10 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
-  if((opponentt = new(std::nothrow) QTimer()) != 0)
+  if((opponentt = new(std::nothrow) QTimer(this)) != 0)
     {
       connect(opponentt, SIGNAL(timeout()), SLOT(updateOpponent(void)));
       opponentt->start(1000);
@@ -127,7 +127,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if((help_dialog = new(std::nothrow) qtchess_help_dialog(this)) == 0)
@@ -135,7 +135,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if((setup_dialog = new(std::nothrow) qtchess_setup_dialog(this)) == 0)
@@ -143,7 +143,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if((promote_dialog = new(std::nothrow) qtchess_promote_dialog(this)) == 0)
@@ -151,7 +151,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if((glboard = new(std::nothrow) openglWid(this)) == 0)
@@ -159,7 +159,7 @@ void qtchess_gui::init(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	::exit(EXIT_FAILURE);
+	exit(EXIT_FAILURE);
     }
 
   if(glboard)
@@ -300,7 +300,7 @@ void qtchess_gui::quit(void)
   if(chess)
     chess->quit(0, EXIT_SUCCESS);
   else
-    ::exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 void qtchess_gui::closeEvent(QCloseEvent *e)
@@ -310,7 +310,7 @@ void qtchess_gui::closeEvent(QCloseEvent *e)
   if(chess)
     chess->quit(0, EXIT_SUCCESS);
   else
-    ::exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
 }
 
 void qtchess_gui::newGame(void)
