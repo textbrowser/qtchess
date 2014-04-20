@@ -80,6 +80,8 @@ void openglWid::paintGL(void)
 
 	if(showValid)
 	  if(chess &&
+	     qtchess_validate::areValidCoordinates(point_selected.x,
+						   point_selected.y) &&
 	     qtchess_validate::isValidMove
 	     ((int) point_selected.y,
 	      (int) point_selected.x,
@@ -662,7 +664,9 @@ void openglWid::paintGL(void)
 
   bool isValid = true;
 
-  if(qtchess_validate::isKing
+  if(qtchess_validate::areValidCoordinates((int) point_selected.x,
+					   (int) point_selected.y) &&
+     qtchess_validate::isKing
      (chess->board
       [(int) point_selected.x][(int) point_selected.y]))
     {
@@ -730,6 +734,8 @@ void openglWid::paintGL(void)
 	  glColor3f(0.0, 1.0, 0.0);
 	}
       else if(mouse_pressed == 2 && isValid &&
+	      qtchess_validate::areValidCoordinates((int) point_selected.x,
+						    (int) point_selected.y) &&
 	      (rc = qtchess_validate::isValidMove
 	       ((int) point_selected.y,
 		(int) point_selected.x,
@@ -1014,50 +1020,55 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 void openglWid::rescale(const double denominatorArg)
 {
   mouse_pressed = 0;
-  denominator = denominatorArg;
-  px /= denominator;
-  py /= denominator;
-  block_size = block_size / denominator;
-  PAWN_WIDTH /= denominator;
-  PAWN_HEIGHT /= denominator;
-  PAWN_X_OFFSET /= denominator;
-  PAWN_Y_OFFSET /= denominator;
-  BISHOP_WIDTH /= denominator;
-  BISHOP_HEIGHT /= denominator;
-  BISHOP_X_OFFSET /= denominator;
-  BISHOP_Y_OFFSET /= denominator;
-  KING_X_OFFSET /= denominator;
-  KING_Y_OFFSET /= denominator;
-  KING_B_WIDTH /= denominator;
-  KING_B_HEIGHT /= denominator;
-  KING_BT_WIDTH /= denominator;
-  KING_BT_HEIGHT /= denominator;
-  KING_WIDTH /= denominator;
-  KING_HEIGHT /= denominator;
-  KING_HCROSS_WIDTH /= denominator;
-  KING_HCROSS_HEIGHT /= denominator;
-  KING_VCROSS_WIDTH /= denominator;
-  KING_VCROSS_HEIGHT /= denominator;
-  KNIGHT_WIDTH /= denominator;
-  KNIGHT_HEIGHT /= denominator;
-  KNIGHT_X_OFFSET /= denominator;
-  KNIGHT_Y_OFFSET /= denominator;
-  ROOK_WIDTH /= denominator;
-  ROOK_HEIGHT /= denominator;
-  ROOK_B_WIDTH /= denominator;
-  ROOK_B_HEIGHT /= denominator;
-  ROOK_T_WIDTH /= denominator;
-  ROOK_T_HEIGHT /= denominator;
-  ROOK_X_OFFSET /= denominator;
-  ROOK_Y_OFFSET /= denominator;
-  QUEEN_X_OFFSET /= denominator;
-  QUEEN_Y_OFFSET /= denominator;
-  QUEEN_B_WIDTH /= denominator;
-  QUEEN_B_HEIGHT /= denominator;
-  QUEEN_BT_WIDTH /= denominator;
-  QUEEN_BT_HEIGHT /= denominator;
-  QUEEN_WIDTH /= denominator;
-  QUEEN_HEIGHT /= denominator;
+
+  if(denominatorArg != 0.0)
+    {
+      denominator = denominatorArg;
+      px /= denominator;
+      py /= denominator;
+      block_size = block_size / denominator;
+      PAWN_WIDTH /= denominator;
+      PAWN_HEIGHT /= denominator;
+      PAWN_X_OFFSET /= denominator;
+      PAWN_Y_OFFSET /= denominator;
+      BISHOP_WIDTH /= denominator;
+      BISHOP_HEIGHT /= denominator;
+      BISHOP_X_OFFSET /= denominator;
+      BISHOP_Y_OFFSET /= denominator;
+      KING_X_OFFSET /= denominator;
+      KING_Y_OFFSET /= denominator;
+      KING_B_WIDTH /= denominator;
+      KING_B_HEIGHT /= denominator;
+      KING_BT_WIDTH /= denominator;
+      KING_BT_HEIGHT /= denominator;
+      KING_WIDTH /= denominator;
+      KING_HEIGHT /= denominator;
+      KING_HCROSS_WIDTH /= denominator;
+      KING_HCROSS_HEIGHT /= denominator;
+      KING_VCROSS_WIDTH /= denominator;
+      KING_VCROSS_HEIGHT /= denominator;
+      KNIGHT_WIDTH /= denominator;
+      KNIGHT_HEIGHT /= denominator;
+      KNIGHT_X_OFFSET /= denominator;
+      KNIGHT_Y_OFFSET /= denominator;
+      ROOK_WIDTH /= denominator;
+      ROOK_HEIGHT /= denominator;
+      ROOK_B_WIDTH /= denominator;
+      ROOK_B_HEIGHT /= denominator;
+      ROOK_T_WIDTH /= denominator;
+      ROOK_T_HEIGHT /= denominator;
+      ROOK_X_OFFSET /= denominator;
+      ROOK_Y_OFFSET /= denominator;
+      QUEEN_X_OFFSET /= denominator;
+      QUEEN_Y_OFFSET /= denominator;
+      QUEEN_B_WIDTH /= denominator;
+      QUEEN_B_HEIGHT /= denominator;
+      QUEEN_BT_WIDTH /= denominator;
+      QUEEN_BT_HEIGHT /= denominator;
+      QUEEN_WIDTH /= denominator;
+      QUEEN_HEIGHT /= denominator;
+    }
+
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
   updateGL();

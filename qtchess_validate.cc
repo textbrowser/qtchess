@@ -1006,3 +1006,8 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
  done_label:
   return rc;
 }
+
+bool qtchess_validate::areValidCoordinates(const int x, const int y)
+{
+  return x >= 0 && x < NSQUARES && y >= 0 && y < NSQUARES;
+}

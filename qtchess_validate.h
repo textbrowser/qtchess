@@ -18,6 +18,7 @@ namespace qtchess_validate
 			const int);
   int color(const int);
   int isValidMove(const int, const int, const int, const int, const int);
+  bool areValidCoordinates(const int, const int);
   bool isBishop(const int);
   bool isBlack(const int);
   bool isColor(const int, const int);

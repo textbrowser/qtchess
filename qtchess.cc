@@ -74,7 +74,10 @@ void qtchess::updateBoard(const QByteArray &buffer)
   QList<QByteArray> list = buffer.simplified().split(' ');
 
   if(list.size() < 15 + NSQUARES * NSQUARES)
-    return;
+    {
+      qDebug() << "qtchess::updateBoard(): list.size() is too small.";
+      return;
+    }
 
   int color = 0, i = 0, j = 0, nonEmptyNow = 0, nonEmptyThen = 0, x = 15;
   struct move_s current_move;

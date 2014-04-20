@@ -103,8 +103,13 @@ void qtchess_comm::setListen(void)
   */
 
   if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
-    gui->getSetupDialog()->getPortField()->setText
-      (QString::number(listening_sock.serverPort()));
+    {
+      if(listening_sock.isListening())
+	gui->getSetupDialog()->getPortField()->setText
+	  (QString::number(listening_sock.serverPort()));
+      else
+	gui->getSetupDialog()->getPortField()->clear();
+    }
 }
 
 void qtchess_comm::quit(void)
@@ -271,7 +276,7 @@ void qtchess_comm::acceptConnection(void)
     return;
   else if(clientConnection)
     {
-      socket->close();
+      socket->abort();
       socket->deleteLater();
       return;
     }
@@ -284,14 +289,13 @@ void qtchess_comm::acceptConnection(void)
 
   if(gui && gui->getSetupDialog() &&
      gui->getSetupDialog()->getAllowedHostField() &&
-     !gui->getSetupDialog()->getAllowedHostField()->text().trimmed().
-     isEmpty())
+     !gui->getSetupDialog()->getAllowedHostField()->text().
+     trimmed().isEmpty())
     {
       QString str(gui->getSetupDialog()->
 		  getAllowedHostField()->text().trimmed());
 
-      if(clientConnection &&
-	 QHostAddress(str) != clientConnection->peerAddress())
+      if(QHostAddress(str) != clientConnection->peerAddress())
 	{
 	  clientConnection->abort();
 	  clientConnection->deleteLater();
@@ -305,7 +309,7 @@ void qtchess_comm::acceptConnection(void)
   connect(clientConnection, SIGNAL(disconnected(void)), this,
 	  SLOT(clientDisconnected(void)));
 
-  if(clientConnection && gui)
+  if(gui)
     gui->notifyConnection(clientConnection->peerAddress().toString());
 
   if(chess && chess->getFirst() == -1)
@@ -332,9 +336,14 @@ void qtchess_comm::clientDisconnected(void)
 {
   QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
 
-  if(socket == clientConnection)
+  if(clientConnection == socket)
     if(clientConnection)
-      clientConnection->deleteLater();
+      {
+	clientConnection->deleteLater();
+
+	if(gui)
+	  gui->setStatusText(tr("Status: Ready"));
+      }
 
   if(chess)
     {
@@ -344,9 +353,6 @@ void qtchess_comm::clientDisconnected(void)
     }
 
   setConnected(false);
-
-  if(gui && socket == clientConnection)
-    gui->setStatusText(tr("Status: Ready"));
 }
 
 bool qtchess_comm::isListening(void) const
