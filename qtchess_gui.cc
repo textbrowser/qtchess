@@ -689,7 +689,7 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
 		 current_move.departure, insertX,
 		 to_let, current_move.x2 + 1);
       else
-	snprintf(hist, sizeof(hist), "-----");
+	snprintf(hist, sizeof(hist), "%s", "-----");
     }
 
   /*

@@ -9,7 +9,7 @@ TEMPLATE	= app
 
 QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual -Werror -Wextra \
-                   -Woverloaded-virtual -Wpointer-arith \
+                   -Wformat=2 -Woverloaded-virtual -Wpointer-arith \
                    -Wstrict-overflow=4 -fwrapv -pie
 QMAKE_EXTRA_TARGETS = purge
 

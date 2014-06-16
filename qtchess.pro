@@ -7,7 +7,7 @@ TEMPLATE        = app
 
 QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
-                   -Werror -Wextra \
+                   -Werror -Wextra -Wformat=2 \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstack-protector -Wstrict-overflow=4 \
                    -fPIE -fstack-protector-all -fwrapv \
