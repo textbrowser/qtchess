@@ -743,8 +743,11 @@ void qtchess_help_dialog::ok_cb(void)
 
 void qtchess_help_dialog::setup(void)
 {
+  if(isVisible())
+    hide();
+
   ui.ok->setFocus();
-  exec();
+  show();
 }
 
 qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
@@ -754,18 +757,18 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
   setMinimumWidth(600);
   setMinimumHeight(300);
-  ui.text->append(tr("Please do not connect to the same process.\n"
+  setWindowModality(Qt::NonModal);
+  ui.text->append(tr("An empty Allowed IP Address value will allow any "
+		     "peer to connect.\n"
 		     "Beige always moves first.\n"
-		     "To move a piece, first click it and then click "
-		     "the desired destination.\n"
-		     "To view a selected piece's valid moves, "
-		     "double-click the selected piece.\n"
 		     "Moves are prohibited until connections have been "
 		     "established.\n"
-		     "An empty Allowed IP Address value will allow any "
-		     "peer to connect.\n"
+		     "To move a piece, first click it and then click "
+		     "the desired destination.\n"
 		     "To prevent peer connections, please set the "
-		     "Allowed IP Address to 0.0.0.0 (:: for IPv6)."
+		     "Allowed IP Address to 0.0.0.0 (:: for IPv6).\n"
+		     "To view a selected piece's valid moves, "
+		     "double-click the selected piece."
 		     ));
 }
 
