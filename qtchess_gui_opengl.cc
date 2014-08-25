@@ -1137,8 +1137,15 @@ openglWid::openglWid(QWidget *parent):QGLWidget(parent)
 
 void openglWid::showValidMoves(void)
 {
-  showValid = true;
-  updateGL();
+  if(!chess || !comm)
+    return;
+
+  if(chess->getTurn() == MY_TURN && !chess->isGameOver() &&
+     comm->isReady())
+    {
+      showValid = true;
+      updateGL();
+    }
 }
 
 void openglWid::highlightSquare(const double x, const double y)
