@@ -272,7 +272,7 @@ void qtchess_gui::about(void)
 	     "<a href=\"http://qtchess.sourceforge.net/release_news.html\">"
 	     "http://qtchess.sourceforge.net/release_news.html</a>.<br>");
   mb.setStandardButtons(QMessageBox::Ok);
-  mb.setIconPixmap(QPixmap("./chess.png"));
+  mb.setIconPixmap(QPixmap("./Images/chess.png"));
   mb.exec();
 }
 

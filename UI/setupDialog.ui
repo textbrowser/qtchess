@@ -25,8 +25,8 @@
    <string>QtChess: Connection Configuration</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>chess.png</normaloff>chess.png</iconset>
+   <iconset resource="../Images/images.qrc">
+    <normaloff>:/chess.png</normaloff>:/chess.png</iconset>
   </property>
   <layout class="QVBoxLayout">
    <item>
@@ -339,6 +339,8 @@
   <tabstop>connect</tabstop>
   <tabstop>cancel</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../Images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

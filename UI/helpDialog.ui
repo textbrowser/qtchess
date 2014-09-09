@@ -19,8 +19,8 @@
    <string>QtChess: Help</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>chess.png</normaloff>chess.png</iconset>
+   <iconset resource="../Images/images.qrc">
+    <normaloff>:/chess.png</normaloff>:/chess.png</iconset>
   </property>
   <layout class="QVBoxLayout">
    <item>
@@ -80,6 +80,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Images/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

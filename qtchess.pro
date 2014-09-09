@@ -14,24 +14,27 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -mtune=generic -pie
 QMAKE_EXTRA_TARGETS = purge
 
-FORMS		= helpDialog.ui \
-                  mainwindow.ui \
-                  promotionDialog.ui \
-                  setupDialog.ui
+INCLUDEPATH     += Include
+RESOURCES       = Images/images.qrc
 
-HEADERS		= qtchess.h \
-                  qtchess_comm.h \
-                  qtchess_defs.h \
-                  qtchess_gui.h \
-                  qtchess_gui_opengl.h \
-                  qtchess_validate.h
+FORMS		= UI/helpDialog.ui \
+                  UI/mainwindow.ui \
+                  UI/promotionDialog.ui \
+                  UI/setupDialog.ui
 
-SOURCES		= qtchess.cc \
-                  qtchess_comm.cc \
-                  qtchess_gui.cc \
-                  qtchess_gui_opengl.cc \
-                  qtchess_main.cc \
-                  qtchess_validate.cc
+HEADERS		= Include/qtchess.h \
+                  Include/qtchess_comm.h \
+                  Include/qtchess_defs.h \
+                  Include/qtchess_gui.h \
+                  Include/qtchess_gui_opengl.h \
+                  Include/qtchess_validate.h
+
+SOURCES		= Source/qtchess.cc \
+                  Source/qtchess_comm.cc \
+                  Source/qtchess_gui.cc \
+                  Source/qtchess_gui_opengl.cc \
+                  Source/qtchess_main.cc \
+                  Source/qtchess_validate.cc
 
 PROJECTNAME	= QtChess
 TARGET		= QtChess
