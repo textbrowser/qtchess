@@ -51,6 +51,9 @@ void qtchess_comm::init(void)
     gui->getSetupDialog()->getHostField()->setText
       (QHostAddress(QHostAddress::LocalHost).toString());
 
+  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
+    gui->getSetupDialog()->getPortField()->setText("50000");
+
   if(gui && gui->getSetupDialog() &&
      gui->getSetupDialog()->getAllowedHostField())
     gui->getSetupDialog()->getAllowedHostField()->setText
@@ -92,11 +95,15 @@ void qtchess_comm::setListen(void)
   */
 
   QHostAddress address(QHostAddress::Any);
+  quint16 port = 0;
 
   if(gui && gui->getSetupDialog())
-    address = gui->getSetupDialog()->getListeningAddress();
+    {
+      address = gui->getSetupDialog()->getListeningAddress();
+      port = gui->getSetupDialog()->getPortField()->text().toUShort();
+    }
 
-  listening_sock.listen(address);
+  listening_sock.listen(address, port);
 
   /*
   ** Save the port number.
@@ -107,8 +114,6 @@ void qtchess_comm::setListen(void)
       if(listening_sock.isListening())
 	gui->getSetupDialog()->getPortField()->setText
 	  (QString::number(listening_sock.serverPort()));
-      else
-	gui->getSetupDialog()->getPortField()->clear();
     }
 }
 

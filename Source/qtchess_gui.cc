@@ -261,9 +261,8 @@ void qtchess_gui::about(void)
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
-  mb.setText("<html>QtChess Version 3.19.<br>"
-	     "Copyright (c) 2003 - 2014 "
-	     "Asparagus."
+  mb.setText("<html>QtChess Version 3.20.<br>"
+	     "Copyright (c) 2003 - 2015 Guess Who?"
 	     "<hr>"
 	     "Please visit <a href=\"http://qtchess.sourceforge.net\">"
 	     "http://qtchess.sourceforge.net</a> for "
@@ -501,6 +500,7 @@ void qtchess_setup_dialog::slotListen(void)
       bool state = comm->isListening();
 
       ui.host->setReadOnly(state);
+      ui.port->setReadOnly(state);
       ui.lipv4->setEnabled(!state);
       ui.lipv6->setEnabled(!state);
 
@@ -510,10 +510,7 @@ void qtchess_setup_dialog::slotListen(void)
       if(state)
 	ui.listen->setText(tr("&Stop Listening"));
       else
-	{
-	  ui.port->clear();
-	  ui.listen->setText(tr("&Listen"));
-	}
+	ui.listen->setText(tr("&Listen"));
     }
 }
 
