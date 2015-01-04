@@ -261,15 +261,18 @@ void qtchess_gui::about(void)
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
-  mb.setText("<html>QtChess Version 3.20.<br>"
-	     "Copyright (c) 2003 - 2015 Guess Who?"
-	     "<hr>"
-	     "Please visit <a href=\"http://qtchess.sourceforge.net\">"
-	     "http://qtchess.sourceforge.net</a> for "
-	     "project information.<br>"
-	     "For release notes, please visit "
-	     "<a href=\"http://qtchess.sourceforge.net/release_news.html\">"
-	     "http://qtchess.sourceforge.net/release_news.html</a>.<br>");
+  mb.setText
+    (tr("<html>QtChess Version 3.20.<br>"
+	"Copyright (c) 2003 - 2015 Guess Who?<br>"
+	"Qt version %1."
+	"<hr>"
+	"Please visit <a href=\"http://qtchess.sourceforge.net\">"
+	"http://qtchess.sourceforge.net</a> for "
+	"project information.<br>"
+	"For release notes, please visit "
+	"<a href=\"http://qtchess.sourceforge.net/release_news.html\">"
+	"http://qtchess.sourceforge.net/release_news.html</a>.<br>").
+     arg(QT_VERSION_STR));
   mb.setStandardButtons(QMessageBox::Ok);
   mb.setIconPixmap(QPixmap("./Images/chess.png"));
   mb.exec();
