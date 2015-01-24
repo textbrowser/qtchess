@@ -14,7 +14,7 @@ section
 setOutPath $INSTDIR
 
 # Specify files to go in output path.
-file .\Images\chess.png
+file /r .\release\Images
 file .\release\*.dll
 file .\release\QtChess.exe
 
