@@ -9,7 +9,7 @@ QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Werror -Wextra -Wformat=2 \
                    -Woverloaded-virtual -Wpointer-arith \
-                   -Wstack-protector -Wstrict-overflow=4 \
+                   -Wstack-protector -Wstrict-overflow=5 \
                    -fPIE -fstack-protector-all -fwrapv \
                    -mtune=generic -pie
 QMAKE_EXTRA_TARGETS = purge
