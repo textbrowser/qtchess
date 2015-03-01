@@ -23,8 +23,7 @@ void qtchess_comm::updateBoard(void)
 
       QByteArray buffer(BUFFER_SIZE, 0);
 
-      if(clientConnection->
-	 readLine(buffer.data(), (qint64) buffer.length()) != -1)
+      if(clientConnection->readLine(buffer.data(), buffer.length()) != -1)
 	{
 	  QApplication::restoreOverrideCursor();
 
@@ -232,7 +231,8 @@ void qtchess_comm::sendMove(const struct move_s current_move)
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  if(send_sock.write(buffer.constData(), (qint64) buffer.length()) == -1)
+  if(send_sock.write(buffer.constData(),
+		     buffer.length()) != (qint64) buffer.length())
     {
       QApplication::restoreOverrideCursor();
 

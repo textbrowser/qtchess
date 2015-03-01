@@ -90,16 +90,16 @@ void qtchess::updateBoard(const QByteArray &buffer)
   ** Copy the information into current_move.
   */
 
-  current_move.x1 = qBound(-1, list[0].toInt(), NSQUARES - 1);
-  current_move.x2 = qBound(-1, list[1].toInt(), NSQUARES - 1);
-  current_move.y1 = qBound(-1, list[2].toInt(), NSQUARES - 1);
-  current_move.y2 = qBound(-1, list[3].toInt(), NSQUARES - 1);
-  current_move.r_x1 = qBound(-1, list[4].toInt(), NSQUARES - 1);
-  current_move.r_x2 = qBound(-1, list[5].toInt(), NSQUARES - 1);
-  current_move.r_y1 = qBound(-1, list[6].toInt(), NSQUARES - 1);
-  current_move.r_y2 = qBound(-1, list[7].toInt(), NSQUARES - 1);
-  current_move.piece = list[8].toInt();
-  current_move.rook = list[9].toInt();
+  current_move.x1 = qBound(-1, list.value(0).toInt(), NSQUARES - 1);
+  current_move.x2 = qBound(-1, list.value(1).toInt(), NSQUARES - 1);
+  current_move.y1 = qBound(-1, list.value(2).toInt(), NSQUARES - 1);
+  current_move.y2 = qBound(-1, list.value(3).toInt(), NSQUARES - 1);
+  current_move.r_x1 = qBound(-1, list.value(4).toInt(), NSQUARES - 1);
+  current_move.r_x2 = qBound(-1, list.value(5).toInt(), NSQUARES - 1);
+  current_move.r_y1 = qBound(-1, list.value(6).toInt(), NSQUARES - 1);
+  current_move.r_y2 = qBound(-1, list.value(7).toInt(), NSQUARES - 1);
+  current_move.piece = list.value(8).toInt();
+  current_move.rook = list.value(9).toInt();
 
   if(getMyColor() == BLACK)
     {
@@ -119,17 +119,17 @@ void qtchess::updateBoard(const QByteArray &buffer)
        current_move.rook == ROOK2_WHITE))
     current_move.rook = -1;
 
-  current_move.promoted = QVariant(list[10].toInt()).toBool();
-  current_move.pawn_2 = QVariant(list[11].toInt()).toBool();
-  current_move.enpassant = QVariant(list[12].toInt()).toBool();
-  current_move.isOppKingThreat = QVariant(list[13].toInt()).toBool();
+  current_move.promoted = QVariant(list.value(10).toInt()).toBool();
+  current_move.pawn_2 = QVariant(list.value(11).toInt()).toBool();
+  current_move.enpassant = QVariant(list.value(12).toInt()).toBool();
+  current_move.isOppKingThreat = QVariant(list.value(13).toInt()).toBool();
   snprintf(current_move.departure, sizeof(current_move.departure),
-	   "%s", list[14].constData());
+	   "%s", list.value(14).constData());
 
   for(i = 0; i < NSQUARES; i++)
     for(j = 0; j < NSQUARES; j++)
       {
-	current_move.board[i][j] = list[x].toInt();
+	current_move.board[i][j] = list.value(x).toInt();
 
 	if(!((current_move.board[i][j] >= 100 &&
 	      current_move.board[i][j] <= 107) ||

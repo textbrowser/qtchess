@@ -48,10 +48,6 @@ qtchess_gui *gui = 0;
 
 int main(int argc, char *argv[])
 {
-  int rc = 0;
-
-  QApplication::setColorSpec(QApplication::CustomColor);
-
   if((qapp = new(std::nothrow) QApplication(argc, argv)) == 0)
     {
       qDebug() << "Memory allocation failure.";
@@ -95,6 +91,5 @@ int main(int argc, char *argv[])
   */
 
   gui->display();
-  rc = gui->exec();
-  return rc;
+  return gui->exec();
 }

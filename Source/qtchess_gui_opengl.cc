@@ -80,8 +80,9 @@ void openglWid::paintGL(void)
 
 	if(showValid)
 	  if(chess &&
-	     qtchess_validate::areValidCoordinates(point_selected.x,
-						   point_selected.y) &&
+	     qtchess_validate::
+	     areValidCoordinates((int) point_selected.x,
+				 (int) point_selected.y) &&
 	     qtchess_validate::isValidMove
 	     ((int) point_selected.y,
 	      (int) point_selected.x,
