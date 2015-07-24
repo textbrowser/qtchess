@@ -31,6 +31,11 @@
 ** -- Local Includes --
 */
 
+#ifdef Q_OS_MAC
+#if QT_VERSION >= 0x050000
+#include "CocoaInitializer.h"
+#endif
+#endif
 #include "qtchess.h"
 
 /*
@@ -53,6 +58,16 @@ int main(int argc, char *argv[])
       qDebug() << "Memory allocation failure.";
       return EXIT_FAILURE;
     }
+
+#ifdef Q_OS_MAC
+#if QT_VERSION >= 0x050000
+  /*
+  ** Eliminate warnings.
+  */
+
+  CocoaInitializer ci;
+#endif
+#endif
 
   if(!QGLFormat::hasOpenGL())
     {
