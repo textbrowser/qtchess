@@ -1,3 +1,4 @@
+cache()
 purge.commands = rm -f *~
 
 CONFIG		+= app_bundle qt release warn_on
@@ -13,9 +14,12 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Wstack-protector -Wstrict-overflow=5 \
                    -fPIE -fstack-protector-all -fwrapv \
                    -mtune=generic
+QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
 QMAKE_EXTRA_TARGETS = purge
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
 
 INCLUDEPATH     += Include
+LIBS            += -framework Cocoa
 RESOURCES       = Images/images.qrc
 
 FORMS		= UI/helpDialog.ui \
@@ -29,6 +33,9 @@ HEADERS		= Include/qtchess.h \
                   Include/qtchess_gui.h \
                   Include/qtchess_gui_opengl.h \
                   Include/qtchess_validate.h
+
+OBJECTIVE_HEADERS += Include/Cocoainitializer.h
+OBJECTIVE_SOURCES += Source/Cocoainitializer.mm
 
 SOURCES		= Source/qtchess.cc \
                   Source/qtchess_comm.cc \
