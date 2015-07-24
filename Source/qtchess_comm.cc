@@ -8,7 +8,6 @@
 
 #include "qtchess_comm.h"
 
-extern QApplication *qapp;
 extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;

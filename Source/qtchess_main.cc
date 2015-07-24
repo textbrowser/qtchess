@@ -42,7 +42,6 @@
 ** -- Globals --
 */
 
-QApplication *qapp = 0;
 qtchess *chess = 0;
 qtchess_comm *comm = 0;
 qtchess_gui *gui = 0;
@@ -53,11 +52,7 @@ qtchess_gui *gui = 0;
 
 int main(int argc, char *argv[])
 {
-  if((qapp = new(std::nothrow) QApplication(argc, argv)) == 0)
-    {
-      qDebug() << "Memory allocation failure.";
-      return EXIT_FAILURE;
-    }
+  QApplication application(argc, argv);
 
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x050000

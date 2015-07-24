@@ -7,7 +7,6 @@
 #include "qtchess.h"
 
 extern qtchess_gui *gui;
-extern QApplication *qapp;
 extern qtchess_comm *comm;
 
 bool qtchess::isReady(void)
@@ -66,7 +65,10 @@ void qtchess::quit(const char *message_text, const int exit_code)
   if(message_text != 0)
     qDebug() << message_text;
 
-  qapp->exit(exit_code);
+  if(QApplication::instance())
+    QApplication::instance()->exit(exit_code);
+  else
+    exit(exit_code);
 }
 
 void qtchess::updateBoard(const QByteArray &buffer)

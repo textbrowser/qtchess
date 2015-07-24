@@ -14,15 +14,14 @@
 #include <QLabel>
 #include <QMenu>
 
-extern QApplication *qapp;
 extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;
 
 int qtchess_gui::exec(void)
 {
-  if(qapp)
-    return qapp->exec();
+  if(QApplication::instance())
+    return QApplication::instance()->exec();
   else
     return EXIT_FAILURE;
 }
