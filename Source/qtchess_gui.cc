@@ -105,7 +105,7 @@ void qtchess_gui::init(void)
 
   if((playert = new(std::nothrow) QTimer(this)) != 0)
     {
-      connect(playert, SIGNAL(timeout()), SLOT(updatePlayer(void)));
+      connect(playert, SIGNAL(timeout(void)), SLOT(updatePlayer(void)));
       playert->start(1000);
     }
   else
@@ -118,7 +118,7 @@ void qtchess_gui::init(void)
 
   if((opponentt = new(std::nothrow) QTimer(this)) != 0)
     {
-      connect(opponentt, SIGNAL(timeout()), SLOT(updateOpponent(void)));
+      connect(opponentt, SIGNAL(timeout(void)), SLOT(updateOpponent(void)));
       opponentt->start(1000);
     }
   else
