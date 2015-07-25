@@ -30,7 +30,7 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="local">
      <property name="title">
       <string>Local</string>
      </property>
@@ -156,7 +156,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
+    <widget class="QGroupBox" name="remote">
      <property name="title">
       <string>Remote</string>
      </property>

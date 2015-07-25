@@ -448,6 +448,7 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
   ui.setupUi(this);
   ui.lScopeId->setEnabled(false);
   ui.rScopeId->setEnabled(false);
+  ui.rhost->setText(QHostAddress(QHostAddress::LocalHost).toString());
   connect(ui.cancel, SIGNAL(clicked(void)), this, SLOT(close_cb(void)));
   connect(ui.connect, SIGNAL(clicked(void)), this, SLOT(connect_cb(void)));
   connect(ui.lipv4, SIGNAL(clicked(void)), this,

@@ -16,13 +16,13 @@ void qtchess_comm::updateBoard(void)
 {
   int ntries = 1;
 
-  while(clientConnection && clientConnection->canReadLine() && ntries <= 5)
+  while(m_clientConnection && m_clientConnection->canReadLine() && ntries <= 5)
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
       QByteArray buffer(BUFFER_SIZE, 0);
 
-      if(clientConnection->readLine(buffer.data(), buffer.length()) != -1)
+      if(m_clientConnection->readLine(buffer.data(), buffer.length()) != -1)
 	{
 	  QApplication::restoreOverrideCursor();
 
@@ -70,9 +70,8 @@ bool qtchess_comm::isReady(void) const
 {
   if(isSet())
     {
-      if(clientConnection &&
-	 clientConnection->state() == QAbstractSocket::ConnectedState &&
-	 send_sock.state() == QAbstractSocket::ConnectedState)
+      if(m_clientConnection &&
+	 m_clientConnection->state() == QAbstractSocket::ConnectedState)
 	return true;
       else
 	return false;
@@ -121,7 +120,9 @@ void qtchess_comm::quit(void)
   ** Terminate all communications.
   */
 
-  send_sock.close();
+  if(m_clientConnection)
+    m_clientConnection->deleteLater();
+
   listening_sock.close();
   setConnected(false);
 }
@@ -133,7 +134,8 @@ void qtchess_comm::setConnected(const bool connected_arg)
 
 void qtchess_comm::disconnectRemotely(void)
 {
-  send_sock.close();
+  if(m_clientConnection)
+    m_clientConnection->deleteLater();
 
   if(chess)
     {
@@ -172,13 +174,41 @@ void qtchess_comm::connectRemotely(void)
   if(!scopeId.isEmpty())
     address.setScopeId(scopeId);
 
-  send_sock.abort();
-  send_sock.connectToHost(address, remotePort);
+  if(m_clientConnection)
+    {
+      m_clientConnection->abort();
+      m_clientConnection->deleteLater();
+    }
+
+  m_clientConnection = new QTcpSocket(this);
+  connect(m_clientConnection,
+	  SIGNAL(connected(void)),
+	  this,
+	  SIGNAL(connectedToClient(void)));
+  connect(m_clientConnection,
+	  SIGNAL(connected(void)),
+	  this,
+	  SLOT(slotClientConnected(void)));
+  connect(m_clientConnection,
+	  SIGNAL(disconnected(void)),
+	  this,
+	  SLOT(clientDisconnected(void)));
+  connect(m_clientConnection,
+	  SIGNAL(disconnected(void)),
+	  this,
+	  SIGNAL(disconnectedFromClient(void)));
+  connect(m_clientConnection,
+	  SIGNAL(error(QAbstractSocket::SocketError)),
+	  m_clientConnection,
+	  SIGNAL(disconnected(void)));
+  m_clientConnection->connectToHost(address, remotePort);
 }
 
 void qtchess_comm::sendMove(const struct move_s current_move)
 {
-  if(send_sock.state() != QAbstractSocket::ConnectedState)
+  if(!m_clientConnection)
+    return;
+  else if(m_clientConnection->state() != QAbstractSocket::ConnectedState)
     return;
 
   QByteArray buffer;
@@ -230,8 +260,8 @@ void qtchess_comm::sendMove(const struct move_s current_move)
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  if(send_sock.write(buffer.constData(),
-		     buffer.length()) != (qint64) buffer.length())
+  if(m_clientConnection->write(buffer.constData(),
+			       buffer.length()) != (qint64) buffer.length())
     {
       QApplication::restoreOverrideCursor();
 
@@ -251,22 +281,6 @@ qtchess_comm::qtchess_comm(void)
 {
   connect(&listening_sock, SIGNAL(newConnection(void)), this,
 	  SLOT(acceptConnection(void)));
-  connect(&send_sock,
-	  SIGNAL(connected(void)),
-	  this,
-	  SIGNAL(connectedToClient(void)));
-  connect(&send_sock,
-	  SIGNAL(connected(void)),
-	  this,
-	  SLOT(slotClientConnected(void)));
-  connect(&send_sock,
-	  SIGNAL(disconnected(void)),
-	  this,
-	  SLOT(clientDisconnected(void)));
-  connect(&send_sock,
-	  SIGNAL(disconnected(void)),
-	  this,
-	  SIGNAL(disconnectedFromClient(void)));
 }
 
 void qtchess_comm::acceptConnection(void)
@@ -278,14 +292,16 @@ void qtchess_comm::acceptConnection(void)
 
   if(!socket)
     return;
-  else if(clientConnection)
+  else if(m_clientConnection)
     {
       socket->abort();
       socket->deleteLater();
       return;
     }
   else
-    clientConnection = socket;
+    m_clientConnection = socket;
+
+  m_clientConnection->setParent(this);
 
   /*
   ** Acceptable peer?
@@ -299,22 +315,27 @@ void qtchess_comm::acceptConnection(void)
       QString str(gui->getSetupDialog()->
 		  getAllowedHostField()->text().trimmed());
 
-      if(QHostAddress(str) != clientConnection->peerAddress())
+      if(QHostAddress(str) != m_clientConnection->peerAddress())
 	{
-	  clientConnection->abort();
-	  clientConnection->deleteLater();
+	  m_clientConnection->abort();
+	  m_clientConnection->deleteLater();
 	  return;
 	}
     }
 
   setConnected(true);
-  connect(clientConnection, SIGNAL(readyRead(void)), this,
-	  SLOT(updateBoard(void)));
-  connect(clientConnection, SIGNAL(disconnected(void)), this,
+  emit connectedToClient();
+  connect(m_clientConnection, SIGNAL(disconnected(void)), this,
 	  SLOT(clientDisconnected(void)));
+  connect(m_clientConnection,
+	  SIGNAL(error(QAbstractSocket::SocketError)),
+	  m_clientConnection,
+	  SIGNAL(disconnected(void)));
+  connect(m_clientConnection, SIGNAL(readyRead(void)), this,
+	  SLOT(updateBoard(void)));
 
   if(gui)
-    gui->notifyConnection(clientConnection->peerAddress().toString());
+    gui->notifyConnection(m_clientConnection->peerAddress().toString());
 
   if(chess && chess->getFirst() == -1)
     {
@@ -340,14 +361,10 @@ void qtchess_comm::clientDisconnected(void)
 {
   QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
 
-  if(clientConnection == socket)
-    if(clientConnection)
-      {
-	clientConnection->deleteLater();
-
-	if(gui)
-	  gui->setStatusText(tr("Status: Ready"));
-      }
+  if(m_clientConnection && m_clientConnection == socket)
+    m_clientConnection->deleteLater();
+  else if(socket)
+    socket->deleteLater();
 
   if(chess)
     {
@@ -356,6 +373,10 @@ void qtchess_comm::clientDisconnected(void)
       chess->setMyColor(-1);
     }
 
+  if(gui)
+    gui->setStatusText(tr("Status: Ready"));
+
+  emit disconnectedFromClient();
   setConnected(false);
 }
 
@@ -371,5 +392,6 @@ void qtchess_comm::stopListening(void)
 
 bool qtchess_comm::isConnectedRemotely(void) const
 {
-  return send_sock.state() == QAbstractSocket::ConnectedState;
+  return m_clientConnection &&
+    m_clientConnection->state() == QAbstractSocket::ConnectedState;
 }

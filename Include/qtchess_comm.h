@@ -46,6 +46,22 @@ class qtchess_comm: public QObject
   {
   }
 
+  QHostAddress peerAddress(void) const
+  {
+    if(m_clientConnection)
+      return m_clientConnection->peerAddress();
+    else
+      return QHostAddress();
+  }
+
+  quint16 peerPort(void) const
+  {
+    if(m_clientConnection)
+      return m_clientConnection->peerPort();
+    else
+      return 0;
+  }
+
   bool isConnectedRemotely(void) const;
   bool isListening(void) const;
   bool isReady(void) const;
@@ -64,9 +80,8 @@ class qtchess_comm: public QObject
   ** -- Members --
   */
 
-  QPointer<QTcpSocket> clientConnection;
+  QPointer<QTcpSocket> m_clientConnection;
   QTcpServer listening_sock;
-  QTcpSocket send_sock;
   bool connected;
 
   /*
