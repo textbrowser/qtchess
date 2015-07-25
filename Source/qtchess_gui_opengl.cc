@@ -621,8 +621,9 @@ void openglWid::paintGL(void)
 
   glColor3f(0.0, 0.0, 0.0);
   font.setBold(false);
+  font.setStyleStrategy(QFont::OpenGLCompatible);
 
-  for(int m = 1; m <= 8; m++)
+  for(int m = 1; m <= NSQUARES; m++)
     {
       renderText((int) (px + m * block_size - block_size / 2 - 5),
 		 (int) (py - 5),

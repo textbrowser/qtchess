@@ -33,6 +33,11 @@ void qtchess_gui::setStatusText(const QString &str)
 
 void qtchess_gui::init(void)
 {
+  static bool s_initialized = false;
+
+  if(s_initialized)
+    return;
+
   QActionGroup *ag1 = 0;
 
   ui.setupUi(this);
@@ -189,6 +194,7 @@ void qtchess_gui::init(void)
   resize(sizeHint());
   ui.boardFrame->setFocus();
   show();
+  s_initialized = true;
 }
 
 void qtchess_gui::slotShowValidMoves(void)
@@ -783,18 +789,36 @@ void qtchess_gui::stopTimers(const int which)
 
 void qtchess_gui::updatePlayer(void)
 {
+  static QString stylesheet
+    (ui.playerClock->styleSheet());
+
   if(comm && chess &&
      comm->isReady() && chess->getTurn() == MY_TURN &&
      !chess->isGameOver())
-    ui.playerClock->setTime(ui.playerClock->time().addSecs(1));
+    {
+      ui.playerClock->setStyleSheet
+	("QWidget {background: rgb(144, 238, 144);}");
+      ui.playerClock->setTime(ui.playerClock->time().addSecs(1));
+    }
+  else
+    ui.playerClock->setStyleSheet(stylesheet);
 }
 
 void qtchess_gui::updateOpponent(void)
 {
+  static QString stylesheet
+    (ui.opponentClock->styleSheet());
+
   if(comm && chess &&
      comm->isReady() && chess->getTurn() == THEIR_TURN &&
      !chess->isGameOver())
-    ui.opponentClock->setTime(ui.opponentClock->time().addSecs(1));
+    {
+      ui.opponentClock->setStyleSheet
+	("QWidget {background: rgb(240, 128, 128);}");
+      ui.opponentClock->setTime(ui.opponentClock->time().addSecs(1));
+    }
+  else
+    ui.opponentClock->setStyleSheet(stylesheet);
 }
 
 void qtchess_gui::initClocks(void)
