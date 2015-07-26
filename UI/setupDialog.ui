@@ -34,6 +34,9 @@
      <property name="title">
       <string>Local</string>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QGroupBox" name="groupBox">
@@ -138,6 +141,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="disconnect">
+          <property name="text">
+           <string>&amp;Disconnect</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -159,6 +169,12 @@
     <widget class="QGroupBox" name="remote">
      <property name="title">
       <string>Remote</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -324,6 +340,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>local</tabstop>
   <tabstop>lipv4</tabstop>
   <tabstop>lipv6</tabstop>
   <tabstop>host</tabstop>
@@ -331,6 +348,8 @@
   <tabstop>port</tabstop>
   <tabstop>allowedHost</tabstop>
   <tabstop>listen</tabstop>
+  <tabstop>disconnect</tabstop>
+  <tabstop>remote</tabstop>
   <tabstop>ripv4</tabstop>
   <tabstop>ripv6</tabstop>
   <tabstop>rhost</tabstop>

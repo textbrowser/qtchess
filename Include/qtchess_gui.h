@@ -112,9 +112,12 @@ class qtchess_setup_dialog: public QDialog
   void close_cb(void);
   void connect_cb(void);
   void slotConnectedToClient(void);
+  void slotDisconnect(void);
   void slotDisconnectedFromClient(void);
+  void slotLocal(bool state);
   void slotListen(void);
   void slotProtocolChanged(void);
+  void slotRemote(bool state);
 };
 
 class qtchess_promote_dialog: public QDialog

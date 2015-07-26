@@ -451,10 +451,16 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
   ui.rhost->setText(QHostAddress(QHostAddress::LocalHost).toString());
   connect(ui.cancel, SIGNAL(clicked(void)), this, SLOT(close_cb(void)));
   connect(ui.connect, SIGNAL(clicked(void)), this, SLOT(connect_cb(void)));
+  connect(ui.disconnect, SIGNAL(clicked(void)), this,
+	  SLOT(slotDisconnect(void)));
   connect(ui.lipv4, SIGNAL(clicked(void)), this,
 	  SLOT(slotProtocolChanged(void)));
   connect(ui.lipv6, SIGNAL(clicked(void)), this,
 	  SLOT(slotProtocolChanged(void)));
+  connect(ui.local, SIGNAL(toggled(bool)),
+	  this, SLOT(slotLocal(bool)));
+  connect(ui.remote, SIGNAL(toggled(bool)),
+	  this, SLOT(slotRemote(bool)));
   connect(ui.ripv4, SIGNAL(clicked(void)), this,
 	  SLOT(slotProtocolChanged(void)));
   connect(ui.ripv6, SIGNAL(clicked(void)), this,
@@ -499,28 +505,31 @@ QLineEdit *qtchess_setup_dialog::getAllowedHostField(void) const
 
 void qtchess_setup_dialog::slotListen(void)
 {
-  if(comm)
-    {
-      if(comm->isListening())
-	comm->stopListening();
-      else
-	comm->setListen();
+  bool state = false;
 
-      bool state = comm->isListening();
+  if(sender() == ui.listen)
+    if(comm)
+      {
+	if(comm->isListening())
+	  comm->stopListening();
+	else
+	  comm->setListen();
 
-      ui.host->setReadOnly(state);
-      ui.port->setReadOnly(state);
-      ui.lipv4->setEnabled(!state);
-      ui.lipv6->setEnabled(!state);
+	state = comm->isListening();
+      }
 
-      if(ui.lipv6->isChecked())
-	ui.lScopeId->setReadOnly(state);
+  ui.host->setReadOnly(state);
+  ui.port->setReadOnly(state);
+  ui.lipv4->setEnabled(!state);
+  ui.lipv6->setEnabled(!state);
 
-      if(state)
-	ui.listen->setText(tr("&Stop Listening"));
-      else
-	ui.listen->setText(tr("&Listen"));
-    }
+  if(ui.lipv6->isChecked())
+    ui.lScopeId->setReadOnly(state);
+
+  if(state)
+    ui.listen->setText(tr("&Stop Listening"));
+  else
+    ui.listen->setText(tr("&Listen"));
 }
 
 void qtchess_setup_dialog::slotProtocolChanged(void)
@@ -557,22 +566,28 @@ void qtchess_setup_dialog::slotProtocolChanged(void)
 
 void qtchess_setup_dialog::slotConnectedToClient(void)
 {
+  if(ui.local->isChecked())
+    return;
+
   ui.connect->setText(tr("&Disconnect"));
+  ui.rScopeId->setReadOnly(true);
   ui.ripv4->setEnabled(false);
   ui.ripv6->setEnabled(false);
   ui.rhost->setReadOnly(true);
   ui.rport->setReadOnly(true);
-  ui.rScopeId->setReadOnly(true);
 }
 
 void qtchess_setup_dialog::slotDisconnectedFromClient(void)
 {
+  if(ui.local->isChecked())
+    return;
+
   ui.connect->setText(tr("&Connect"));
+  ui.rScopeId->setReadOnly(false);
+  ui.rhost->setReadOnly(false);
   ui.ripv4->setEnabled(true);
   ui.ripv6->setEnabled(true);
-  ui.rhost->setReadOnly(false);
   ui.rport->setReadOnly(false);
-  ui.rScopeId->setReadOnly(false);
 }
 
 QHostAddress qtchess_setup_dialog::getListeningAddress(void) const
@@ -588,6 +603,39 @@ QHostAddress qtchess_setup_dialog::getListeningAddress(void) const
     }
 
   return address;
+}
+
+void qtchess_setup_dialog::slotLocal(bool state)
+{
+  if(state)
+    ui.remote->setChecked(false);
+  else
+    {
+      if(comm)
+	comm->stopListening();
+
+      slotListen();
+      ui.remote->setChecked(true);
+    }
+}
+
+void qtchess_setup_dialog::slotRemote(bool state)
+{
+  if(comm)
+    comm->disconnectRemotely();
+
+  slotDisconnectedFromClient();
+
+  if(state)
+    ui.local->setChecked(false);
+  else
+    ui.local->setChecked(true);
+}
+
+void qtchess_setup_dialog::slotDisconnect(void)
+{
+  if(comm)
+    comm->disconnectRemotely();
 }
 
 void qtchess_gui::clearHistory(void)
