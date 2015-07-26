@@ -226,7 +226,7 @@ class qtchess_gui: public QMainWindow
   void display(void);
   void init(void);
   void initClocks(void);
-  void notifyConnection(const QString &);
+  void notifyConnection(const QString &, const quint16);
   void setStatusText(const QString &);
   void showDisconnect(void);
   void showErrorMsg(const char *);

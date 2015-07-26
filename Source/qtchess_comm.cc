@@ -201,6 +201,10 @@ void qtchess_comm::connectRemotely(void)
 	  SIGNAL(error(QAbstractSocket::SocketError)),
 	  m_clientConnection,
 	  SIGNAL(disconnected(void)));
+  connect(m_clientConnection,
+	  SIGNAL(readyRead(void)),
+	  this,
+	  SLOT(updateBoard(void)));
   m_clientConnection->connectToHost(address, remotePort);
 }
 
@@ -279,7 +283,9 @@ void qtchess_comm::sendMove(const struct move_s current_move)
 
 qtchess_comm::qtchess_comm(void)
 {
-  connect(&listening_sock, SIGNAL(newConnection(void)), this,
+  connect(&listening_sock,
+	  SIGNAL(newConnection(void)),
+	  this,
 	  SLOT(acceptConnection(void)));
 }
 
@@ -325,17 +331,22 @@ void qtchess_comm::acceptConnection(void)
 
   setConnected(true);
   emit connectedToClient();
-  connect(m_clientConnection, SIGNAL(disconnected(void)), this,
+  connect(m_clientConnection,
+	  SIGNAL(disconnected(void)),
+	  this,
 	  SLOT(clientDisconnected(void)));
   connect(m_clientConnection,
 	  SIGNAL(error(QAbstractSocket::SocketError)),
 	  m_clientConnection,
 	  SIGNAL(disconnected(void)));
-  connect(m_clientConnection, SIGNAL(readyRead(void)), this,
+  connect(m_clientConnection,
+	  SIGNAL(readyRead(void)),
+	  this,
 	  SLOT(updateBoard(void)));
 
   if(gui)
-    gui->notifyConnection(m_clientConnection->peerAddress().toString());
+    gui->notifyConnection(m_clientConnection->peerAddress().toString(),
+			  m_clientConnection->peerPort());
 
   if(chess && chess->getFirst() == -1)
     {
@@ -355,6 +366,10 @@ void qtchess_comm::slotClientConnected(void)
       chess->setFirst(I_AM_FIRST);
       chess->setMyColor(WHITE);
     }
+
+  if(gui && m_clientConnection)
+    gui->notifyConnection(m_clientConnection->peerAddress().toString(),
+			  m_clientConnection->peerPort());
 }
 
 void qtchess_comm::clientDisconnected(void)

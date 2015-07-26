@@ -94,23 +94,40 @@ void qtchess_gui::init(void)
   statusLabel->setFrameStyle(QFrame::NoFrame);
   statusBar()->setSizeGripEnabled(false);
   statusBar()->addWidget(statusLabel, 100);
-  connect(ui.action_New_Game, SIGNAL(triggered(void)), this,
+  connect(ui.action_New_Game,
+	  SIGNAL(triggered(void)),
+	  this,
 	  SLOT(newGame(void)));
-  connect(ui.action_Quit, SIGNAL(triggered(void)), this, SLOT(quit(void)));
+  connect(ui.action_Quit,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(quit(void)));
   connect(ui.action_Connection_Configuration,
-	  SIGNAL(triggered(void)), this, SLOT(setup(void)));
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(setup(void)));
   connect(action_Large_Size,
-	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slotChangeSize(void)));
   connect(action_Normal_Size,
-	  SIGNAL(triggered(void)), this, SLOT(slotChangeSize(void)));
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slotChangeSize(void)));
   connect(ui.action_About,
-	  SIGNAL(triggered(void)), this, SLOT(about(void)));
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(about(void)));
   connect(ui.action_Help,
-	  SIGNAL(triggered(void)), this, SLOT(help(void)));
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(help(void)));
 
   if((playert = new(std::nothrow) QTimer(this)) != 0)
     {
-      connect(playert, SIGNAL(timeout(void)), SLOT(updatePlayer(void)));
+      connect(playert,
+	      SIGNAL(timeout(void)),
+	      SLOT(updatePlayer(void)));
       playert->start(1000);
     }
   else
@@ -123,7 +140,9 @@ void qtchess_gui::init(void)
 
   if((opponentt = new(std::nothrow) QTimer(this)) != 0)
     {
-      connect(opponentt, SIGNAL(timeout(void)), SLOT(updateOpponent(void)));
+      connect(opponentt,
+	      SIGNAL(timeout(void)),
+	      SLOT(updateOpponent(void)));
       opponentt->start(1000);
     }
   else
@@ -267,7 +286,7 @@ void qtchess_gui::about(void)
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
   mb.setText
-    (tr("<html>QtChess Version 2015.07.25.<br>"
+    (tr("<html>QtChess Version 2015.07.26.<br>"
 	"Copyright (c) 2003 - 2015 Guess Who?<br>"
 	"Qt version %1."
 	"<hr>"
@@ -401,9 +420,11 @@ qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
   return promote_dialog;
 }
 
-void qtchess_gui::notifyConnection(const QString &address)
+void qtchess_gui::notifyConnection(const QString &address,
+				   const quint16 port)
 {
-  setStatusText(tr("Status: Host ") + address + tr(" Connected"));
+  setStatusText
+    (tr("Status: Host %1:%2 Connected").arg(address).arg(port));
 }
 
 void qtchess_gui::showGameOver(const int turn)
@@ -449,28 +470,54 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
   ui.lScopeId->setEnabled(false);
   ui.rScopeId->setEnabled(false);
   ui.rhost->setText(QHostAddress(QHostAddress::LocalHost).toString());
-  connect(ui.cancel, SIGNAL(clicked(void)), this, SLOT(close_cb(void)));
-  connect(ui.connect, SIGNAL(clicked(void)), this, SLOT(connect_cb(void)));
-  connect(ui.disconnect, SIGNAL(clicked(void)), this,
+  connect(ui.cancel,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(close_cb(void)));
+  connect(ui.connect,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(connect_cb(void)));
+  connect(ui.disconnect,
+	  SIGNAL(clicked(void)),
+	  this,
 	  SLOT(slotDisconnect(void)));
-  connect(ui.lipv4, SIGNAL(clicked(void)), this,
+  connect(ui.lipv4,
+	  SIGNAL(clicked(void)),
+	  this,
 	  SLOT(slotProtocolChanged(void)));
-  connect(ui.lipv6, SIGNAL(clicked(void)), this,
+  connect(ui.lipv6,
+	  SIGNAL(clicked(void)),
+	  this,
 	  SLOT(slotProtocolChanged(void)));
-  connect(ui.local, SIGNAL(toggled(bool)),
-	  this, SLOT(slotLocal(bool)));
-  connect(ui.remote, SIGNAL(toggled(bool)),
-	  this, SLOT(slotRemote(bool)));
-  connect(ui.ripv4, SIGNAL(clicked(void)), this,
+  connect(ui.local,
+	  SIGNAL(toggled(bool)),
+	  this,
+	  SLOT(slotLocal(bool)));
+  connect(ui.remote,
+	  SIGNAL(toggled(bool)),
+	  this,
+	  SLOT(slotRemote(bool)));
+  connect(ui.ripv4,
+	  SIGNAL(clicked(void)),
+	  this,
 	  SLOT(slotProtocolChanged(void)));
-  connect(ui.ripv6, SIGNAL(clicked(void)), this,
+  connect(ui.ripv6,
+	  SIGNAL(clicked(void)),
+	  this,
 	  SLOT(slotProtocolChanged(void)));
-  connect(ui.listen, SIGNAL(clicked(void)), this,
+  connect(ui.listen,
+	  SIGNAL(clicked(void)),
+	  this,
 	  SLOT(slotListen(void)));
-  connect(comm, SIGNAL(connectedToClient(void)),
-	  this, SLOT(slotConnectedToClient(void)));
-  connect(comm, SIGNAL(disconnectedFromClient(void)),
-	  this, SLOT(slotDisconnectedFromClient(void)));
+  connect(comm,
+	  SIGNAL(connectedToClient(void)),
+	  this,
+	  SLOT(slotConnectedToClient(void)));
+  connect(comm,
+	  SIGNAL(disconnectedFromClient(void)),
+	  this,
+	  SLOT(slotDisconnectedFromClient(void)));
 }
 
 QLineEdit *qtchess_setup_dialog::getHostField(void) const
@@ -787,7 +834,10 @@ qtchess_promote_dialog::qtchess_promote_dialog(QWidget *parent):
   QDialog(parent)
 {
   ui.setupUi(this);
-  connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
+  connect(ui.ok,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(ok_cb(void)));
 }
 
 void qtchess_help_dialog::ok_cb(void)
@@ -808,7 +858,10 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   QDialog(parent)
 {
   ui.setupUi(this);
-  connect(ui.ok, SIGNAL(clicked(void)), this, SLOT(ok_cb(void)));
+  connect(ui.ok,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(ok_cb(void)));
   setMinimumWidth(600);
   setMinimumHeight(300);
   setWindowModality(Qt::NonModal);
