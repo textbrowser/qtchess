@@ -518,6 +518,7 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
 	  SIGNAL(disconnectedFromClient(void)),
 	  this,
 	  SLOT(slotDisconnectedFromClient(void)));
+  ui.remote_gb->setEnabled(false);
 }
 
 QLineEdit *qtchess_setup_dialog::getHostField(void) const
@@ -655,28 +656,49 @@ QHostAddress qtchess_setup_dialog::getListeningAddress(void) const
 void qtchess_setup_dialog::slotLocal(bool state)
 {
   if(state)
-    ui.remote->setChecked(false);
-  else
     {
       if(comm)
-	comm->stopListening();
+	comm->disconnectRemotely();
 
-      slotListen();
-      ui.remote->setChecked(true);
+      slotDisconnectedFromClient();
+      ui.local_gb->setEnabled(true);
+      ui.remote->blockSignals(true);
+      ui.remote->setChecked(false);
+      ui.remote->blockSignals(false);
+      ui.remote_gb->setEnabled(false);
+    }
+  else
+    {
+      ui.local->blockSignals(true);
+      ui.local->setChecked(true);
+      ui.local->blockSignals(false);
     }
 }
 
 void qtchess_setup_dialog::slotRemote(bool state)
 {
-  if(comm)
-    comm->disconnectRemotely();
-
-  slotDisconnectedFromClient();
-
   if(state)
-    ui.local->setChecked(false);
+    {
+      if(comm)
+	{
+	  comm->disconnectRemotely();
+	  comm->stopListening();
+	}
+
+      slotDisconnectedFromClient();
+      slotListen();
+      ui.local->blockSignals(true);
+      ui.local->setChecked(false);
+      ui.local->blockSignals(false);
+      ui.local_gb->setEnabled(false);
+      ui.remote_gb->setEnabled(true);
+    }
   else
-    ui.local->setChecked(true);
+    {
+      ui.remote->blockSignals(true);
+      ui.remote->setChecked(true);
+      ui.remote->blockSignals(false);
+    }
 }
 
 void qtchess_setup_dialog::slotDisconnect(void)

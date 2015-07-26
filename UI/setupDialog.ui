@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>490</width>
-    <height>530</height>
+    <height>576</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -30,13 +30,17 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="local">
-     <property name="title">
-      <string>Local</string>
+    <widget class="QRadioButton" name="local">
+     <property name="text">
+      <string>&amp;Local</string>
      </property>
-     <property name="checkable">
+     <property name="checked">
       <bool>true</bool>
      </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="local_gb">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QGroupBox" name="groupBox">
@@ -166,16 +170,14 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="remote">
-     <property name="title">
-      <string>Remote</string>
+    <widget class="QRadioButton" name="remote">
+     <property name="text">
+      <string>&amp;Remote</string>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="remote_gb">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QGroupBox" name="groupBox_4">
@@ -340,7 +342,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>local</tabstop>
+  <tabstop>local_gb</tabstop>
   <tabstop>lipv4</tabstop>
   <tabstop>lipv6</tabstop>
   <tabstop>host</tabstop>
@@ -349,7 +351,7 @@
   <tabstop>allowedHost</tabstop>
   <tabstop>listen</tabstop>
   <tabstop>disconnect</tabstop>
-  <tabstop>remote</tabstop>
+  <tabstop>remote_gb</tabstop>
   <tabstop>ripv4</tabstop>
   <tabstop>ripv6</tabstop>
   <tabstop>rhost</tabstop>
