@@ -121,8 +121,11 @@
              <height>0</height>
             </size>
            </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::NoSelection</enum>
+            <enum>QAbstractItemView::SingleSelection</enum>
            </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
@@ -266,7 +269,6 @@
  <tabstops>
   <tabstop>playerClock</tabstop>
   <tabstop>opponentClock</tabstop>
-  <tabstop>history</tabstop>
  </tabstops>
  <resources>
   <include location="../Images/images.qrc"/>
