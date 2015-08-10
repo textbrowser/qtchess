@@ -1,5 +1,5 @@
 cache()
-purge.commands = rm -f *~
+purge.commands = rm -f *~ && rm -f */*~
 
 CONFIG		+= app_bundle qt release warn_on
 ICON            = Images/chess.icns

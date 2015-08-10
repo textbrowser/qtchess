@@ -1020,120 +1020,120 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 
 void openglWid::rescale(const double denominatorArg)
 {
+  denominator = denominatorArg;
+
+  if(denominator <= 0.0)
+    denominator = 1.0;
+
+  BISHOP_HEIGHT /= denominator;
+  BISHOP_WIDTH /= denominator;
+  BISHOP_X_OFFSET /= denominator;
+  BISHOP_Y_OFFSET /= denominator;
+  KING_BT_HEIGHT /= denominator;
+  KING_BT_WIDTH /= denominator;
+  KING_B_HEIGHT /= denominator;
+  KING_B_WIDTH /= denominator;
+  KING_HCROSS_HEIGHT /= denominator;
+  KING_HCROSS_WIDTH /= denominator;
+  KING_HEIGHT /= denominator;
+  KING_VCROSS_HEIGHT /= denominator;
+  KING_VCROSS_WIDTH /= denominator;
+  KING_WIDTH /= denominator;
+  KING_X_OFFSET /= denominator;
+  KING_Y_OFFSET /= denominator;
+  KNIGHT_HEIGHT /= denominator;
+  KNIGHT_WIDTH /= denominator;
+  KNIGHT_X_OFFSET /= denominator;
+  KNIGHT_Y_OFFSET /= denominator;
+  PAWN_HEIGHT /= denominator;
+  PAWN_WIDTH /= denominator;
+  PAWN_X_OFFSET /= denominator;
+  PAWN_Y_OFFSET /= denominator;
+  QUEEN_BT_HEIGHT /= denominator;
+  QUEEN_BT_WIDTH /= denominator;
+  QUEEN_B_HEIGHT /= denominator;
+  QUEEN_B_WIDTH /= denominator;
+  QUEEN_HEIGHT /= denominator;
+  QUEEN_WIDTH /= denominator;
+  QUEEN_X_OFFSET /= denominator;
+  QUEEN_Y_OFFSET /= denominator;
+  ROOK_B_HEIGHT /= denominator;
+  ROOK_B_WIDTH /= denominator;
+  ROOK_HEIGHT /= denominator;
+  ROOK_T_HEIGHT /= denominator;
+  ROOK_T_WIDTH /= denominator;
+  ROOK_WIDTH /= denominator;
+  ROOK_X_OFFSET /= denominator;
+  ROOK_Y_OFFSET /= denominator;
+  block_size /= denominator;
   mouse_pressed = 0;
-
-  if(denominatorArg != 0.0)
-    {
-      denominator = denominatorArg;
-      px /= denominator;
-      py /= denominator;
-      block_size = block_size / denominator;
-      PAWN_WIDTH /= denominator;
-      PAWN_HEIGHT /= denominator;
-      PAWN_X_OFFSET /= denominator;
-      PAWN_Y_OFFSET /= denominator;
-      BISHOP_WIDTH /= denominator;
-      BISHOP_HEIGHT /= denominator;
-      BISHOP_X_OFFSET /= denominator;
-      BISHOP_Y_OFFSET /= denominator;
-      KING_X_OFFSET /= denominator;
-      KING_Y_OFFSET /= denominator;
-      KING_B_WIDTH /= denominator;
-      KING_B_HEIGHT /= denominator;
-      KING_BT_WIDTH /= denominator;
-      KING_BT_HEIGHT /= denominator;
-      KING_WIDTH /= denominator;
-      KING_HEIGHT /= denominator;
-      KING_HCROSS_WIDTH /= denominator;
-      KING_HCROSS_HEIGHT /= denominator;
-      KING_VCROSS_WIDTH /= denominator;
-      KING_VCROSS_HEIGHT /= denominator;
-      KNIGHT_WIDTH /= denominator;
-      KNIGHT_HEIGHT /= denominator;
-      KNIGHT_X_OFFSET /= denominator;
-      KNIGHT_Y_OFFSET /= denominator;
-      ROOK_WIDTH /= denominator;
-      ROOK_HEIGHT /= denominator;
-      ROOK_B_WIDTH /= denominator;
-      ROOK_B_HEIGHT /= denominator;
-      ROOK_T_WIDTH /= denominator;
-      ROOK_T_HEIGHT /= denominator;
-      ROOK_X_OFFSET /= denominator;
-      ROOK_Y_OFFSET /= denominator;
-      QUEEN_X_OFFSET /= denominator;
-      QUEEN_Y_OFFSET /= denominator;
-      QUEEN_B_WIDTH /= denominator;
-      QUEEN_B_HEIGHT /= denominator;
-      QUEEN_BT_WIDTH /= denominator;
-      QUEEN_BT_HEIGHT /= denominator;
-      QUEEN_WIDTH /= denominator;
-      QUEEN_HEIGHT /= denominator;
-    }
-
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
+  px /= denominator;
+  py /= denominator;
   updateGL();
   update();
 }
 
 void openglWid::reinit(void)
 {
-  showValid = false;
-  PAWN_WIDTH = 18;
-  PAWN_HEIGHT = 24;
-  PAWN_X_OFFSET = 30;
-  PAWN_Y_OFFSET = 5;
-  BISHOP_WIDTH = 42;
   BISHOP_HEIGHT = 68;
+  BISHOP_WIDTH = 42;
   BISHOP_X_OFFSET = 20;
   BISHOP_Y_OFFSET = 5;
+  KING_BT_HEIGHT = 5;
+  KING_BT_WIDTH = 32;
+  KING_B_HEIGHT = 10;
+  KING_B_WIDTH = 42;
+  KING_HCROSS_HEIGHT = 10;
+  KING_HCROSS_WIDTH = 26;
+  KING_HEIGHT = 30;
+  KING_VCROSS_HEIGHT = 20;
+  KING_VCROSS_WIDTH = 14;
+  KING_WIDTH = 26;
   KING_X_OFFSET = 20;
   KING_Y_OFFSET = 5;
-  KING_B_WIDTH = 42;
-  KING_B_HEIGHT = 10;
-  KING_BT_WIDTH = 32;
-  KING_BT_HEIGHT = 5;
-  KING_WIDTH = 26;
-  KING_HEIGHT = 30;
-  KING_HCROSS_WIDTH = 26;
-  KING_HCROSS_HEIGHT = 10;
-  KING_VCROSS_WIDTH = 14;
-  KING_VCROSS_HEIGHT = 20;
-  KNIGHT_WIDTH = 42;
   KNIGHT_HEIGHT = 64;
+  KNIGHT_WIDTH = 42;
   KNIGHT_X_OFFSET = 20;
   KNIGHT_Y_OFFSET = 5;
-  ROOK_WIDTH = 22;
-  ROOK_HEIGHT = 32;
-  ROOK_B_WIDTH = 42;
-  ROOK_B_HEIGHT = 10;
-  ROOK_T_WIDTH = 32;
-  ROOK_T_HEIGHT = 20;
-  ROOK_X_OFFSET = 20;
-  ROOK_Y_OFFSET = 5;
+  PAWN_HEIGHT = 24;
+  PAWN_WIDTH = 18;
+  PAWN_X_OFFSET = 30;
+  PAWN_Y_OFFSET = 5;
+  QUEEN_BT_HEIGHT = 5;
+  QUEEN_BT_WIDTH = 32;
+  QUEEN_B_HEIGHT = 10;
+  QUEEN_B_WIDTH = 42;
+  QUEEN_HEIGHT = 30;
+  QUEEN_WIDTH = 26;
   QUEEN_X_OFFSET = 20;
   QUEEN_Y_OFFSET = 5;
-  QUEEN_B_WIDTH = 42;
-  QUEEN_B_HEIGHT = 10;
-  QUEEN_BT_WIDTH = 32;
-  QUEEN_BT_HEIGHT = 5;
-  QUEEN_WIDTH = 26;
-  QUEEN_HEIGHT = 30;
+  ROOK_B_HEIGHT = 10;
+  ROOK_B_WIDTH = 42;
+  ROOK_HEIGHT = 32;
+  ROOK_T_HEIGHT = 20;
+  ROOK_T_WIDTH = 32;
+  ROOK_WIDTH = 22;
+  ROOK_X_OFFSET = 20;
+  ROOK_Y_OFFSET = 5;
+  block_size = 80; // Good default value.
+  denominator = 1.0;
   mouse_pressed = 0;
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
-  denominator = 1.0;
   px = py = 4; // Reasonable default value.
-  block_size = 80; // Good default value.
+  showValid = false;
 }
 
 openglWid::openglWid(QWidget *parent):QGLWidget(parent)
 {
-  showValid = false;
   mouse_pressed = 0;
+  showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
-  setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+  setFormat
+    (QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer | QGL::SampleBuffers));
 }
 
 void openglWid::showValidMoves(void)

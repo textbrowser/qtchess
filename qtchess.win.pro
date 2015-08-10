@@ -1,4 +1,4 @@
-purge.commands = del *~
+purge.commands = del *~ && del */*~
 
 CONFIG	        += qt release warn_on
 ICON            = Images\\chess.png
