@@ -42,7 +42,7 @@ void qtchess_gui::init(void)
 
   ui.setupUi(this);
   setWindowTitle(tr("QtChess"));
-  denominator = 4.0 / 3.0;
+  denominator = 4.0 / 3.8;
   ui.menu_Setup->setVisible(false);
 
   if((statusLabel = new(std::nothrow) QLabel(tr("Status: Ready"))) == 0)
@@ -199,8 +199,8 @@ void qtchess_gui::init(void)
   if(glboard)
     {
       glboard->rescale(denominator);
-      glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
-		      (int) (0.75 * OPEN_GL_DIMENSION));
+      glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
+		      (int) (1.0 / denominator * OPEN_GL_DIMENSION));
       ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
     }
 
@@ -257,17 +257,17 @@ void qtchess_gui::slotChangeSize(void)
     }
   else if(data == "N")
     {
-      if(denominator == 4.0 / 3.0)
+      if(denominator == 4.0 / 3.8)
 	return;
 
-      denominator = 4.0 / 3.0;
+      denominator = 4.0 / 3.8;
 
       if(glboard)
 	{
 	  glboard->reinit();
 	  glboard->rescale(denominator);
-	  glboard->resize((int) (0.75 * OPEN_GL_DIMENSION),
-			  (int) (0.75 * OPEN_GL_DIMENSION));
+	  glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
+			  (int) (1.0 / denominator * OPEN_GL_DIMENSION));
 	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
 	}
 
