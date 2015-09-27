@@ -1133,7 +1133,7 @@ openglWid::openglWid(QWidget *parent):QGLWidget(parent)
   reinit();
   point_pressed.x = point_pressed.y = -1;
   setFormat
-    (QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer | QGL::SampleBuffers));
+    (QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
 }
 
 void openglWid::showValidMoves(void)
