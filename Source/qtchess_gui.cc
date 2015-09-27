@@ -90,9 +90,13 @@ void qtchess_gui::init(void)
   action_Large_Size->setCheckable(true);
   action_Normal_Size->setCheckable(true);
   action_Normal_Size->setChecked(true);
-  statusLabel->setMargin(0);
-  statusLabel->setFrameStyle(QFrame::NoFrame);
+  statusLabel->setMargin(5);
+  statusLabel->setFrameShadow(QFrame::Raised);
+  statusLabel->setFrameShape(QFrame::NoFrame);
   statusBar()->setSizeGripEnabled(false);
+  statusBar()->setStyleSheet("QStatusBar::item {"
+			     "border: none; "
+			     "}");
   statusBar()->addWidget(statusLabel, 100);
   connect(ui.action_New_Game,
 	  SIGNAL(triggered(void)),
@@ -282,6 +286,7 @@ void qtchess_gui::display(void)
 void qtchess_gui::about(void)
 {
   QMessageBox mb(this);
+  QPixmap pixmap("./Images/chess.png");
 
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
@@ -298,7 +303,9 @@ void qtchess_gui::about(void)
 	"http://qtchess.sourceforge.net/release_news.html</a>.<br>").
      arg(QT_VERSION_STR));
   mb.setStandardButtons(QMessageBox::Ok);
-  mb.setIconPixmap(QPixmap("./Images/chess.png"));
+  mb.setIconPixmap
+    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio,
+		   Qt::SmoothTransformation));
   mb.exec();
 }
 
