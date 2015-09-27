@@ -37,7 +37,7 @@ void openglWid::paintGL(void)
   ** All the drawing occurs here.
   */
 
-  glLineWidth(2.0);
+  glLineWidth(1.0);
   glPointSize(2.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen.
 
