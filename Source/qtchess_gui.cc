@@ -291,7 +291,7 @@ void qtchess_gui::about(void)
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
   mb.setText
-    (tr("<html>QtChess Version 2015.10.01.<br>"
+    (tr("<html>QtChess Version 2015.10.16.<br>"
 	"Copyright (c) 2003 - 2015 Guess Who?<br>"
 	"Qt version %1."
 	"<hr>"
