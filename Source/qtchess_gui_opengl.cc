@@ -981,9 +981,6 @@ void openglWid::initializeGL(void)
   ** Set a white background color.
   */
 
-  if(gui)
-    gui->getUI().boardFrame->palette();
-
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glShadeModel(GL_FLAT);
 }
