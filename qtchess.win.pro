@@ -14,6 +14,7 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual -Werror -Wextra \
 QMAKE_EXTRA_TARGETS = purge
 
 INCLUDEPATH += Include
+LIBS += -lopengl32
 RESOURCES = Images\\images.qrc
 
 FORMS	=	UI\\helpDialog.ui \
