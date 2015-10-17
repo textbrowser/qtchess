@@ -974,7 +974,7 @@ void openglWid::paintGL(void)
 void openglWid::initializeGL(void)
 {
   /*
-  ** Initiaze OpenGL.
+  ** Initialize OpenGL.
   */
 
   /*
