@@ -42,7 +42,7 @@ void qtchess_gui::init(void)
 
   ui.setupUi(this);
   setWindowTitle(tr("QtChess"));
-  denominator = 4.0 / 3.8;
+  denominator = 1.25;
   ui.menu_Setup->setVisible(false);
 
   if((statusLabel = new(std::nothrow) QLabel(tr("Status: Ready"))) == 0)
@@ -72,6 +72,17 @@ void qtchess_gui::init(void)
 
   action_Large_Size->setData("L");
 
+  if((action_Miniature_Size = new(std::nothrow) QAction(tr("&Miniature Size"),
+							this)) == 0)
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	exit(EXIT_FAILURE);
+    }
+
+  action_Miniature_Size->setData("M");
+
   if((action_Normal_Size = new(std::nothrow) QAction(tr("&Normal Size"),
 						     this)) == 0)
     {
@@ -84,12 +95,15 @@ void qtchess_gui::init(void)
   action_Normal_Size->setData("N");
   ag1->setExclusive(true);
   ag1->addAction(action_Large_Size);
+  ag1->addAction(action_Miniature_Size);
   ag1->addAction(action_Normal_Size);
   ui.menu_View->addAction(action_Large_Size);
+  ui.menu_View->addAction(action_Miniature_Size);
   ui.menu_View->addAction(action_Normal_Size);
   action_Large_Size->setCheckable(true);
+  action_Miniature_Size->setCheckable(true);
+  action_Miniature_Size->setChecked(true);
   action_Normal_Size->setCheckable(true);
-  action_Normal_Size->setChecked(true);
   statusLabel->setMargin(5);
   statusLabel->setFrameShadow(QFrame::Raised);
   statusLabel->setFrameShape(QFrame::NoFrame);
@@ -111,6 +125,10 @@ void qtchess_gui::init(void)
 	  this,
 	  SLOT(setup(void)));
   connect(action_Large_Size,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slotChangeSize(void)));
+  connect(action_Miniature_Size,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slotChangeSize(void)));
@@ -255,6 +273,28 @@ void qtchess_gui::slotChangeSize(void)
       ui.history->scrollToBottom();
       ui.boardFrame->setFocus();
     }
+  else if(data == "M")
+    {
+      if(denominator == 1.25)
+	return;
+
+      denominator = 1.25;
+
+      if(glboard)
+	{
+	  glboard->reinit();
+	  glboard->rescale(denominator);
+	  glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
+			  (int) (1.0 / denominator * OPEN_GL_DIMENSION));
+	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
+	}
+
+      ui.boardFrame->hide();
+      ui.boardFrame->show();
+      resize(sizeHint());
+      ui.history->scrollToBottom();
+      ui.boardFrame->setFocus();
+    }
   else if(data == "N")
     {
       if(denominator == 4.0 / 3.8)
@@ -291,9 +331,9 @@ void qtchess_gui::about(void)
   mb.setWindowTitle(tr("QtChess: About"));
   mb.setTextFormat(Qt::RichText);
   mb.setText
-    (tr("<html>QtChess Version 2015.10.16.<br>"
+    (tr("<html>QtChess Version %1.<br>"
 	"Copyright (c) 2003 - 2015 Guess Who?<br>"
-	"Qt version %1."
+	"Qt version %2."
 	"<hr>"
 	"Please visit <a href=\"http://qtchess.sourceforge.net\">"
 	"http://qtchess.sourceforge.net</a> for "
@@ -301,6 +341,7 @@ void qtchess_gui::about(void)
 	"For release notes, please visit "
 	"<a href=\"http://qtchess.sourceforge.net/release_news.html\">"
 	"http://qtchess.sourceforge.net/release_news.html</a>.<br>").
+     arg(QTCHESS_VERSION).
      arg(QT_VERSION_STR));
   mb.setStandardButtons(QMessageBox::Ok);
   mb.setIconPixmap

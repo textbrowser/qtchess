@@ -241,6 +241,7 @@ class qtchess_gui: public QMainWindow
   */
 
   QAction *action_Large_Size;
+  QAction *action_Miniature_Size;
   QAction *action_Normal_Size;
   QLabel *statusLabel;
   QTimer *opponentt;
