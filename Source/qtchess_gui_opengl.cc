@@ -688,7 +688,7 @@ void openglWid::paintGL(void)
 	piece2;
     }
 
-#ifdef _DEBUG_
+#ifdef QTCHESS_DEBUG
   if(chess && mouse_pressed && found)
 #else
   if(chess && mouse_pressed && found && chess->isReady())
