@@ -52,6 +52,9 @@ void qtchess_comm::init(void)
   if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
     gui->getSetupDialog()->getPortField()->setText("50000");
 
+  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getRPortField())
+    gui->getSetupDialog()->getRPortField()->setText("50000");
+
   if(gui && gui->getSetupDialog() &&
      gui->getSetupDialog()->getAllowedHostField())
     gui->getSetupDialog()->getAllowedHostField()->setText
