@@ -625,14 +625,12 @@ void openglWid::paintGL(void)
 
   for(int m = 1; m <= NSQUARES; m++)
     {
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
       renderText((int) (px + m * block_size - block_size / 2 - 5),
 		 (int) (py - 5),
 		 QString((char) 96 + m), font);
       renderText((int) (px - 15),
 		 (int) (py + m * block_size - block_size / 2 + 5),
 		 QString::number(9 - m), font);
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     }
 
   /*
