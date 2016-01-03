@@ -52,6 +52,9 @@ qtchess_gui *gui = 0;
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_WIN32
+  QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL, true);
+#endif
   QApplication application(argc, argv);
 
 #ifdef Q_OS_MAC
