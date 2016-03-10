@@ -18,7 +18,6 @@ QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
 QMAKE_EXTRA_TARGETS = purge
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
 
-INCLUDEPATH     += Include
 LIBS            += -framework Cocoa
 RESOURCES       = Images/images.qrc
 
@@ -27,14 +26,14 @@ FORMS		= UI/helpDialog.ui \
                   UI/promotionDialog.ui \
                   UI/setupDialog.ui
 
-HEADERS		= Include/qtchess.h \
-                  Include/qtchess_comm.h \
-                  Include/qtchess_defs.h \
-                  Include/qtchess_gui.h \
-                  Include/qtchess_gui_opengl.h \
-                  Include/qtchess_validate.h
+HEADERS		= Source/qtchess.h \
+                  Source/qtchess_comm.h \
+                  Source/qtchess_defs.h \
+                  Source/qtchess_gui.h \
+                  Source/qtchess_gui_opengl.h \
+                  Source/qtchess_validate.h
 
-OBJECTIVE_HEADERS += Include/Cocoainitializer.h
+OBJECTIVE_HEADERS += Source/Cocoainitializer.h
 OBJECTIVE_SOURCES += Source/Cocoainitializer.mm
 
 SOURCES		= Source/qtchess.cc \

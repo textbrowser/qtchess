@@ -14,7 +14,6 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -mtune=generic -pie
 QMAKE_EXTRA_TARGETS = purge
 
-INCLUDEPATH     += Include
 RESOURCES       = Images/images.qrc
 
 FORMS		= UI/helpDialog.ui \
@@ -22,12 +21,12 @@ FORMS		= UI/helpDialog.ui \
                   UI/promotionDialog.ui \
                   UI/setupDialog.ui
 
-HEADERS		= Include/qtchess.h \
-                  Include/qtchess_comm.h \
-                  Include/qtchess_defs.h \
-                  Include/qtchess_gui.h \
-                  Include/qtchess_gui_opengl.h \
-                  Include/qtchess_validate.h
+HEADERS		= Source/qtchess.h \
+                  Source/qtchess_comm.h \
+                  Source/qtchess_defs.h \
+                  Source/qtchess_gui.h \
+                  Source/qtchess_gui_opengl.h \
+                  Source/qtchess_validate.h
 
 SOURCES		= Source/qtchess.cc \
                   Source/qtchess_comm.cc \
