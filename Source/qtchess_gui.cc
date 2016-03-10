@@ -419,6 +419,10 @@ void qtchess_gui::newGame(void)
       else
 	current_move.board[i][j] = EMPTY_SQUARE;
 
+  current_move.enpassant =
+    current_move.pawn_2 =
+    current_move.promoted = 0;
+  current_move.isOppKingThreat = 0;
   current_move.piece =
     current_move.rook =
     current_move.r_x1 =
@@ -429,9 +433,7 @@ void qtchess_gui::newGame(void)
     current_move.x2 =
     current_move.y1 =
     current_move.y2 = -1;
-  current_move.enpassant =
-    current_move.pawn_2 =
-    current_move.promoted = 0;
+  memset(current_move.departure, 0, sizeof(current_move.departure));
 
   if(comm)
     comm->sendMove(current_move);
@@ -772,12 +774,12 @@ void qtchess_gui::addHistoryMove(const struct move_s current_move,
   char insertX[3];
   char to_let[2];
 
-  memset(hist, 0, sizeof(hist));
-  memset(to_let, 0, sizeof(to_let));
-  memset(insertX, 0, sizeof(insertX));
   memset(from_position, 0, sizeof(from_position));
-  to_let[0] = (char) (97 + current_move.y2);
+  memset(hist, 0, sizeof(hist));
+  memset(insertX, 0, sizeof(insertX));
+  memset(to_let, 0, sizeof(to_let));
   from_position[0] = (char) (97 + current_move.y1);
+  to_let[0] = (char) (97 + current_move.y2);
 
   if(current_move.promoted)
     {
