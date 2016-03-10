@@ -20,7 +20,7 @@ void qtchess_comm::updateBoard(void)
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
-      QByteArray buffer(BUFFER_SIZE, 0);
+      QByteArray buffer(s_buffer_size, 0);
 
       if(m_clientConnection->readLine(buffer.data(), buffer.length()) != -1)
 	{
@@ -36,6 +36,9 @@ void qtchess_comm::updateBoard(void)
 
       ntries += 1;
     }
+
+  if(m_clientConnection)
+    m_clientConnection->readAll();
 }
 
 void qtchess_comm::init(void)

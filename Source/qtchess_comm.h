@@ -1,8 +1,6 @@
 #ifndef _QTCHESS_COMM_
 #define _QTCHESS_COMM_
 
-#define BUFFER_SIZE 1024
-
 /*
 ** -- System Includes --
 */
@@ -32,6 +30,8 @@ class qtchess_comm: public QObject
   Q_OBJECT
 
  public:
+  static const int s_buffer_size = 1024;
+
   /*
   ** -- Members --
   */
