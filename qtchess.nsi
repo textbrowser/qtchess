@@ -14,7 +14,6 @@ section
 setOutPath $INSTDIR
 
 # Specify files to go in output path.
-file /r .\release\Images
 file /r .\release\plugins
 file .\release\qt.conf
 file .\release\*.dll
