@@ -177,6 +177,7 @@ class qtchess_gui: public QMainWindow
   qtchess_gui(void)
   {
     action_Large_Size = 0;
+    action_Miniature_Size = 0;
     action_Normal_Size = 0;
     denominator = 1;
     glboard = 0;
@@ -220,7 +221,7 @@ class qtchess_gui: public QMainWindow
 
   qtchess_promote_dialog *getPromoteDialog(void) const;
   qtchess_setup_dialog *getSetupDialog(void) const;
-  void addHistoryMove(const struct move_s, const int);
+  void addHistoryMove(const struct move_s &, const int);
   void clearHistory(void);
   void closeEvent(QCloseEvent *);
   void display(void);

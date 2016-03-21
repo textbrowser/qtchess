@@ -70,7 +70,7 @@ class qtchess_comm: public QObject
   void disconnectRemotely(void);
   void init(void);
   void quit(void);
-  void sendMove(const struct move_s);
+  void sendMove(const struct move_s &);
   void setConnected(const bool);
   void setListen(void);
   void stopListening(void);

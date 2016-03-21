@@ -214,7 +214,7 @@ void qtchess_comm::connectRemotely(void)
   m_clientConnection->connectToHost(address, remotePort);
 }
 
-void qtchess_comm::sendMove(const struct move_s current_move)
+void qtchess_comm::sendMove(const struct move_s &current_move)
 {
   if(!m_clientConnection)
     return;

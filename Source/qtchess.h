@@ -112,7 +112,7 @@ class qtchess
     king_has_moved = king_has_moved_arg;
   }
 
-  void setLastOpponentMove(const struct move_s move)
+  void setLastOpponentMove(const struct move_s &move)
   {
     last_opponent_move = move;
   }

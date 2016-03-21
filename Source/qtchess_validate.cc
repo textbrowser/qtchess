@@ -79,7 +79,7 @@ QString qtchess_validate::findDeparture(const int X1,
   return departure;
 }
 
-bool qtchess_validate::isKingChecked(const struct move_s current_move)
+bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 {
   bool isChecked = false;
   int I = -1, J = -1, i = 0, j = 0;

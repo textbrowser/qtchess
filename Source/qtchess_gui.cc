@@ -765,7 +765,7 @@ void qtchess_gui::clearHistory(void)
   ui.history->horizontalScrollBar()->setValue(0);
 }
 
-void qtchess_gui::addHistoryMove(const struct move_s current_move,
+void qtchess_gui::addHistoryMove(const struct move_s &current_move,
 				 const int color)
 {
   QTableWidgetItem *item = 0;

@@ -24,7 +24,7 @@ namespace qtchess_validate
   bool isColor(const int, const int);
   bool isEmpty(const int);
   bool isKing(const int);
-  bool isKingChecked(const struct move_s);
+  bool isKingChecked(const struct move_s &);
   bool isKnight(const int);
   bool isPawn(const int);
   bool isRook(const int);
