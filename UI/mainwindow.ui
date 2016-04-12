@@ -161,7 +161,7 @@
      <x>0</x>
      <y>0</y>
      <width>250</width>
-     <height>24</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -240,7 +240,7 @@
   </action>
   <action name="action_Connection_Configuration">
    <property name="text">
-    <string>&amp;Connection Configuration</string>
+    <string>&amp;Connection Configuration...</string>
    </property>
    <property name="font">
     <font/>
@@ -251,7 +251,7 @@
   </action>
   <action name="action_About">
    <property name="text">
-    <string>&amp;About</string>
+    <string>&amp;About...</string>
    </property>
    <property name="font">
     <font/>
@@ -259,7 +259,7 @@
   </action>
   <action name="action_Help">
    <property name="text">
-    <string>&amp;Help</string>
+    <string>&amp;Help...</string>
    </property>
    <property name="font">
     <font/>
