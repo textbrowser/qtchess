@@ -939,18 +939,17 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   setMinimumWidth(600);
   setMinimumHeight(300);
   setWindowModality(Qt::NonModal);
-  ui.text->append(tr("An empty Allowed IP Address value will allow any "
-		     "peer to connect.\n"
-		     "Beige always moves first.\n"
-		     "Moves are prohibited until connections have been "
-		     "established.\n"
-		     "To move a piece, first click it and then click "
-		     "the desired destination.\n"
-		     "To prevent peer connections, please set the "
-		     "Allowed IP Address to 0.0.0.0 (:: for IPv6).\n"
-		     "To view a selected piece's valid moves, "
-		     "double-click the selected piece."
-		     ));
+  ui.text->append
+    (tr("An empty Allowed IP Address value will allow any peer to connect.\n"
+	"Beige always moves first, unless both parties are clients.\n"
+	"Moves are prohibited until connections have been established.\n"
+	"To move a piece, first click it and then click "
+	"the desired destination.\n"
+	"To prevent peer connections, please set the "
+	"Allowed IP Address to 0.0.0.0 (:: for IPv6).\n"
+	"To view a selected piece's valid moves, "
+	"double-click the selected piece."
+	));
 }
 
 void qtchess_gui::startTimers(const int which)

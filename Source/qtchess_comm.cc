@@ -145,9 +145,9 @@ void qtchess_comm::disconnectRemotely(void)
 
   if(chess)
     {
-      chess->setTurn(-1);
       chess->setFirst(-1);
       chess->setMyColor(-1);
+      chess->setTurn(-1);
     }
 
   setConnected(false);
@@ -356,9 +356,9 @@ void qtchess_comm::acceptConnection(void)
 
   if(chess && chess->getFirst() == -1)
     {
-      chess->setTurn(THEIR_TURN);
       chess->setFirst(THEY_ARE_FIRST);
       chess->setMyColor(BLACK);
+      chess->setTurn(THEIR_TURN);
     }
 }
 
@@ -404,9 +404,9 @@ void qtchess_comm::clientDisconnected(void)
 
   if(chess)
     {
-      chess->setTurn(-1);
       chess->setFirst(-1);
       chess->setMyColor(-1);
+      chess->setTurn(-1);
     }
 
   if(gui)
