@@ -16,7 +16,7 @@
 #include "qtchess_defs.h"
 #include "qtchess_validate.h"
 
-#define QTCHESS_VERSION "2016.09.04"
+#define QTCHESS_VERSION "2016.10.01"
 
 static struct move_s emptyMoveStruct;
 
