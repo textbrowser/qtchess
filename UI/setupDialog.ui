@@ -180,6 +180,40 @@
     <widget class="QGroupBox" name="remote_gb">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QComboBox" name="color">
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
+          <item>
+           <property name="text">
+            <string>Beige</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Crimson</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBox_4">
         <property name="title">
          <string>Internet Layer Protocol</string>
@@ -352,6 +386,7 @@
   <tabstop>listen</tabstop>
   <tabstop>disconnect</tabstop>
   <tabstop>remote</tabstop>
+  <tabstop>color</tabstop>
   <tabstop>ripv4</tabstop>
   <tabstop>ripv6</tabstop>
   <tabstop>rhost</tabstop>

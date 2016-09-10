@@ -364,16 +364,31 @@ void qtchess_comm::acceptConnection(void)
 
 void qtchess_comm::slotClientConnected(void)
 {
+  if(!gui)
+    {
+      clientDisconnected();
+      return;
+    }
+
   setConnected(true);
 
   if(chess && chess->getFirst() == -1)
     {
       chess->setTurn(MY_TURN);
       chess->setFirst(I_AM_FIRST);
-      chess->setMyColor(WHITE);
+
+      if(gui->color() == tr("Beige"))
+	chess->setMyColor(WHITE);
+      else if(gui->color() == tr("Crimson"))
+	chess->setMyColor(BLACK);
+      else
+	{
+	  clientDisconnected();
+	  return;
+	}
     }
 
-  if(gui && m_clientConnection)
+  if(m_clientConnection)
     gui->notifyConnection(m_clientConnection->peerAddress().toString(),
 			  m_clientConnection->peerPort());
 }

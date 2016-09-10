@@ -93,6 +93,11 @@ class qtchess_setup_dialog: public QDialog
   QLineEdit *getRPortField(void) const;
   QLineEdit *getRScopeIdField(void) const;
 
+  QString color(void) const
+  {
+    return ui.color->currentText();
+  }
+
  private:
   /*
   ** -- Members --
@@ -205,6 +210,14 @@ class qtchess_gui: public QMainWindow
 
     if(setup_dialog != 0)
       setup_dialog->deleteLater();
+  }
+
+  QString color(void) const
+  {
+    if(setup_dialog)
+      return setup_dialog->color();
+    else
+      return "";
   }
 
   Ui_mainWindow getUI(void) const
