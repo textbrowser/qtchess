@@ -403,6 +403,18 @@ void qtchess_gui::newGame(void)
       return;
     }
 
+  QMessageBox mb(this);
+
+  mb.setIcon(QMessageBox::Question);
+  mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  mb.setText(tr("Are you sure that you wish to initiate a new game? "
+		"Both your board and your opponent's will be reset."));
+  mb.setWindowModality(Qt::WindowModal);
+  mb.setWindowTitle(tr("QtChess: Confirmation"));
+
+  if(mb.exec() != QMessageBox::Yes)
+    return;
+
   if(chess)
     chess->init();
 
