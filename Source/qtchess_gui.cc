@@ -389,31 +389,23 @@ void qtchess_gui::closeEvent(QCloseEvent *e)
 
 void qtchess_gui::newGame(void)
 {
+  if(comm && comm->isConnectedRemotely())
+    {
+      QMessageBox mb(this);
+
+      mb.setIcon(QMessageBox::Question);
+      mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+      mb.setText(tr("Are you sure that you wish to initiate a new game? "
+		    "Both your board and your opponent's will be reset."));
+      mb.setWindowModality(Qt::WindowModal);
+      mb.setWindowTitle(tr("QtChess: Confirmation"));
+
+      if(mb.exec() != QMessageBox::Yes)
+	return;
+    }
+
   int i = 0, j = 0;
   struct move_s current_move;
-
-  if(chess && chess->getFirst() == -1)
-    {
-      showErrorMsg("Please start a game first.");
-      return;
-    }
-  else if(chess && chess->getFirst() != I_AM_FIRST)
-    {
-      showErrorMsg("Only the first player may initiate a new game.");
-      return;
-    }
-
-  QMessageBox mb(this);
-
-  mb.setIcon(QMessageBox::Question);
-  mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-  mb.setText(tr("Are you sure that you wish to initiate a new game? "
-		"Both your board and your opponent's will be reset."));
-  mb.setWindowModality(Qt::WindowModal);
-  mb.setWindowTitle(tr("QtChess: Confirmation"));
-
-  if(mb.exec() != QMessageBox::Yes)
-    return;
 
   if(chess)
     chess->init();
@@ -953,7 +945,6 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
   setWindowModality(Qt::NonModal);
   ui.text->append
     (tr("An empty Allowed IP Address value will allow any peer to connect.\n"
-	"Beige always moves first, unless both parties are clients.\n"
 	"Moves are prohibited until connections have been established.\n"
 	"To move a piece, first click it and then click "
 	"the desired destination.\n"
