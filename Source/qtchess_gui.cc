@@ -764,7 +764,6 @@ void qtchess_setup_dialog::slotDisconnect(void)
 
 void qtchess_gui::clearHistory(void)
 {
-  ui.history->clearContents();
   ui.history->setRowCount(0);
   ui.history->scrollToTop();
   ui.history->horizontalScrollBar()->setValue(0);
