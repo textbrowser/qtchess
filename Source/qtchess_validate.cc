@@ -123,7 +123,6 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
   return isChecked;
 }
 
-
 bool qtchess_validate::isThreatened(const int x, const int y, int color)
 {
   int i = 0, j = 0;
