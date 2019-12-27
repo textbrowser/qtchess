@@ -16,34 +16,32 @@ bool qtchess::isReady(void)
 
 void qtchess::init(void)
 {
-  int i = 0, j = 0;
-
+  board[0][0] = ROOK1_WHITE;
+  board[0][7] = ROOK1_BLACK;
+  board[1][0] = board[6][0] = KNIGHT_WHITE;
+  board[1][7] = board[6][7] = KNIGHT_BLACK;
+  board[2][0] = board[5][0] = BISHOP_WHITE;
+  board[2][7] = board[5][7] = BISHOP_BLACK;
+  board[3][0] = QUEEN_WHITE;
+  board[3][7] = QUEEN_BLACK;
+  board[4][0] = KING_WHITE;
+  board[4][7] = KING_BLACK;
+  board[7][0] = ROOK2_WHITE;
+  board[7][7] = ROOK2_BLACK;
   game_over = false;
-  wonPiece = false;
   king_has_moved = false;
   rook1_has_moved = false;
   rook2_has_moved = false;
-  board[0][0] = ROOK1_WHITE;
-  board[7][0] = ROOK2_WHITE;
-  board[1][0] = board[6][0] = KNIGHT_WHITE;
-  board[2][0] = board[5][0] = BISHOP_WHITE;
-  board[3][0] = QUEEN_WHITE;
-  board[4][0] = KING_WHITE;
-  board[0][7] = ROOK1_BLACK;
-  board[7][7] = ROOK2_BLACK;
-  board[1][7] = board[6][7] = KNIGHT_BLACK;
-  board[2][7] = board[5][7] = BISHOP_BLACK;
-  board[3][7] = QUEEN_BLACK;
-  board[4][7] = KING_BLACK;
+  wonPiece = false;
 
-  for(i = 0; i < NSQUARES; i++)
+  for(int i = 0; i < NSQUARES; i++)
     {
       board[i][1] = PAWN_WHITE;
       board[i][6] = PAWN_BLACK;
     }
 
-  for(i = 2; i < 6; i++)
-    for(j = 0; j < NSQUARES; j++)
+  for(int i = 2; i < 6; i++)
+    for(int j = 0; j < NSQUARES; j++)
       board[j][i] = EMPTY_SQUARE;
 
   last_opponent_move.x1 = last_opponent_move.x2 = last_opponent_move.y1 =
@@ -81,7 +79,7 @@ void qtchess::updateBoard(const QByteArray &buffer)
       return;
     }
 
-  int color = 0, i = 0, j = 0, nonEmptyNow = 0, nonEmptyThen = 0, x = 15;
+  int x = 15;
   struct move_s current_move;
 
   /*
@@ -128,8 +126,8 @@ void qtchess::updateBoard(const QByteArray &buffer)
   snprintf(current_move.departure, sizeof(current_move.departure),
 	   "%s", list.value(14).constData());
 
-  for(i = 0; i < NSQUARES; i++)
-    for(j = 0; j < NSQUARES; j++)
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
       {
 	current_move.board[i][j] = list.value(x).toInt();
 
@@ -173,6 +171,8 @@ void qtchess::updateBoard(const QByteArray &buffer)
 	  gui->startTimers(PLAYER_TIMER);
 	}
 
+      int color = BLACK;
+
       if(getMyColor() == BLACK)
 	color = WHITE;
       else
@@ -190,8 +190,10 @@ void qtchess::updateBoard(const QByteArray &buffer)
 
       last_opponent_move = current_move;
 
-      for(i = 0; i < NSQUARES; i++)
-	for(j = 0; j < NSQUARES; j++)
+      int nonEmptyNow = 0, nonEmptyThen = 0;
+
+      for(int i = 0; i < NSQUARES; i++)
+	for(int j = 0; j < NSQUARES; j++)
 	  {
 	    if(board[i][j] != EMPTY_SQUARE)
 	      nonEmptyThen += 1;
@@ -205,8 +207,8 @@ void qtchess::updateBoard(const QByteArray &buffer)
       else
 	wonPiece = false;
 
-      for(i = 0; i < NSQUARES; i++)
-	for(j = 0; j < NSQUARES; j++)
+      for(int i = 0; i < NSQUARES; i++)
+	for(int j = 0; j < NSQUARES; j++)
 	  board[i][j] = current_move.board[i][j];
 
       if(gui)

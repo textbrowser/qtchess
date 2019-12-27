@@ -14,7 +14,6 @@ QString qtchess_validate::findDeparture(const int X1,
 {
   char departure[3];
   int fcount = 0;
-  int i = 0;
   int rcount = 0;
 
   /*
@@ -30,7 +29,7 @@ QString qtchess_validate::findDeparture(const int X1,
   ** Same rank? Use the file of the departure square.
   */
 
-  for(i = 0; i < NSQUARES; i++)
+  for(int i = 0; i < NSQUARES; i++)
     if(Y1 >= 0 && Y1 < NSQUARES)
       if(chess->board[i][Y1] == piece)
 	{
@@ -50,7 +49,7 @@ QString qtchess_validate::findDeparture(const int X1,
   ** Same file? Use the rank of the departure square.
   */
 
-  for(i = 0; i < NSQUARES; i++)
+  for(int i = 0; i < NSQUARES; i++)
     if(X1 >= 0 && X1 < NSQUARES)
       if(chess->board[X1][i] == piece)
 	{
@@ -82,13 +81,13 @@ QString qtchess_validate::findDeparture(const int X1,
 bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 {
   bool isChecked = false;
-  int I = -1, J = -1, i = 0, j = 0;
+  int I = -1, J = -1;
 
   if(!chess)
     return isChecked;
 
-  for(i = 0; i < NSQUARES && I == -1 && J == -1; i++)
-    for(j = 0; j < NSQUARES; j++)
+  for(int i = 0; i < NSQUARES && I == -1 && J == -1; i++)
+    for(int j = 0; j < NSQUARES; j++)
       if(chess->getMyColor() == WHITE)
 	{
 	  if(isColor(chess->board[i][j], BLACK) && isKing(chess->board[i][j]))
@@ -109,8 +108,8 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 	}
 
   if(I != -1 && J != -1)
-    for(i = 0; i < NSQUARES && !isChecked; i++)
-      for(j = 0; j < NSQUARES; j++)
+    for(int i = 0; i < NSQUARES && !isChecked; i++)
+      for(int j = 0; j < NSQUARES; j++)
 	if(isValidMove(j, i, J, I, chess->board[i][j]) != INVALID)
 	  {
 	    if(i == current_move.y2 && j == current_move.x2)
@@ -125,15 +124,13 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 
 bool qtchess_validate::isThreatened(const int x, const int y, int color)
 {
-  int i = 0, j = 0;
-
   /*
   ** Determine if the given opponent threatens a certain square.
   */
 
   if(chess)
-    for(i = 0; i < NSQUARES; i++)
-      for(j = 0; j < NSQUARES; j++)
+    for(int i = 0; i < NSQUARES; i++)
+      for(int j = 0; j < NSQUARES; j++)
 	if(!isEmpty(chess->board[i][j]))
 	  if(isColor(chess->board[i][j], color))
 	    if(isValidMove(j, i, y, x, chess->board[i][j]) != INVALID)
@@ -263,7 +260,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 				  const int piece)
 {
   bool kingHasMoved = false;
-  int i = 0, j = 0, rc = INVALID;
+  int rc = INVALID;
   struct move_s move;
 
   if(!chess)
@@ -500,7 +497,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	      }
 	    else if(col_from < col_to)
 	      {
-		for(i = col_from + 1; i < col_to; i++)
+		for(int i = col_from + 1; i < col_to; i++)
 		  if(i >= 0 && i < NSQUARES &&
 		     row_to >= 0 && row_to < NSQUARES &&
 		     !isEmpty(chess->board[i][row_to]))
@@ -526,7 +523,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	      }
 	    else
 	      {
-		for(i = col_from - 1; i > col_to; i--)
+		for(int i = col_from - 1; i > col_to; i--)
 		  if(i >= 0 && i < NSQUARES &&
 		     row_to >= 0 && row_to < NSQUARES &&
 		     !isEmpty(chess->board[i][row_to]))
@@ -592,7 +589,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	      }
 	    else if(row_from < row_to)
 	      {
-		for(i = row_from + 1; i < row_to; i++)
+		for(int i = row_from + 1; i < row_to; i++)
 		  if(i >= 0 && i < NSQUARES &&
 		     col_to >= 0 && col_to < NSQUARES &&
 		     !isEmpty(chess->board[col_to][i]))
@@ -618,7 +615,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	      }
 	    else
 	      {
-		for(i = row_from - 1; i > row_to; i--)
+		for(int i = row_from - 1; i > row_to; i--)
 		  if(i >= 0 && i < NSQUARES &&
 		     col_to >= 0 && col_to < NSQUARES &&
 		     !isEmpty(chess->board[col_to][i]))
@@ -708,7 +705,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	      {
 		if(row_from < row_to)
 		  {
-		    for(i = row_from + 1, j = col_from + 1; i < row_to;
+		    for(int i = row_from + 1, j = col_from + 1; i < row_to;
 			i++, j++)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
@@ -731,7 +728,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		  }
 		else
 		  {
-		    for(i = row_from - 1, j = col_from + 1; i > row_to; i--,
+		    for(int i = row_from - 1, j = col_from + 1; i > row_to; i--,
 			  j++)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
@@ -757,7 +754,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	      {
 		if(row_from < row_to)
 		  {
-		    for(i = row_from + 1, j = col_from - 1; i < row_to;
+		    for(int i = row_from + 1, j = col_from - 1; i < row_to;
 			i++, j--)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
@@ -780,7 +777,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 		  }
 		else
 		  {
-		    for(i = row_from - 1, j = col_from - 1; i > row_to;
+		    for(int i = row_from - 1, j = col_from - 1; i > row_to;
 			i--, j--)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&

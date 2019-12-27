@@ -25,12 +25,8 @@ void openglWid::newGame(void)
 void openglWid::paintGL(void)
 {
   QFont font;
-  bool game_over = false;
-  double X = 0, Y = 0, x = 0, y = 0;
-  int I = 0, J = 0, found = 0, i = 0, j = 0, rc = 0;
-  int nonEmptyNow = 0, nonEmptyThen = 0;
-  int oldBoard[NSQUARES][NSQUARES];
-  int origPiece = 0;
+  double X = 0.0, Y = 0.0;
+  int I = 0, J = 0, found = 0;
   struct move_s current_move;
 
   /*
@@ -45,16 +41,17 @@ void openglWid::paintGL(void)
   ** First an empty board.
   */
 
-  for(i = 0; i < NSQUARES; i++)
-    for(j = 0; j < NSQUARES; j++)
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
       {
 	if((i + j) % 2 != 0)
 	  glColor3f((GLfloat) 0.8, (GLfloat) 0.7, (GLfloat) 0.5);
 	else
 	  glColor3f((GLfloat) 0.5, (GLfloat) 0.5, (GLfloat) 0.6);
 
-	x = px + i * block_size;
-	y = py + j * block_size;
+	int x = px + i * block_size;
+	int y = py + j * block_size;
+
 	glRectd((double) x,
 		(double) y,
 		px + (i + 1) * block_size,
@@ -639,7 +636,7 @@ void openglWid::paintGL(void)
 
   glBegin(GL_LINES);
 
-  for(i = 0; i < NSQUARES + 1; i++)
+  for(int i = 0; i < NSQUARES + 1; i++)
     {
       /*
       ** Vertical lines.
@@ -697,6 +694,8 @@ void openglWid::paintGL(void)
       /*
       ** Set the last square's border to its original color (black).
       */
+
+      int rc = 0;
 
       if(mouse_pressed == 1 && qtchess_validate::isEmpty(chess->board[I][J]))
 	{
@@ -758,6 +757,8 @@ void openglWid::paintGL(void)
 					   [(int) point_selected.y]))
 	    chess->setKingHasMoved(true);
 
+	  bool game_over = false;
+
 	  if(qtchess_validate::isKing(chess->board[I][J]))
 	    game_over = true;
 
@@ -778,8 +779,10 @@ void openglWid::paintGL(void)
 	  current_move.pawn_2 = 0;
 	  current_move.rook = -1;
 
-	  for(i = 0; i < NSQUARES; i++)
-	    for(j = 0; j < NSQUARES; j++)
+	  int oldBoard[NSQUARES][NSQUARES];
+
+	  for(int i = 0; i < NSQUARES; i++)
+	    for(int j = 0; j < NSQUARES; j++)
 	      oldBoard[i][j] = chess->board[i][j];
 
 	  /*
@@ -900,7 +903,9 @@ void openglWid::paintGL(void)
 
 	  chess->board[(int) point_selected.x][(int) point_selected.y] =
 	    EMPTY_SQUARE;
-	  origPiece = chess->board[I][J];
+
+	  int origPiece = chess->board[I][J];
+
 	  chess->board[I][J] = EMPTY_SQUARE;
 	  snprintf
 	    (current_move.departure, sizeof(current_move.departure), "%s",
@@ -909,12 +914,14 @@ void openglWid::paintGL(void)
 	      I, J, origPiece).toLatin1().constData());
 	  chess->board[I][J] = origPiece;
 
-	  for(i = 0; i < NSQUARES; i++)
-	    for(j = 0; j < NSQUARES; j++)
+	  for(int i = 0; i < NSQUARES; i++)
+	    for(int j = 0; j < NSQUARES; j++)
 	      current_move.board[i][j] = chess->board[i][j];
 
-	  for(i = 0; i < NSQUARES; i++)
-	    for(j = 0; j < NSQUARES; j++)
+	  int nonEmptyNow = 0, nonEmptyThen = 0;
+
+	  for(int i = 0; i < NSQUARES; i++)
+	    for(int j = 0; j < NSQUARES; j++)
 	      {
 		if(chess->board[i][j] != EMPTY_SQUARE)
 		  nonEmptyThen += 1;
@@ -1131,8 +1138,7 @@ openglWid::openglWid(QWidget *parent):QGLWidget(parent)
   showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
-  setFormat
-    (QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
+  setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
 }
 
 void openglWid::showValidMoves(void)

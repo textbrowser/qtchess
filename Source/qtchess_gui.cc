@@ -332,21 +332,20 @@ void qtchess_gui::about(void)
   mb.setTextFormat(Qt::RichText);
   mb.setText
     (tr("<html>QtChess Version %1.<br>"
-	"Copyright (c) 2003 - 2016 Guess Who?<br>"
+	"Copyright (c) 2003 - 2020 Guess Who?<br>"
 	"Qt version %2."
 	"<hr>"
-	"Please visit <a href=\"http://qtchess.sourceforge.net\">"
-	"http://qtchess.sourceforge.net</a> for "
+	"Please visit <a href=\"https://qtchess.sourceforge.io\">"
+	"https://qtchess.sourceforge.io</a> for "
 	"project information.<br>"
 	"For release notes, please visit "
-	"<a href=\"http://qtchess.sourceforge.net/release_news.html\">"
-	"http://qtchess.sourceforge.net/release_news.html</a>.<br>").
+	"<a href=\"https://qtchess.sourceforge.io/release_news.html\">"
+	"https://qtchess.sourceforge.io/release_news.html</a>.<br>").
      arg(QTCHESS_VERSION).
      arg(QT_VERSION_STR));
   mb.setStandardButtons(QMessageBox::Ok);
   mb.setIconPixmap
-    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio,
-		   Qt::SmoothTransformation));
+    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
   mb.exec();
 }
 
@@ -404,7 +403,6 @@ void qtchess_gui::newGame(void)
 	return;
     }
 
-  int i = 0, j = 0;
   struct move_s current_move;
 
   if(chess)
@@ -416,8 +414,8 @@ void qtchess_gui::newGame(void)
       gui->getGLBoard()->updateGL();
     }
 
-  for(i = 0; i < NSQUARES; i++)
-    for(j = 0; j < NSQUARES; j++)
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
       if(chess)
 	current_move.board[i][j] = chess->board[i][j];
       else

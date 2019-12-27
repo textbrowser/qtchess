@@ -222,7 +222,6 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
     return;
 
   QByteArray buffer;
-  int i = 0, j = 0;
 
   /*
   ** Copy the structure.
@@ -259,8 +258,8 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
   buffer.append(current_move.departure);
   buffer.append(" ");
 
-  for(i = 0; i < NSQUARES; i++)
-    for(j = 0; j < NSQUARES; j++)
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
       {
 	buffer.append(QByteArray::number(current_move.board[i][j]));
 	buffer.append(" ");

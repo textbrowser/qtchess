@@ -16,7 +16,7 @@
 #include "qtchess_defs.h"
 #include "qtchess_validate.h"
 
-#define QTCHESS_VERSION "2016.10.01"
+#define QTCHESS_VERSION "2020.02.02"
 
 static struct move_s emptyMoveStruct;
 
@@ -35,10 +35,8 @@ class qtchess
 
   qtchess(void)
   {
-    int i = 0, j = 0;
-
-    for(i = 0; i < NSQUARES; i++)
-      for(j = 0; j < NSQUARES; j++)
+    for(int i = 0; i < NSQUARES; i++)
+      for(int j = 0; j < NSQUARES; j++)
 	board[i][j] = 0;
 
     first = -1;
