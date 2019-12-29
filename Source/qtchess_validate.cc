@@ -12,16 +12,16 @@ QString qtchess_validate::findDeparture(const int X1,
 					const int Y2,
 					const int piece)
 {
-  char departure[3];
-  int fcount = 0;
-  int rcount = 0;
-
   /*
   ** This function is primarily used for recording moves.
   */
 
   if(!chess)
     return "XX";
+
+  char departure[3];
+  int fcount = 0;
+  int rcount = 0;
 
   memset(departure, 0, sizeof(departure));
 
@@ -81,10 +81,11 @@ QString qtchess_validate::findDeparture(const int X1,
 bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 {
   bool isChecked = false;
-  int I = -1, J = -1;
 
   if(!chess)
     return isChecked;
+
+  int I = -1, J = -1;
 
   for(int i = 0; i < NSQUARES && I == -1 && J == -1; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -259,12 +260,12 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 				  const int row_to, const int col_to,
 				  const int piece)
 {
-  bool kingHasMoved = false;
   int rc = INVALID;
-  struct move_s move;
 
   if(!chess)
     return rc;
+
+  struct move_s move;
 
   /*
   ** 7
@@ -830,8 +831,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	** Castling.
 	*/
 
-	if(rc == VALID)
-	  kingHasMoved = true;
+	bool kingHasMoved = chess->hasKingMoved();
 
 	if(!kingHasMoved && (col_to == 2 || col_to == 6) && row_to == 7)
 	  {
@@ -916,8 +916,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	** Castling.
 	*/
 
-	if(rc == VALID)
-	  kingHasMoved = true;
+	bool kingHasMoved = chess->hasKingMoved();
 
 	if(!kingHasMoved && (col_to == 2 || col_to == 6) && row_to == 0)
 	  {
