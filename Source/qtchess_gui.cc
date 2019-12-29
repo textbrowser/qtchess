@@ -42,7 +42,7 @@ void qtchess_gui::init(void)
 
   ui.setupUi(this);
   setWindowTitle(tr("QtChess"));
-  denominator = 1.25;
+  denominator = 4.0 / 3.8;
   ui.menu_Setup->setVisible(false);
 
   if((statusLabel = new(std::nothrow) QLabel(tr("Status: Ready"))) == 0)
@@ -102,8 +102,8 @@ void qtchess_gui::init(void)
   ui.menu_View->addAction(action_Normal_Size);
   action_Large_Size->setCheckable(true);
   action_Miniature_Size->setCheckable(true);
-  action_Miniature_Size->setChecked(true);
   action_Normal_Size->setCheckable(true);
+  action_Normal_Size->setChecked(true);
   statusLabel->setMargin(5);
   statusLabel->setFrameShadow(QFrame::Raised);
   statusLabel->setFrameShape(QFrame::NoFrame);
@@ -458,7 +458,8 @@ void qtchess_gui::setup(void)
       if(setup_dialog->getHostField())
 	setup_dialog->getHostField()->setFocus();
 
-      setup_dialog->resize(setup_dialog->sizeHint());
+      setup_dialog->resize(setup_dialog->sizeHint().width(),
+			   setup_dialog->minimumSize().height());
       setup_dialog->exec();
     }
 }
