@@ -232,7 +232,7 @@ void qtchess_gui::init(void)
 #endif
   ui.boardFrame->hide();
   ui.boardFrame->show();
-  resize(sizeHint());
+  resize(minimumSize());
   ui.boardFrame->setFocus();
   show();
   s_initialized = true;
@@ -269,7 +269,7 @@ void qtchess_gui::slotChangeSize(void)
 
       ui.boardFrame->hide();
       ui.boardFrame->show();
-      resize(sizeHint());
+      resize(minimumSize());
       ui.history->scrollToBottom();
       ui.boardFrame->setFocus();
     }
@@ -291,7 +291,7 @@ void qtchess_gui::slotChangeSize(void)
 
       ui.boardFrame->hide();
       ui.boardFrame->show();
-      resize(sizeHint());
+      resize(minimumSize());
       ui.history->scrollToBottom();
       ui.boardFrame->setFocus();
     }
@@ -313,7 +313,7 @@ void qtchess_gui::slotChangeSize(void)
 
       ui.boardFrame->hide();
       ui.boardFrame->show();
-      resize(sizeHint());
+      resize(minimumSize());
       ui.history->scrollToBottom();
       ui.boardFrame->setFocus();
     }
