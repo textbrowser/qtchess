@@ -296,9 +296,6 @@ qtchess_comm::qtchess_comm(void)
 
 void qtchess_comm::acceptConnection(void)
 {
-  if(!listening_sock.hasPendingConnections())
-    return;
-
   QTcpSocket *socket = listening_sock.nextPendingConnection();
 
   if(!socket)

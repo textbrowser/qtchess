@@ -727,7 +727,8 @@ void openglWid::paintGL(void)
 	      glColor3f(0.0, 1.0, 0.0);
 	    }
 	}
-      else if(mouse_pressed == 2 && point_selected.x == I &&
+      else if(mouse_pressed == 2 &&
+	      point_selected.x == I &&
 	      point_selected.y == J)
 	{
 	  mouse_pressed = 1;
@@ -964,10 +965,27 @@ void openglWid::paintGL(void)
 	}
       else
 	{
-	  mouse_pressed = 0;
-	  point_selected.x = -1;
-	  point_selected.y = -1;
-	  glColor3f(1.0, 0.0, 0.0);
+	  if((chess->getMyColor() == BLACK &&
+	      qtchess_validate::isBlack(chess->board[I][J])) ||
+	     (chess->getMyColor() == WHITE &&
+	      qtchess_validate::isWhite(chess->board[I][J])))
+	    {
+	      /*
+	      ** Allow selection of another similar piece.
+	      */
+
+	      mouse_pressed = 1;
+	      point_selected.x = I;
+	      point_selected.y = J;
+	      glColor3f(0.0, 1.0, 0.0);
+	    }
+	  else
+	    {
+	      mouse_pressed = 0;
+	      point_selected.x = -1;
+	      point_selected.y = -1;
+	      glColor3f(1.0, 0.0, 0.0);
+	    }
 	}
 
       highlightSquare(X, Y);
