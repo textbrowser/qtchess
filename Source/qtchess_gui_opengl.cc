@@ -1008,6 +1008,7 @@ void openglWid::initializeGL(void)
 
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glEnable(GL_BLEND);
+  glEnable(GL_LINE_SMOOTH);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glShadeModel(GL_FLAT);
 }
