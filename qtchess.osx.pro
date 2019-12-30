@@ -12,7 +12,7 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstack-protector -Wstrict-overflow=5 \
                    -fPIE -fstack-protector-all -fwrapv \
-                   -mtune=generic -pie
+                   -mtune=generic
 QMAKE_EXTRA_TARGETS = purge
 
 RESOURCES       = Images/images.qrc
@@ -35,6 +35,12 @@ SOURCES		= Source/qtchess.cc \
                   Source/qtchess_gui_opengl.cc \
                   Source/qtchess_main.cc \
                   Source/qtchess_validate.cc
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+LIBS            += -framework Cocoa
+OBJECTIVE_HEADERS += Source/CocoaInitializer.h
+OBJECTIVE_SOURCES += Source/CocoaInitializer.mm
+}
 
 PROJECTNAME	= QtChess
 TARGET		= QtChess
