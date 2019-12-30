@@ -236,7 +236,6 @@ class qtchess_gui: public QMainWindow
   qtchess_setup_dialog *getSetupDialog(void) const;
   void addHistoryMove(const struct move_s &, const int);
   void clearHistory(void);
-  void closeEvent(QCloseEvent *);
   void display(void);
   void init(void);
   void initClocks(void);
@@ -270,6 +269,14 @@ class qtchess_gui: public QMainWindow
   /*
   ** -- Methods --
   */
+
+  void closeEvent(QCloseEvent *event)
+  {
+    if(event)
+      event->ignore();
+
+    quit();
+  }
 
   /*
   ** -- Slots --

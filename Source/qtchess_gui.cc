@@ -8,7 +8,6 @@
 ** -- Qt Includes --
 */
 
-#include <QCloseEvent>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -393,16 +392,6 @@ void qtchess_gui::quit(void)
     exit(EXIT_FAILURE);
 }
 
-void qtchess_gui::closeEvent(QCloseEvent *e)
-{
-  Q_UNUSED(e);
-
-  if(chess)
-    chess->quit(0, EXIT_SUCCESS);
-  else
-    exit(EXIT_FAILURE);
-}
-
 void qtchess_gui::newGame(void)
 {
   if(comm && comm->isConnectedRemotely())
@@ -535,8 +524,7 @@ void qtchess_setup_dialog::close_cb(void)
   hide();
 }
 
-qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):
-  QDialog(parent)
+qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):QDialog(parent)
 {
   ui.setupUi(this);
   ui.lScopeId->setEnabled(false);
