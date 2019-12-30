@@ -1002,14 +1002,13 @@ void openglWid::initializeGL(void)
   ** Initialize OpenGL.
   */
 
-  /*
-  ** Set a white background color.
-  */
-
-  glClearColor(1.0, 1.0, 1.0, 1.0);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glClearColor(1.0, 1.0, 1.0, 1.0); // White background.
   glEnable(GL_BLEND);
   glEnable(GL_LINE_SMOOTH);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_POINT_SMOOTH);
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
   glShadeModel(GL_FLAT);
 }
 

@@ -371,7 +371,24 @@ void qtchess_gui::help(void)
 void qtchess_gui::quit(void)
 {
   if(chess)
-    chess->quit(0, EXIT_SUCCESS);
+    {
+      if(!chess->isGameOver() && comm && comm->isConnectedRemotely())
+	{
+	  QMessageBox mb(this);
+
+	  mb.setIcon(QMessageBox::Question);
+	  mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+	  mb.setText
+	    (tr("A game is in progress. Are you sure that you wish to quit?"));
+	  mb.setWindowModality(Qt::WindowModal);
+	  mb.setWindowTitle(tr("QtChess: Confirmation"));
+
+	  if(mb.exec() != QMessageBox::Yes)
+	    return;
+	}
+
+      chess->quit(0, EXIT_SUCCESS);
+    }
   else
     exit(EXIT_FAILURE);
 }
@@ -394,8 +411,9 @@ void qtchess_gui::newGame(void)
 
       mb.setIcon(QMessageBox::Question);
       mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-      mb.setText(tr("Are you sure that you wish to initiate a new game? "
-		    "Both your board and your opponent's will be reset."));
+      mb.setText
+	(tr("Are you sure that you wish to initiate a new game? "
+	    "Your board and your opponent's board will be reset."));
       mb.setWindowModality(Qt::WindowModal);
       mb.setWindowTitle(tr("QtChess: Confirmation"));
 

@@ -140,7 +140,6 @@ class qtchess
     wonPiece = wonPieceArg;
   }
 
-  bool isConnected(void);
   bool isReady(void);
   void init(void);
   void quit(const char *, const int);
