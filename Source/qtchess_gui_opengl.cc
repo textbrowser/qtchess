@@ -1011,8 +1011,8 @@ void openglWid::mousePressEvent(QMouseEvent *e)
     showValidMoves();
   else
     {
-      showValid = false;
       mouse_pressed += 1;
+      showValid = false;
 
       if(e)
 	{
