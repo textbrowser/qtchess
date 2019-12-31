@@ -1,28 +1,12 @@
 #ifndef _QTCHESS_GUI_
 #define _QTCHESS_GUI_
 
-/*
-** -- C Includes --
-*/
-
-/*
-** -- C++ Includes --
-*/
-
-/*
-** -- Local Includes --
-*/
-
 #include "qtchess.h"
 #include "qtchess_gui_opengl.h"
 #include "ui_helpDialog.h"
 #include "ui_mainwindow.h"
 #include "ui_promotionDialog.h"
 #include "ui_setupDialog.h"
-
-/*
-** -- Qt Includes --
-*/
 
 #include <QCloseEvent>
 #include <QComboBox>
@@ -31,40 +15,16 @@
 #include <QTextEdit>
 #include <QTimeEdit>
 
-/*
-** -- Class(es) --
-*/
-
 class qtchess_help_dialog: public QDialog
 {
   Q_OBJECT
 
  public:
-  /*
-  ** -- Members --
-  */
-
-  /*
-  ** -- Methods --
-  */
-
   qtchess_help_dialog(QWidget *);
   void setup(void);
 
  private:
-  /*
-  ** -- Members --
-  */
-
   Ui_helpDialog ui;
-
-  /*
-  ** -- Methods --
-  */
-
-  /*
-  ** -- Slots --
-  */
 
  private slots:
   void ok_cb(void);
@@ -75,14 +35,6 @@ class qtchess_setup_dialog: public QDialog
   Q_OBJECT
 
  public:
-  /*
-  ** -- Members --
-  */
-
-  /*
-  ** -- Methods --
-  */
-
   qtchess_setup_dialog(QWidget *);
   qtchess_setup_dialog(void);
   QHostAddress getListeningAddress(void) const;
@@ -99,19 +51,7 @@ class qtchess_setup_dialog: public QDialog
   }
 
  private:
-  /*
-  ** -- Members --
-  */
-
   Ui_setupDialog ui;
-
-  /*
-  ** -- Methods --
-  */
-
-  /*
-  ** -- Slots --
-  */
 
  private slots:
   void close_cb(void);
@@ -130,14 +70,6 @@ class qtchess_promote_dialog: public QDialog
   Q_OBJECT
 
  public:
-  /*
-  ** -- Members --
-  */
-
-  /*
-  ** -- Methods --
-  */
-
   qtchess_promote_dialog(QWidget *);
 
   QComboBox *getMenu(void) const
@@ -148,19 +80,7 @@ class qtchess_promote_dialog: public QDialog
   void setup(void);
 
  private:
-  /*
-  ** -- Members --
-  */
-
   Ui_promotionDialog ui;
-
-  /*
-  ** -- Methods --
-  */
-
-  /*
-  ** -- Slots --
-  */
 
  private slots:
   void ok_cb(void);
@@ -171,14 +91,6 @@ class qtchess_gui: public QMainWindow
   Q_OBJECT
 
  public:
-  /*
-  ** -- Members --
-  */
-
-  /*
-  ** -- Methods --
-  */
-
   qtchess_gui(void)
   {
     action_Large_Size = 0;
@@ -249,10 +161,6 @@ class qtchess_gui: public QMainWindow
   void stopTimers(const int);
 
  private:
-  /*
-  ** -- Members --
-  */
-
   QAction *action_Large_Size;
   QAction *action_Miniature_Size;
   QAction *action_Normal_Size;
@@ -266,10 +174,6 @@ class qtchess_gui: public QMainWindow
   qtchess_promote_dialog *promote_dialog;
   qtchess_setup_dialog *setup_dialog;
 
-  /*
-  ** -- Methods --
-  */
-
   void closeEvent(QCloseEvent *event)
   {
     if(event)
@@ -277,10 +181,6 @@ class qtchess_gui: public QMainWindow
 
     quit();
   }
-
-  /*
-  ** -- Slots --
-  */
 
  private slots:
   void about(void);

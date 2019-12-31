@@ -1,7 +1,3 @@
-/*
-** -- Local Includes --
-*/
-
 #include "qtchess_validate.h"
 
 extern qtchess *chess;

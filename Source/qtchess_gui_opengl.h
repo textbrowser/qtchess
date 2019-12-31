@@ -1,45 +1,20 @@
 #ifndef _QTCHESS_GUI_OPENGL_
 #define _QTCHESS_GUI_OPENGL_
 
-/*
-** -- Qt Includes --
-*/
-
 #include <QEvent>
 #include <QMouseEvent>
 #include <QtOpenGL>
 
-/*
-** -- Class(es) --
-*/
-
 class point
 {
  public:
-  /*
-  ** -- Members --
-  */
-
   double x;
   double y;
-
-  /*
-  ** -- Methods --
-  */
 };
 
 class openglWid: public QGLWidget
 {
  public:
-
-  /*
-  ** -- Members --
-  */
-
-  /*
-  ** -- Methods --
-  */
-
   openglWid(QWidget *);
   void highlightSquare(const double, const double);
   void initializeGL(void);
@@ -52,10 +27,6 @@ class openglWid: public QGLWidget
   void showValidMoves(void);
 
  private:
-  /*
-  ** -- Members --
-  */
-
   bool showValid;
   double BISHOP_HEIGHT;
   double BISHOP_WIDTH;
@@ -104,10 +75,6 @@ class openglWid: public QGLWidget
   int mouse_pressed;
   point point_pressed;
   point point_selected;
-
-  /*
-  ** -- Methods --
-  */
 };
 
 #endif

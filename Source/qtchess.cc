@@ -1,9 +1,5 @@
 #include <QtDebug>
 
-/*
-** -- Local Includes --
-*/
-
 #include "qtchess.h"
 
 extern qtchess_gui *gui;
@@ -90,16 +86,16 @@ void qtchess::updateBoard(const QByteArray &buffer)
   ** Copy the information into current_move.
   */
 
-  current_move.x1 = qBound(-1, list.value(0).toInt(), NSQUARES - 1);
-  current_move.x2 = qBound(-1, list.value(1).toInt(), NSQUARES - 1);
-  current_move.y1 = qBound(-1, list.value(2).toInt(), NSQUARES - 1);
-  current_move.y2 = qBound(-1, list.value(3).toInt(), NSQUARES - 1);
+  current_move.piece = list.value(8).toInt();
   current_move.r_x1 = qBound(-1, list.value(4).toInt(), NSQUARES - 1);
   current_move.r_x2 = qBound(-1, list.value(5).toInt(), NSQUARES - 1);
   current_move.r_y1 = qBound(-1, list.value(6).toInt(), NSQUARES - 1);
   current_move.r_y2 = qBound(-1, list.value(7).toInt(), NSQUARES - 1);
-  current_move.piece = list.value(8).toInt();
   current_move.rook = list.value(9).toInt();
+  current_move.x1 = qBound(-1, list.value(0).toInt(), NSQUARES - 1);
+  current_move.x2 = qBound(-1, list.value(1).toInt(), NSQUARES - 1);
+  current_move.y1 = qBound(-1, list.value(2).toInt(), NSQUARES - 1);
+  current_move.y2 = qBound(-1, list.value(3).toInt(), NSQUARES - 1);
 
   if(getMyColor() == BLACK)
     {

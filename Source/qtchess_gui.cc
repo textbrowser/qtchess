@@ -1,12 +1,4 @@
-/*
-** -- Local Includes --
-*/
-
 #include "qtchess_gui.h"
-
-/*
-** -- Qt Includes --
-*/
 
 #include <QGridLayout>
 #include <QHBoxLayout>

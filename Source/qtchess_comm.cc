@@ -1,11 +1,3 @@
-/*
-** -- Qt Includes --
-*/
-
-/*
-** -- Local Includes --
-*/
-
 #include "qtchess_comm.h"
 
 extern qtchess *chess;

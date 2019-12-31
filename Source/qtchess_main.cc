@@ -27,10 +27,6 @@
 
 #include <QtDebug>
 
-/*
-** -- Local Includes --
-*/
-
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x050000
 #include "CocoaInitializer.h"
@@ -38,17 +34,9 @@
 #endif
 #include "qtchess.h"
 
-/*
-** -- Globals --
-*/
-
 qtchess *chess = 0;
 qtchess_comm *comm = 0;
 qtchess_gui *gui = 0;
-
-/*
-** -- Main --
-*/
 
 int main(int argc, char *argv[])
 {

@@ -1,26 +1,14 @@
 #ifndef _QTCHESS_COMM_
 #define _QTCHESS_COMM_
 
-/*
-** -- System Includes --
-*/
-
 extern "C"
 {
 #include <stdio.h>
 }
 
-/*
-** -- Qt Includes --
-*/
-
 #include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
-
-/*
-** -- Local Includes --
-*/
 
 #include "qtchess.h"
 #include "qtchess_defs.h"
@@ -31,14 +19,6 @@ class qtchess_comm: public QObject
 
  public:
   static const int s_buffer_size = 1024;
-
-  /*
-  ** -- Members --
-  */
-
-  /*
-  ** -- Methods --
-  */
 
   qtchess_comm(void);
 
@@ -76,17 +56,9 @@ class qtchess_comm: public QObject
   void stopListening(void);
 
  private:
-  /*
-  ** -- Members --
-  */
-
   QPointer<QTcpSocket> m_clientConnection;
   QTcpServer listening_sock;
   bool connected;
-
-  /*
-  ** -- Methods --
-  */
 
  private slots:
   void acceptConnection(void);

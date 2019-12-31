@@ -1,12 +1,4 @@
-/*
-** -- Qt Includes --
-*/
-
 #include <QMouseEvent>
-
-/*
-** -- Local Includes --
-*/
 
 #include "qtchess.h"
 

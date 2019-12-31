@@ -1,19 +1,11 @@
 #ifndef _QTCHESS_DEFS_
 #define _QTCHESS_DEFS_
 
-/*
-** -- System Includes --
-*/
-
 extern "C"
 {
 #include <stdio.h>
 #include <stdlib.h>
 }
-
-/*
-** -- Local Includes --
-*/
 
 enum
 {

@@ -1,21 +1,12 @@
 #ifndef _QTCHESS_VALIDATE_
 #define _QTCHESS_VALIDATE_
 
-/*
-** -- Local Includes --
-**/
-
 #include "qtchess.h"
 #include "qtchess_defs.h"
 
-/*
-** -- Namespaces --
-*/
-
 namespace qtchess_validate
 {
-  QString findDeparture(const int, const int, const int, const int,
-			const int);
+  QString findDeparture(const int, const int, const int, const int, const int);
   int color(const int);
   int isValidMove(const int, const int, const int, const int, const int);
   bool areValidCoordinates(const int, const int);
