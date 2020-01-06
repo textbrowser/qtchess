@@ -1,3 +1,12 @@
+extern "C"
+{
+#include <stdio.h>
+#include <stdlib.h>
+}
+
+#include <QString>
+
+#include "qtchess.h"
 #include "qtchess_validate.h"
 
 extern qtchess *chess;
@@ -62,8 +71,7 @@ QString qtchess_validate::findDeparture(const int X1,
 	}
 
   if(fcount > 0 && rcount > 0)
-    snprintf(departure, sizeof(departure), "%c%d", (char) (97 + X1),
-	     Y1 + 1);
+    snprintf(departure, sizeof(departure), "%c%d", (char) (97 + X1), Y1 + 1);
   else if(fcount > 0)
     departure[0] = (char) (97 + X1);
   else if(rcount > 0)

@@ -1,20 +1,9 @@
 #ifndef _QTCHESS_
 #define _QTCHESS_
 
-/*
-** -- Qt Includes --
-*/
+#include <QByteArray>
 
-#include <QApplication>
-
-/*
-** -- Local Includes --
-*/
-
-#include "qtchess_gui.h"
-#include "qtchess_comm.h"
 #include "qtchess_defs.h"
-#include "qtchess_validate.h"
 
 #define QTCHESS_VERSION "2020.02.02"
 

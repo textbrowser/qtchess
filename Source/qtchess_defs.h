@@ -1,12 +1,6 @@
 #ifndef _QTCHESS_DEFS_
 #define _QTCHESS_DEFS_
 
-extern "C"
-{
-#include <stdio.h>
-#include <stdlib.h>
-}
-
 enum
 {
   BLACK = 1,

@@ -1,4 +1,6 @@
+#include "qtchess.h"
 #include "qtchess_comm.h"
+#include "qtchess_gui.h"
 
 extern qtchess *chess;
 extern qtchess_comm *comm;

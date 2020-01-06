@@ -1,6 +1,10 @@
 #include <QMouseEvent>
 
 #include "qtchess.h"
+#include "qtchess_comm.h"
+#include "qtchess_gui.h"
+#include "qtchess_gui_opengl.h"
+#include "qtchess_validate.h"
 
 extern qtchess *chess;
 extern qtchess_comm *comm;

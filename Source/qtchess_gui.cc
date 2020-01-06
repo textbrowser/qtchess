@@ -1,4 +1,8 @@
+#include "qtchess.h"
+#include "qtchess_comm.h"
+#include "qtchess_defs.h"
 #include "qtchess_gui.h"
+#include "qtchess_validate.h"
 
 #include <QGridLayout>
 #include <QHBoxLayout>

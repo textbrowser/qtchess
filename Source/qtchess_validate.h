@@ -1,9 +1,6 @@
 #ifndef _QTCHESS_VALIDATE_
 #define _QTCHESS_VALIDATE_
 
-#include "qtchess.h"
-#include "qtchess_defs.h"
-
 namespace qtchess_validate
 {
   QString findDeparture(const int, const int, const int, const int, const int);

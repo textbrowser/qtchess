@@ -1,6 +1,9 @@
 #include <QtDebug>
 
 #include "qtchess.h"
+#include "qtchess_comm.h"
+#include "qtchess_gui.h"
+#include "qtchess_validate.h"
 
 extern qtchess_gui *gui;
 extern qtchess_comm *comm;
@@ -75,7 +78,6 @@ void qtchess::updateBoard(const QByteArray &buffer)
       return;
     }
 
-  int x = 15;
   struct move_s current_move;
 
   /*
@@ -115,14 +117,16 @@ void qtchess::updateBoard(const QByteArray &buffer)
        current_move.rook == ROOK2_WHITE))
     current_move.rook = -1;
 
-  current_move.promoted = QVariant(list.value(10).toInt()).toBool();
-  current_move.pawn_2 = QVariant(list.value(11).toInt()).toBool();
   current_move.enpassant = QVariant(list.value(12).toInt()).toBool();
   current_move.isOppKingThreat = QVariant(list.value(13).toInt()).toBool();
-  snprintf(current_move.departure, sizeof(current_move.departure),
-	   "%s", list.value(14).constData());
+  current_move.pawn_2 = QVariant(list.value(11).toInt()).toBool();
+  current_move.promoted = QVariant(list.value(10).toInt()).toBool();
+  snprintf(current_move.departure,
+	   sizeof(current_move.departure),
+	   "%s",
+	   list.value(14).constData());
 
-  for(int i = 0; i < NSQUARES; i++)
+  for(int i = 0, x = 15; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
 	current_move.board[i][j] = list.value(x).toInt();

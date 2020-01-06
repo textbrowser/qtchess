@@ -1,7 +1,6 @@
 #ifndef _QTCHESS_GUI_
 #define _QTCHESS_GUI_
 
-#include "qtchess.h"
 #include "qtchess_gui_opengl.h"
 #include "ui_helpDialog.h"
 #include "ui_mainwindow.h"

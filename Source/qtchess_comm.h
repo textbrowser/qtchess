@@ -1,25 +1,15 @@
 #ifndef _QTCHESS_COMM_
 #define _QTCHESS_COMM_
 
-extern "C"
-{
-#include <stdio.h>
-}
-
 #include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
-
-#include "qtchess.h"
-#include "qtchess_defs.h"
 
 class qtchess_comm: public QObject
 {
   Q_OBJECT
 
  public:
-  static const int s_buffer_size = 1024;
-
   qtchess_comm(void);
 
   ~qtchess_comm()
@@ -59,6 +49,7 @@ class qtchess_comm: public QObject
   QPointer<QTcpSocket> m_clientConnection;
   QTcpServer listening_sock;
   bool connected;
+  static const int s_buffer_size = 1024;
 
  private slots:
   void acceptConnection(void);

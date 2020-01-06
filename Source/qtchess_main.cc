@@ -33,6 +33,8 @@
 #endif
 #endif
 #include "qtchess.h"
+#include "qtchess_comm.h"
+#include "qtchess_gui.h"
 
 qtchess *chess = 0;
 qtchess_comm *comm = 0;
