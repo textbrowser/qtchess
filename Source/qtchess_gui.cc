@@ -461,8 +461,7 @@ void qtchess_gui::setup(void)
       if(setup_dialog->getHostField())
 	setup_dialog->getHostField()->setFocus();
 
-      setup_dialog->resize(setup_dialog->sizeHint().width(),
-			   setup_dialog->minimumSize().height());
+      setup_dialog->resize(setup_dialog->sizeHint());
       setup_dialog->exec();
     }
 }
