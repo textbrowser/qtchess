@@ -406,7 +406,7 @@ void qtchess_gui::newGame(void)
 	return;
     }
 
-  struct move_s current_move;
+  struct move_s current_move = {};
 
   if(chess)
     chess->init();

@@ -280,8 +280,9 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
     }
 }
 
-qtchess_comm::qtchess_comm(void)
+qtchess_comm::qtchess_comm(void):QObject()
 {
+  connected = false;
   connect(&listening_sock,
 	  SIGNAL(newConnection(void)),
 	  this,

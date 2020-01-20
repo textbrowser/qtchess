@@ -23,7 +23,7 @@ void openglWid::paintGL(void)
   QFont font;
   double X = 0.0, Y = 0.0;
   int I = 0, J = 0, found = 0;
-  struct move_s current_move;
+  struct move_s current_move = {};
 
   /*
   ** All the drawing occurs here.
