@@ -11,7 +11,7 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstack-protector -Wstrict-overflow=5 \
                    -fPIE -fstack-protector-all -fwrapv \
-                   -mtune=generic -pie
+                   -mtune=generic -pie -std=c++11
 QMAKE_EXTRA_TARGETS = purge
 
 RESOURCES       = Images/images.qrc

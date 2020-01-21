@@ -13,7 +13,7 @@ QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
                    -Woverloaded-virtual -Wpointer-arith \
                    -Wstack-protector -Wstrict-overflow=5 \
                    -fPIE -fstack-protector-all -fwrapv \
-                   -mtune=generic
+                   -mtune=generic -std=c++11
 QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
 QMAKE_EXTRA_TARGETS = purge
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6

@@ -622,9 +622,9 @@ void qtchess_setup_dialog::slotListen(void)
       }
 
   ui.host->setReadOnly(state);
-  ui.port->setReadOnly(state);
   ui.lipv4->setEnabled(!state);
   ui.lipv6->setEnabled(!state);
+  ui.port->setReadOnly(state);
 
   if(ui.lipv6->isChecked())
     ui.lScopeId->setReadOnly(state);
