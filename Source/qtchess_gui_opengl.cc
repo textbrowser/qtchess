@@ -1,5 +1,9 @@
 #include <QMouseEvent>
 
+#ifdef Q_PROCESSOR_ARM
+#include <GL/gl.h>
+#endif
+
 #include "qtchess.h"
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"

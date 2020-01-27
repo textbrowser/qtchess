@@ -1,7 +1,9 @@
 purge.commands = rm -f *~ && rm -f */*~
 
 CONFIG		+= qt release warn_on
+INCLUDEPATH	+= /usr/include/GL
 LANGUAGE        = C++
+LIBS            += -lGL -lGLU
 QT		+= network opengl
 TEMPLATE        = app
 
