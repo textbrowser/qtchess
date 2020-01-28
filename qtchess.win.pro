@@ -8,7 +8,7 @@ QT		+= network opengl
 TEMPLATE	= app
 
 QMAKE_CLEAN	+= QtChess
-QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual -Werror -Wextra \
+QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual -Wextra \
                    -Wformat=2 -Woverloaded-virtual -Wpointer-arith \
                    -Wstrict-overflow=5 -fwrapv -pie -std=c++11
 QMAKE_EXTRA_TARGETS = purge
