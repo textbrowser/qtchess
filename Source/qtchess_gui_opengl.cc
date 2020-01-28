@@ -953,6 +953,7 @@ void openglWid::paintGL(void)
 	  if(comm)
 	    comm->sendMove(current_move);
 
+	  updateGL();
 	  update();
 	  chess->setGameOver(game_over);
 
@@ -1011,42 +1012,6 @@ void openglWid::initializeGL(void)
   glShadeModel(GL_FLAT);
 }
 
-void openglWid::renderText(const int x,
-			   const int y,
-			   const QString &text,
-			   const QFont &font)
-{
-#if QTCHESS_RENDER_TEXT
-  GLdouble textPosX = 0.0, textPosY = 0.0, textPosZ = 0.0;
-  int height = this->height();
-
-  project(static_cast<double> (x),
-	  static_cast<double> (y),
-	  0.0,
-	  &textPosX,
-	  &textPosY,
-	  &textPosZ);
-  textPosY = height - textPosY;
-
-  GLdouble glColor[4];
-
-  glGetDoublev(GL_CURRENT_COLOR, glColor);
-
-  QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
-  QPainter painter(this);
-
-  painter.setPen(fontColor);
-  painter.setFont(font);
-  painter.drawText(textPosX, textPosY, text);
-  painter.end();
-#else
-  Q_UNUSED(font);
-  Q_UNUSED(text);
-  Q_UNUSED(x);
-  Q_UNUSED(y);
-#endif
-}
-
 void openglWid::resizeGL(int w, int h)
 {
   px = (w - 8 * block_size) / 2;
@@ -1073,7 +1038,7 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 	  point_pressed.y = height() - e->y();
 	}
 
-      update();
+      updateGL();
     }
 }
 
@@ -1130,7 +1095,7 @@ void openglWid::rescale(const double denominatorArg)
   point_selected.x = point_selected.y = -1;
   px /= denominator;
   py /= denominator;
-  update();
+  updateGL();
 }
 
 void openglWid::reinit(void)
@@ -1184,21 +1149,13 @@ void openglWid::reinit(void)
   showValid = false;
 }
 
-openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
+openglWid::openglWid(QWidget *parent):QGLWidget(parent)
 {
   mouse_pressed = 0;
   showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
-
-  QSurfaceFormat surfaceFormat;
-
-  surfaceFormat.setDepthBufferSize(24);
-  surfaceFormat.setProfile(QSurfaceFormat::CoreProfile);
-  surfaceFormat.setStencilBufferSize(8);
-  surfaceFormat.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-  surfaceFormat.setVersion(2, 0);
-  setFormat(surfaceFormat);
+  setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
 }
 
 void openglWid::showValidMoves(void)
@@ -1210,7 +1167,7 @@ void openglWid::showValidMoves(void)
      comm->isReady())
     {
       showValid = true;
-      update();
+      updateGL();
     }
 }
 
