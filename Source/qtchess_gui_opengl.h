@@ -12,7 +12,7 @@ class point
   double y;
 };
 
-class openglWid: public QGLWidget
+class openglWid: public QOpenGLWidget
 {
  public:
   openglWid(QWidget *);

@@ -622,12 +622,14 @@ void openglWid::paintGL(void)
 
   for(int m = 1; m <= NSQUARES; m++)
     {
+#ifdef QTCHESS_RENDER_TEXT
       renderText((int) (px + m * block_size - block_size / 2 - 5),
 		 (int) (py - 5),
 		 QString((char) 96 + m), font);
       renderText((int) (px - 15),
 		 (int) (py + m * block_size - block_size / 2 + 5),
 		 QString::number(9 - m), font);
+#endif
     }
 
   /*
@@ -953,7 +955,6 @@ void openglWid::paintGL(void)
 	  if(comm)
 	    comm->sendMove(current_move);
 
-	  updateGL();
 	  update();
 	  chess->setGameOver(game_over);
 
@@ -1038,7 +1039,7 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 	  point_pressed.y = height() - e->y();
 	}
 
-      updateGL();
+      update();
     }
 }
 
@@ -1095,7 +1096,6 @@ void openglWid::rescale(const double denominatorArg)
   point_selected.x = point_selected.y = -1;
   px /= denominator;
   py /= denominator;
-  updateGL();
   update();
 }
 
@@ -1150,13 +1150,17 @@ void openglWid::reinit(void)
   showValid = false;
 }
 
-openglWid::openglWid(QWidget *parent):QGLWidget(parent)
+openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
 {
   mouse_pressed = 0;
   showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
-  setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
+
+  QSurfaceFormat surfaceFormat;
+
+  surfaceFormat.setSwapBehavior(QSurfaceFormat::TripleBuffer);
+  setFormat(surfaceFormat);
 }
 
 void openglWid::showValidMoves(void)
@@ -1168,7 +1172,7 @@ void openglWid::showValidMoves(void)
      comm->isReady())
     {
       showValid = true;
-      updateGL();
+      update();
     }
 }
 

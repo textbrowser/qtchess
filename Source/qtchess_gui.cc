@@ -414,7 +414,7 @@ void qtchess_gui::newGame(void)
   if(gui && gui->getGLBoard())
     {
       gui->getGLBoard()->newGame();
-      gui->getGLBoard()->updateGL();
+      gui->getGLBoard()->update();
     }
 
   for(int i = 0; i < NSQUARES; i++)
