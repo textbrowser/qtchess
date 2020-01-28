@@ -75,6 +75,10 @@ class openglWid: public QOpenGLWidget
   int mouse_pressed;
   point point_pressed;
   point point_selected;
+  void renderText(const int x,
+		  const int y,
+		  const QString &text,
+		  const QFont &font);
 };
 
 #endif

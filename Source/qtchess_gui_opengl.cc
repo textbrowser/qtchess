@@ -622,14 +622,12 @@ void openglWid::paintGL(void)
 
   for(int m = 1; m <= NSQUARES; m++)
     {
-#ifdef QTCHESS_RENDER_TEXT
       renderText((int) (px + m * block_size - block_size / 2 - 5),
 		 (int) (py - 5),
 		 QString((char) 96 + m), font);
       renderText((int) (px - 15),
 		 (int) (py + m * block_size - block_size / 2 + 5),
 		 QString::number(9 - m), font);
-#endif
     }
 
   /*
@@ -1013,6 +1011,42 @@ void openglWid::initializeGL(void)
   glShadeModel(GL_FLAT);
 }
 
+void openglWid::renderText(const int x,
+			   const int y,
+			   const QString &text,
+			   const QFont &font)
+{
+#if QTCHESS_RENDER_TEXT
+  GLdouble textPosX = 0.0, textPosY = 0.0, textPosZ = 0.0;
+  int height = this->height();
+
+  project(static_cast<double> (x),
+	  static_cast<double> (y),
+	  0.0,
+	  &textPosX,
+	  &textPosY,
+	  &textPosZ);
+  textPosY = height - textPosY;
+
+  GLdouble glColor[4];
+
+  glGetDoublev(GL_CURRENT_COLOR, glColor);
+
+  QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
+  QPainter painter(this);
+
+  painter.setPen(fontColor);
+  painter.setFont(font);
+  painter.drawText(textPosX, textPosY, text);
+  painter.end();
+#else
+  Q_UNUSED(font);
+  Q_UNUSED(text);
+  Q_UNUSED(x);
+  Q_UNUSED(y);
+#endif
+}
+
 void openglWid::resizeGL(int w, int h)
 {
   px = (w - 8 * block_size) / 2;
@@ -1159,7 +1193,11 @@ openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
 
   QSurfaceFormat surfaceFormat;
 
-  surfaceFormat.setSwapBehavior(QSurfaceFormat::TripleBuffer);
+  surfaceFormat.setDepthBufferSize(24);
+  surfaceFormat.setProfile(QSurfaceFormat::CoreProfile);
+  surfaceFormat.setStencilBufferSize(8);
+  surfaceFormat.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+  surfaceFormat.setVersion(2, 0);
   setFormat(surfaceFormat);
 }
 
