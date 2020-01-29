@@ -43,7 +43,9 @@ qtchess_gui *gui = 0;
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_WIN32
+#if QT_VERSION >= 0x050300
   QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
+#endif
 #endif
   QApplication application(argc, argv);
 
