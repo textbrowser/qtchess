@@ -2,11 +2,11 @@
 
 if [ -r ./QtChess ] && [ -x ./QtChess ]
 then
-    ./QtChess -style fusion "$@"
+    ./QtChess "$@"
     exit $?
 elif [ -r /usr/local/qtchess/QtChess ] && [ -x /usr/local/qtchess/QtChess ]
 then
-    cd /usr/local/qtchess && exec ./QtChess -style fusion "$@"
+    cd /usr/local/qtchess && exec ./QtChess "$@"
     exit $?
 else
     exit 1
