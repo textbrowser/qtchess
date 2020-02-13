@@ -5,7 +5,7 @@
 
 #include "qtchess_defs.h"
 
-#define QTCHESS_VERSION "2020.02.02"
+#define QTCHESS_VERSION "2020.02.15"
 
 static struct move_s emptyMoveStruct;
 
