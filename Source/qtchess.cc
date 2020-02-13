@@ -78,7 +78,7 @@ void qtchess::updateBoard(const QByteArray &buffer)
       return;
     }
 
-  struct move_s current_move;
+  struct move_s current_move = {};
 
   /*
   ** Now for some magic.

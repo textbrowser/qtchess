@@ -49,8 +49,8 @@ void openglWid::paintGL(void)
 	else
 	  glColor3f((GLfloat) 0.5, (GLfloat) 0.5, (GLfloat) 0.6);
 
-	int x = px + i * block_size;
-	int y = py + j * block_size;
+	int x = static_cast<int> (px + i * block_size);
+	int y = static_cast<int> (py + j * block_size);
 
 	glRectd((double) x,
 		(double) y,

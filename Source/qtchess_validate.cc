@@ -269,8 +269,6 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
   if(!chess)
     return rc;
 
-  struct move_s move;
-
   /*
   ** 7
   ** 6
@@ -364,7 +362,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	** En passant.
 	*/
 
-	move = chess->getLastOpponentMove();
+	struct move_s move = chess->getLastOpponentMove();
 
 	if(move.pawn_2)
 	  {
@@ -449,7 +447,7 @@ int qtchess_validate::isValidMove(const int row_from, const int col_from,
 	** En passant.
 	*/
 
-	move = chess->getLastOpponentMove();
+	struct move_s move = chess->getLastOpponentMove();
 
 	if(move.pawn_2)
 	  {
