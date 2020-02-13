@@ -1,0 +1,10 @@
+Architecture: amd64
+Depends: libqt5core5a (>= 5.5.1), libqt5gui5 (>= 5.5.1), libqt5network5 (>= 5.5.1), libqt5opengl5 (>= 5.5.1), libqt5widgets5 (>= 5.5.1)
+Maintainer: textbrowser@gmail.com
+Package: QtChess
+Priority: optional
+Section: Games
+Version: 2020.02.15
+Description: QtChess
+ Welcome to QtChess!
+ QtChess is governed by a BSD license. Enjoy!
