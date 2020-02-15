@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>550</height>
+    <height>602</height>
    </rect>
   </property>
   <property name="font">
@@ -152,6 +152,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="disconnect">
+          <property name="toolTip">
+           <string>Disconnect remote peer.</string>
+          </property>
           <property name="text">
            <string>&amp;Disconnect</string>
           </property>
