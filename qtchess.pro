@@ -1,6 +1,7 @@
 purge.commands = rm -f *~ && rm -f */*~
 
 CONFIG		+= qt release warn_on
+DEFINES		+= QT_DEPRECATED_WARNINGS
 LANGUAGE        = C++
 QT		+= network opengl
 TEMPLATE        = app
