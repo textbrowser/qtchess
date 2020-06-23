@@ -21,7 +21,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -fPIE \
                    -fstack-protector-all \
                    -fwrapv \
-                   -mtune=generic \
                    -pedantic \
                    -pie \
                    -std=c++11
