@@ -8,13 +8,23 @@ QT		+= network opengl
 TEMPLATE        = app
 
 QMAKE_CLEAN	+= QtChess
-QMAKE_CXXFLAGS  += -Wall -Wcast-qual \
-                   -Werror -Wextra -Wformat=2 \
-		   -Wno-deprecated-copy \
-                   -Woverloaded-virtual -Wpointer-arith \
-                   -Wstack-protector -Wstrict-overflow=5 \
-                   -fPIE -fstack-protector-all -fwrapv \
-                   -march=armv6 -mfloat-abi=hard -mfpu=vfp \
+QMAKE_CXXFLAGS  += -Wall \
+                   -Wcast-qual \
+                   -Werror \
+                   -Wextra \
+                   -Wformat=2 \
+                   -Wno-deprecated-copy \
+                   -Woverloaded-virtual \
+                   -Wpointer-arith \
+                   -Wstack-protector \
+                   -Wstrict-overflow=5 \
+                   -fPIE \
+                   -fstack-protector-all \
+                   -fwrapv \
+                   -march=armv6 \
+                   -mfloat-abi=hard \
+                   -mfpu=vfp \
+                   -pedantic \
 		   -pie
 QMAKE_EXTRA_TARGETS = purge
 

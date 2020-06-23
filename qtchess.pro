@@ -7,13 +7,24 @@ QT		+= network opengl
 TEMPLATE        = app
 
 QMAKE_CLEAN	+= QtChess
-QMAKE_CXXFLAGS  += -Wall -Wcast-align -Wcast-qual \
-                   -Werror -Wextra -Wformat=2 \
+QMAKE_CXXFLAGS  += -Wall \
+                   -Wcast-align \
+                   -Wcast-qual \
+                   -Werror \
+                   -Wextra \
+                   -Wformat=2 \
 		   -Wno-deprecated-copy \
-                   -Woverloaded-virtual -Wpointer-arith \
-                   -Wstack-protector -Wstrict-overflow=5 \
-                   -fPIE -fstack-protector-all -fwrapv \
-                   -mtune=generic -pie -std=c++11
+                   -Woverloaded-virtual \
+                   -Wpointer-arith \
+                   -Wstack-protector \
+                   -Wstrict-overflow=5 \
+                   -fPIE \
+                   -fstack-protector-all \
+                   -fwrapv \
+                   -mtune=generic \
+                   -pedantic \
+                   -pie \
+                   -std=c++11
 QMAKE_EXTRA_TARGETS = purge
 
 RESOURCES       = Images/images.qrc
