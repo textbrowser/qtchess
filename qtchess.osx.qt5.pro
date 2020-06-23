@@ -11,11 +11,13 @@ QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
                    -Wcast-qual \
+                   -Wconversion \
                    -Werror \
                    -Wextra \
                    -Wformat=2 \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
+                   -Wsign-conversion \
                    -Wstack-protector \
                    -Wstrict-overflow=5 \
                    -fPIE \
