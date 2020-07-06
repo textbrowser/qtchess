@@ -16,7 +16,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wformat=2 \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
-                   -Wsign-conversion \
                    -Wstrict-overflow=5 \
                    -fwrapv \
                    -pedantic \
