@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>602</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="font">
@@ -88,9 +88,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="port"/>
-        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label">
           <property name="font">
@@ -120,12 +117,19 @@
           <property name="toolTip">
            <string>An empty value will disable the software firewall.</string>
           </property>
+          <property name="placeholderText">
+           <string>Allowed IP Address</string>
+          </property>
          </widget>
         </item>
         <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLineEdit" name="host"/>
+           <widget class="QLineEdit" name="host">
+            <property name="placeholderText">
+             <string>IP Address</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_7">
@@ -135,9 +139,23 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lScopeId"/>
+           <widget class="QLineEdit" name="lScopeId">
+            <property name="placeholderText">
+             <string>Scope ID</string>
+            </property>
+           </widget>
           </item>
          </layout>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="port">
+          <property name="maximum">
+           <number>65535</number>
+          </property>
+          <property name="value">
+           <number>4710</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -272,9 +290,6 @@
       </item>
       <item>
        <layout class="QGridLayout" name="_3">
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="rport"/>
-        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_9">
           <property name="font">
@@ -302,7 +317,11 @@
         <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QLineEdit" name="rhost"/>
+           <widget class="QLineEdit" name="rhost">
+            <property name="placeholderText">
+             <string>IP Address</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_13">
@@ -312,9 +331,23 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="rScopeId"/>
+           <widget class="QLineEdit" name="rScopeId">
+            <property name="placeholderText">
+             <string>Scope ID</string>
+            </property>
+           </widget>
           </item>
          </layout>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="rport">
+          <property name="maximum">
+           <number>65535</number>
+          </property>
+          <property name="value">
+           <number>4710</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

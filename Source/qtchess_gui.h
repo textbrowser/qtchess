@@ -39,10 +39,10 @@ class qtchess_setup_dialog: public QDialog
   QHostAddress getListeningAddress(void) const;
   QLineEdit *getAllowedHostField(void) const;
   QLineEdit *getHostField(void) const;
-  QLineEdit *getPortField(void) const;
   QLineEdit *getRHostField(void) const;
-  QLineEdit *getRPortField(void) const;
   QLineEdit *getRScopeIdField(void) const;
+  QSpinBox *getPortField(void) const;
+  QSpinBox *getRPortField(void) const;
 
   QString color(void) const
   {

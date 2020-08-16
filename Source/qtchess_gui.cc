@@ -582,19 +582,9 @@ QLineEdit *qtchess_setup_dialog::getHostField(void) const
   return ui.host;
 }
 
-QLineEdit *qtchess_setup_dialog::getPortField(void) const
-{
-  return ui.port;
-}
-
 QLineEdit *qtchess_setup_dialog::getRHostField(void) const
 {
   return ui.rhost;
-}
-
-QLineEdit *qtchess_setup_dialog::getRPortField(void) const
-{
-  return ui.rport;
 }
 
 QLineEdit *qtchess_setup_dialog::getRScopeIdField(void) const
@@ -605,6 +595,16 @@ QLineEdit *qtchess_setup_dialog::getRScopeIdField(void) const
 QLineEdit *qtchess_setup_dialog::getAllowedHostField(void) const
 {
   return ui.allowedHost;
+}
+
+QSpinBox *qtchess_setup_dialog::getPortField(void) const
+{
+  return ui.port;
+}
+
+QSpinBox *qtchess_setup_dialog::getRPortField(void) const
+{
+  return ui.rport;
 }
 
 void qtchess_setup_dialog::slotListen(void)
