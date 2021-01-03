@@ -58,20 +58,15 @@ struct move_s
   int pawn_2; // Did a pawn move two squares?
   int piece;
   int promoted;
+  int r_x1; // Castling.
+  int r_x2; // Castling.
+  int r_y1; // Castling.
+  int r_y2; // Castling.
+  int rook; // Castling.
   int x1;
   int x2;
   int y1;
   int y2;
-
-  /*
-  ** Used for castling moves.
-  */
-
-  int r_x1;
-  int r_x2;
-  int r_y1;
-  int r_y2;
-  int rook;
 };
 
 #endif
