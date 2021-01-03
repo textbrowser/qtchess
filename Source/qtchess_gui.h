@@ -92,34 +92,34 @@ class qtchess_gui: public QMainWindow
  public:
   qtchess_gui(void)
   {
-    action_Large_Size = 0;
-    action_Miniature_Size = 0;
-    action_Normal_Size = 0;
+    action_Large_Size = nullptr;
+    action_Miniature_Size = nullptr;
+    action_Normal_Size = nullptr;
     denominator = 1;
-    glboard = 0;
-    help_dialog = 0;
-    opponentt = 0;
-    playert = 0;
-    promote_dialog = 0;
-    setup_dialog = 0;
-    statusLabel = 0;
+    glboard = nullptr;
+    help_dialog = nullptr;
+    opponentt = nullptr;
+    playert = nullptr;
+    promote_dialog = nullptr;
+    setup_dialog = nullptr;
+    statusLabel = nullptr;
   }
 
   ~qtchess_gui()
   {
-    if(help_dialog != 0)
+    if(help_dialog != nullptr)
       help_dialog->deleteLater();
 
-    if(opponentt != 0)
+    if(opponentt != nullptr)
       opponentt->deleteLater();
 
-    if(playert != 0)
+    if(playert != nullptr)
       playert->deleteLater();
 
-    if(promote_dialog != 0)
+    if(promote_dialog != nullptr)
       promote_dialog->deleteLater();
 
-    if(setup_dialog != 0)
+    if(setup_dialog != nullptr)
       setup_dialog->deleteLater();
   }
 

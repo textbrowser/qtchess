@@ -728,8 +728,8 @@ void openglWid::paintGL(void)
 	    }
 	}
       else if(mouse_pressed == 2 &&
-	      point_selected.x == I &&
-	      point_selected.y == J)
+	      qFuzzyCompare(point_selected.x, static_cast<double> (I)) &&
+	      qFuzzyCompare(point_selected.y, static_cast<double> (J)))
 	{
 	  mouse_pressed = 1;
 	  glColor3f(0.0, 1.0, 0.0);

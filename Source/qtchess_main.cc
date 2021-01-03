@@ -36,9 +36,9 @@
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"
 
-qtchess *chess = 0;
-qtchess_comm *comm = 0;
-qtchess_gui *gui = 0;
+qtchess *chess = nullptr;
+qtchess_comm *comm = nullptr;
+qtchess_gui *gui = nullptr;
 
 int main(int argc, char *argv[])
 {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
-  if((chess = new(std::nothrow) qtchess()) == 0)
+  if((chess = new(std::nothrow) qtchess()) == nullptr)
     {
       qDebug() << "Memory allocation failure.";
       return EXIT_FAILURE;
@@ -73,10 +73,10 @@ int main(int argc, char *argv[])
 
   chess->init();
 
-  if((gui = new(std::nothrow) qtchess_gui()) == 0)
+  if((gui = new(std::nothrow) qtchess_gui()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
 
-  if((comm = new(std::nothrow) qtchess_comm()) == 0)
+  if((comm = new(std::nothrow) qtchess_comm()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
 
   /*

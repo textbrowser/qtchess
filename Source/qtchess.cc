@@ -59,7 +59,7 @@ void qtchess::quit(const char *message_text, const int exit_code)
   ** Print the exit message.
   */
 
-  if(message_text != 0)
+  if(message_text != nullptr)
     qDebug() << message_text;
 
   if(QApplication::instance())
