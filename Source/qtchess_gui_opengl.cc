@@ -618,17 +618,28 @@ void openglWid::paintGL(void)
 
   glColor3f(0.0, 0.0, 0.0);
   font.setBold(false);
-  font.setStyleStrategy(QFont::OpenGLCompatible);
+  font.setStyleStrategy
+    (QFont::StyleStrategy(QFont::OpenGLCompatible | QFont::PreferAntialias));
 
   for(int m = 1; m <= NSQUARES; m++)
-    {
-      renderText((int) (px + m * block_size - block_size / 2 - 5),
-		 (int) (py - 5),
-		 QString((char) 96 + m), font);
-      renderText((int) (px - 15),
-		 (int) (py + m * block_size - block_size / 2 + 5),
-		 QString::number(9 - m), font);
-    }
+    if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 0)
+      {
+	renderText((int) (px + m * block_size - block_size / 2 - 5),
+		   (int) (py - 5),
+		   QString((char) 96 + m), font);
+	renderText((int) (px - 15),
+		   (int) (py + m * block_size - block_size / 2 + 5),
+		   QString::number(9 - m), font);
+      }
+    else
+      {
+	renderText((int) (px + m * block_size / 2 - block_size / 2 + 20),
+		   (int) (py - 20),
+		   QString((char) 96 + m), font);
+	renderText((int) (px - 25),
+		   (int) (py + m * block_size / 2 - block_size / 2 + 30),
+		   QString::number(9 - m), font);
+      }
 
   /*
   ** Now add some black borders to the board.
