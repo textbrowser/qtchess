@@ -87,6 +87,51 @@ bool qtchess_validate::areValidCoordinates(const int x, const int y)
   return x >= 0 && x < NSQUARES && y >= 0 && y < NSQUARES;
 }
 
+bool qtchess_validate::isBishop(const int piece)
+{
+  if(piece == BISHOP_BLACK || piece == BISHOP_WHITE)
+    return true;
+  else
+    return false;
+}
+
+bool qtchess_validate::isBlack(const int piece)
+{
+  switch(piece)
+    {
+    case KING_BLACK: case PAWN_BLACK: case ROOK_BLACK: case ROOK1_BLACK:
+    case ROOK2_BLACK: case QUEEN_BLACK: case BISHOP_BLACK:
+    case KNIGHT_BLACK:
+      return true;
+    default:
+      return false;
+    }
+}
+
+bool qtchess_validate::isColor(const int piece, const int color)
+{
+  if(color == BLACK)
+    return isBlack(piece);
+  else
+    return isWhite(piece);
+}
+
+bool qtchess_validate::isEmpty(const int piece)
+{
+  if(piece == EMPTY_SQUARE)
+    return true;
+  else
+    return false;
+}
+
+bool qtchess_validate::isKing(const int piece)
+{
+  if(piece == KING_BLACK || piece == KING_WHITE)
+    return true;
+  else
+    return false;
+}
+
 bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 {
   bool isChecked = false;
@@ -132,50 +177,17 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
   return isChecked;
 }
 
-bool qtchess_validate::isThreatened(const int x, const int y, int color)
+bool qtchess_validate::isKnight(const int piece)
 {
-  /*
-  ** Determine if the given opponent threatens a certain square.
-  */
-
-  if(chess)
-    for(int i = 0; i < NSQUARES; i++)
-      for(int j = 0; j < NSQUARES; j++)
-	if(!isEmpty(chess->board[i][j]))
-	  if(isColor(chess->board[i][j], color))
-	    if(isValidMove(j, i, y, x, chess->board[i][j]) != INVALID)
-	      return true;
-
-  return false;
-}
-
-int qtchess_validate::color(const int piece)
-{
-  if(isBlack(piece))
-    return BLACK;
-  else
-    return WHITE;
-}
-
-bool qtchess_validate::isColor(const int piece, const int color)
-{
-  if(color == BLACK)
-    return isBlack(piece);
-  else
-    return isWhite(piece);
-}
-
-bool qtchess_validate::isKing(const int piece)
-{
-  if(piece == KING_BLACK || piece == KING_WHITE)
+  if(piece == KNIGHT_BLACK || piece == KNIGHT_WHITE)
     return true;
   else
     return false;
 }
 
-bool qtchess_validate::isBishop(const int piece)
+bool qtchess_validate::isPawn(const int piece)
 {
-  if(piece == BISHOP_BLACK || piece == BISHOP_WHITE)
+  if(piece == PAWN_BLACK || piece == PAWN_WHITE)
     return true;
   else
     return false;
@@ -184,14 +196,6 @@ bool qtchess_validate::isBishop(const int piece)
 bool qtchess_validate::isQueen(const int piece)
 {
   if(piece == QUEEN_BLACK || piece == QUEEN_WHITE)
-    return true;
-  else
-    return false;
-}
-
-bool qtchess_validate::isKnight(const int piece)
-{
-  if(piece == KNIGHT_BLACK || piece == KNIGHT_WHITE)
     return true;
   else
     return false;
@@ -223,33 +227,21 @@ bool qtchess_validate::isRook2(const int piece)
     return false;
 }
 
-bool qtchess_validate::isPawn(const int piece)
+bool qtchess_validate::isThreatened(const int x, const int y, int color)
 {
-  if(piece == PAWN_BLACK || piece == PAWN_WHITE)
-    return true;
-  else
-    return false;
-}
+  /*
+  ** Determine if the given opponent threatens a certain square.
+  */
 
-bool qtchess_validate::isEmpty(const int piece)
-{
-  if(piece == EMPTY_SQUARE)
-    return true;
-  else
-    return false;
-}
+  if(chess)
+    for(int i = 0; i < NSQUARES; i++)
+      for(int j = 0; j < NSQUARES; j++)
+	if(!isEmpty(chess->board[i][j]))
+	  if(isColor(chess->board[i][j], color))
+	    if(isValidMove(j, i, y, x, chess->board[i][j]) != INVALID)
+	      return true;
 
-bool qtchess_validate::isBlack(const int piece)
-{
-  switch(piece)
-    {
-    case KING_BLACK: case PAWN_BLACK: case ROOK_BLACK: case ROOK1_BLACK:
-    case ROOK2_BLACK: case QUEEN_BLACK: case BISHOP_BLACK:
-    case KNIGHT_BLACK:
-      return true;
-    default:
-      return false;
-    }
+  return false;
 }
 
 bool qtchess_validate::isWhite(const int piece)
@@ -263,6 +255,14 @@ bool qtchess_validate::isWhite(const int piece)
     default:
       return false;
     }
+}
+
+int qtchess_validate::color(const int piece)
+{
+  if(isBlack(piece))
+    return BLACK;
+  else
+    return WHITE;
 }
 
 int qtchess_validate::isValidMove(const int row_from, const int col_from,
