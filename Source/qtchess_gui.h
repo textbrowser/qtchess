@@ -101,6 +101,7 @@ class qtchess_gui: public QMainWindow
     opponentt = nullptr;
     playert = nullptr;
     promote_dialog = nullptr;
+    rescale = 1.0;
     setup_dialog = nullptr;
     statusLabel = nullptr;
   }
@@ -168,6 +169,7 @@ class qtchess_gui: public QMainWindow
   QTimer *playert;
   Ui_mainWindow ui;
   double denominator;
+  double rescale;
   openglWid *glboard;
   qtchess_help_dialog *help_dialog;
   qtchess_promote_dialog *promote_dialog;

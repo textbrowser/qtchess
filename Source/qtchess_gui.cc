@@ -212,7 +212,12 @@ void qtchess_gui::init(void)
 
   if(glboard)
     {
-      glboard->rescale(denominator);
+      if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
+	rescale = 0.5;
+      else
+	rescale = denominator;
+
+      glboard->rescale(rescale);
       glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
 		      (int) (1.0 / denominator * OPEN_GL_DIMENSION));
       ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
@@ -257,8 +262,13 @@ void qtchess_gui::slotChangeSize(void)
 
       if(glboard)
 	{
+	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
+	    rescale = 0.475;
+	  else
+	    rescale = denominator;
+
 	  glboard->reinit();
-	  glboard->rescale(denominator);
+	  glboard->rescale(rescale);
 	  glboard->resize(OPEN_GL_DIMENSION, OPEN_GL_DIMENSION);
 	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
 	}
@@ -278,8 +288,13 @@ void qtchess_gui::slotChangeSize(void)
 
       if(glboard)
 	{
+	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
+	    rescale = 0.60;
+	  else
+	    rescale = denominator;
+
 	  glboard->reinit();
-	  glboard->rescale(denominator);
+	  glboard->rescale(rescale);
 	  glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
 			  (int) (1.0 / denominator * OPEN_GL_DIMENSION));
 	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
@@ -300,8 +315,13 @@ void qtchess_gui::slotChangeSize(void)
 
       if(glboard)
 	{
+	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
+	    rescale = 0.5;
+	  else
+	    rescale = denominator;
+
 	  glboard->reinit();
-	  glboard->rescale(denominator);
+	  glboard->rescale(rescale);
 	  glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
 			  (int) (1.0 / denominator * OPEN_GL_DIMENSION));
 	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
