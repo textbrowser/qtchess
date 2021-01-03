@@ -95,7 +95,7 @@ class qtchess_gui: public QMainWindow
     action_Large_Size = nullptr;
     action_Miniature_Size = nullptr;
     action_Normal_Size = nullptr;
-    denominator = 1;
+    denominator = 1.0;
     glboard = nullptr;
     help_dialog = nullptr;
     opponentt = nullptr;
