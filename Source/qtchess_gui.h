@@ -183,6 +183,8 @@ class qtchess_gui: public QMainWindow
     quit();
   }
 
+  void resizeEvent(QResizeEvent *event);
+
  private slots:
   void about(void);
   void help(void);

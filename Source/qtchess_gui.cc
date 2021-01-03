@@ -977,6 +977,11 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):
 	));
 }
 
+void qtchess_gui::resizeEvent(QResizeEvent *event)
+{
+  QMainWindow::resizeEvent(event);
+}
+
 void qtchess_gui::startTimers(const int which)
 {
   Q_UNUSED(which);

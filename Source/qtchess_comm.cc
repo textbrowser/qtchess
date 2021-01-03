@@ -6,33 +6,78 @@ extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;
 
-void qtchess_comm::updateBoard(void)
+bool qtchess_comm::isConnectedRemotely(void) const
 {
-  int ntries = 1;
+  return m_clientConnection &&
+    m_clientConnection->state() == QAbstractSocket::ConnectedState;
+}
 
-  while(m_clientConnection && m_clientConnection->canReadLine() && ntries <= 5)
+bool qtchess_comm::isListening(void) const
+{
+  return listening_sock.isListening();
+}
+
+bool qtchess_comm::isReady(void) const
+{
+  if(isSet())
     {
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-
-      QByteArray buffer(s_buffer_size, 0);
-
-      if(m_clientConnection->readLine(buffer.data(), buffer.length()) != -1)
-	{
-	  QApplication::restoreOverrideCursor();
-
-	  if(chess)
-	    chess->updateBoard(buffer);
-
-	  break;
-	}
+      if(m_clientConnection &&
+	 m_clientConnection->state() == QAbstractSocket::ConnectedState)
+	return true;
       else
-	QApplication::restoreOverrideCursor();
+	return false;
+    }
+  else
+    return false;
+}
 
-      ntries += 1;
+bool qtchess_comm::isSet(void) const
+{
+  if(connected)
+    return true;
+  else
+    return false;
+}
+
+void qtchess_comm::clientDisconnected(void)
+{
+  QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
+
+  if(m_clientConnection && m_clientConnection == socket)
+    m_clientConnection->deleteLater();
+  else if(socket)
+    socket->deleteLater();
+
+  if(chess)
+    {
+      chess->setFirst(-1);
+      chess->setMyColor(-1);
+      chess->setTurn(-1);
     }
 
+  if(gui)
+    gui->setStatusText(tr("Status: Ready"));
+
+  emit disconnectedFromClient();
+  setConnected(false);
+}
+
+void qtchess_comm::disconnectRemotely(void)
+{
   if(m_clientConnection)
-    m_clientConnection->readAll();
+    m_clientConnection->deleteLater();
+
+  if(chess)
+    {
+      chess->setFirst(-1);
+      chess->setMyColor(-1);
+      chess->setTurn(-1);
+    }
+
+  setConnected(false);
+
+  if(gui)
+    gui->showDisconnect();
 }
 
 void qtchess_comm::init(void)
@@ -52,26 +97,22 @@ void qtchess_comm::init(void)
       (QHostAddress(QHostAddress::LocalHost).toString());
 }
 
-bool qtchess_comm::isSet(void) const
+void qtchess_comm::quit(void)
 {
-  if(connected)
-    return true;
-  else
-    return false;
+  /*
+  ** Terminate all communications.
+  */
+
+  if(m_clientConnection)
+    m_clientConnection->deleteLater();
+
+  listening_sock.close();
+  setConnected(false);
 }
 
-bool qtchess_comm::isReady(void) const
+void qtchess_comm::setConnected(const bool connected_arg)
 {
-  if(isSet())
-    {
-      if(m_clientConnection &&
-	 m_clientConnection->state() == QAbstractSocket::ConnectedState)
-	return true;
-      else
-	return false;
-    }
-  else
-    return false;
+  connected = connected_arg;
 }
 
 void qtchess_comm::setListen(void)
@@ -106,42 +147,6 @@ void qtchess_comm::setListen(void)
 	gui->getSetupDialog()->getPortField()->setValue
 	  (static_cast<int> (listening_sock.serverPort()));
     }
-}
-
-void qtchess_comm::quit(void)
-{
-  /*
-  ** Terminate all communications.
-  */
-
-  if(m_clientConnection)
-    m_clientConnection->deleteLater();
-
-  listening_sock.close();
-  setConnected(false);
-}
-
-void qtchess_comm::setConnected(const bool connected_arg)
-{
-  connected = connected_arg;
-}
-
-void qtchess_comm::disconnectRemotely(void)
-{
-  if(m_clientConnection)
-    m_clientConnection->deleteLater();
-
-  if(chess)
-    {
-      chess->setFirst(-1);
-      chess->setMyColor(-1);
-      chess->setTurn(-1);
-    }
-
-  setConnected(false);
-
-  if(gui)
-    gui->showDisconnect();
 }
 
 void qtchess_comm::connectRemotely(void)
@@ -378,41 +383,36 @@ void qtchess_comm::slotClientConnected(void)
 			  m_clientConnection->peerPort());
 }
 
-void qtchess_comm::clientDisconnected(void)
-{
-  QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
-
-  if(m_clientConnection && m_clientConnection == socket)
-    m_clientConnection->deleteLater();
-  else if(socket)
-    socket->deleteLater();
-
-  if(chess)
-    {
-      chess->setFirst(-1);
-      chess->setMyColor(-1);
-      chess->setTurn(-1);
-    }
-
-  if(gui)
-    gui->setStatusText(tr("Status: Ready"));
-
-  emit disconnectedFromClient();
-  setConnected(false);
-}
-
-bool qtchess_comm::isListening(void) const
-{
-  return listening_sock.isListening();
-}
-
 void qtchess_comm::stopListening(void)
 {
   listening_sock.close();
 }
 
-bool qtchess_comm::isConnectedRemotely(void) const
+void qtchess_comm::updateBoard(void)
 {
-  return m_clientConnection &&
-    m_clientConnection->state() == QAbstractSocket::ConnectedState;
+  int ntries = 1;
+
+  while(m_clientConnection && m_clientConnection->canReadLine() && ntries <= 5)
+    {
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+
+      QByteArray buffer(s_buffer_size, 0);
+
+      if(m_clientConnection->readLine(buffer.data(), buffer.length()) != -1)
+	{
+	  QApplication::restoreOverrideCursor();
+
+	  if(chess)
+	    chess->updateBoard(buffer);
+
+	  break;
+	}
+      else
+	QApplication::restoreOverrideCursor();
+
+      ntries += 1;
+    }
+
+  if(m_clientConnection)
+    m_clientConnection->readAll();
 }

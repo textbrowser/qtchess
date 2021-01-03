@@ -5,8 +5,8 @@
 #include "qtchess_gui.h"
 #include "qtchess_validate.h"
 
-extern qtchess_gui *gui;
 extern qtchess_comm *comm;
+extern qtchess_gui *gui;
 
 bool qtchess::isReady(void)
 {
