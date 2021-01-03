@@ -330,6 +330,14 @@ void qtchess_setup_dialog::slotRemote(bool state)
     }
 }
 
+int qtchess_gui::exec(void)
+{
+  if(QApplication::instance())
+    return QApplication::instance()->exec();
+  else
+    return EXIT_FAILURE;
+}
+
 qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
 {
   return promote_dialog;
@@ -338,14 +346,6 @@ qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
 qtchess_setup_dialog *qtchess_gui::getSetupDialog(void) const
 {
   return setup_dialog;
-}
-
-int qtchess_gui::exec(void)
-{
-  if(QApplication::instance())
-    return QApplication::instance()->exec();
-  else
-    return EXIT_FAILURE;
 }
 
 void qtchess_gui::about(void)
