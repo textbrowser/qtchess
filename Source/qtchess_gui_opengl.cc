@@ -14,6 +14,76 @@ extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;
 
+openglWid::openglWid(QWidget *parent):QGLWidget(parent)
+{
+  mouse_pressed = 0;
+  showValid = false;
+  reinit();
+  point_pressed.x = point_pressed.y = -1;
+  setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
+}
+
+void openglWid::highlightSquare(const double x, const double y)
+{
+  glLineWidth(2.0);
+  glBegin(GL_LINES);
+
+  /*
+  ** Horizontal lines.
+  */
+
+  glVertex2d(x + 2, y + 2);
+  glVertex2d(x + block_size - 2, y + 2);
+  glVertex2d(x + 2, y + block_size - 2);
+  glVertex2d(x + block_size - 2, y + block_size - 2);
+
+  /*
+  ** Vertical lines.
+  */
+
+  glVertex2d(x + 2 , y + 2);
+  glVertex2d(x + 2, y + block_size - 2);
+  glVertex2d(x + block_size - 2, y + 2);
+  glVertex2d(x + block_size - 2, y + block_size - 2);
+  glEnd();
+  glFlush();
+}
+
+void openglWid::initializeGL(void)
+{
+  /*
+  ** Initialize OpenGL.
+  */
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glClearColor(1.0, 1.0, 1.0, 1.0); // White background.
+  glEnable(GL_BLEND);
+  glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_POINT_SMOOTH);
+  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+  glShadeModel(GL_FLAT);
+}
+
+void openglWid::mousePressEvent(QMouseEvent *e)
+{
+  if(e && e->type() == QEvent::MouseButtonDblClick)
+    showValidMoves();
+  else
+    {
+      mouse_pressed += 1;
+      showValid = false;
+
+      if(e)
+	{
+	  point_pressed.x = e->x();
+	  point_pressed.y = height() - e->y();
+	}
+
+      updateGL();
+    }
+}
+
 void openglWid::newGame(void)
 {
   mouse_pressed = 0;
@@ -1007,50 +1077,55 @@ void openglWid::paintGL(void)
   glFlush();
 }
 
-void openglWid::initializeGL(void)
+void openglWid::reinit(void)
 {
-  /*
-  ** Initialize OpenGL.
-  */
-
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glClearColor(1.0, 1.0, 1.0, 1.0); // White background.
-  glEnable(GL_BLEND);
-  glEnable(GL_LINE_SMOOTH);
-  glEnable(GL_POINT_SMOOTH);
-  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-  glShadeModel(GL_FLAT);
-}
-
-void openglWid::resizeGL(int w, int h)
-{
-  px = (w - 8 * block_size) / 2;
-  py = (h - 8 * block_size) / 2;
-  glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0.0, w, 0.0, h, -1.0, 1.0);
-  glMatrixMode(GL_MODELVIEW);
-}
-
-void openglWid::mousePressEvent(QMouseEvent *e)
-{
-  if(e && e->type() == QEvent::MouseButtonDblClick)
-    showValidMoves();
-  else
-    {
-      mouse_pressed += 1;
-      showValid = false;
-
-      if(e)
-	{
-	  point_pressed.x = e->x();
-	  point_pressed.y = height() - e->y();
-	}
-
-      updateGL();
-    }
+  BISHOP_HEIGHT = 68;
+  BISHOP_WIDTH = 42;
+  BISHOP_X_OFFSET = 20;
+  BISHOP_Y_OFFSET = 5;
+  KING_BT_HEIGHT = 5;
+  KING_BT_WIDTH = 32;
+  KING_B_HEIGHT = 10;
+  KING_B_WIDTH = 42;
+  KING_HCROSS_HEIGHT = 10;
+  KING_HCROSS_WIDTH = 26;
+  KING_HEIGHT = 30;
+  KING_VCROSS_HEIGHT = 20;
+  KING_VCROSS_WIDTH = 14;
+  KING_WIDTH = 26;
+  KING_X_OFFSET = 20;
+  KING_Y_OFFSET = 5;
+  KNIGHT_HEIGHT = 64;
+  KNIGHT_WIDTH = 42;
+  KNIGHT_X_OFFSET = 20;
+  KNIGHT_Y_OFFSET = 5;
+  PAWN_HEIGHT = 24;
+  PAWN_WIDTH = 18;
+  PAWN_X_OFFSET = 30;
+  PAWN_Y_OFFSET = 5;
+  QUEEN_BT_HEIGHT = 5;
+  QUEEN_BT_WIDTH = 32;
+  QUEEN_B_HEIGHT = 10;
+  QUEEN_B_WIDTH = 42;
+  QUEEN_HEIGHT = 30;
+  QUEEN_WIDTH = 26;
+  QUEEN_X_OFFSET = 20;
+  QUEEN_Y_OFFSET = 5;
+  ROOK_B_HEIGHT = 10;
+  ROOK_B_WIDTH = 42;
+  ROOK_HEIGHT = 32;
+  ROOK_T_HEIGHT = 20;
+  ROOK_T_WIDTH = 32;
+  ROOK_WIDTH = 22;
+  ROOK_X_OFFSET = 20;
+  ROOK_Y_OFFSET = 5;
+  block_size = 80; // Good default value.
+  denominator = 1.0;
+  mouse_pressed = 0;
+  point_pressed.x = point_pressed.y = -1;
+  point_selected.x = point_selected.y = -1;
+  px = py = 4; // Reasonable default value.
+  showValid = false;
 }
 
 void openglWid::rescale(const double denominatorArg)
@@ -1109,64 +1184,15 @@ void openglWid::rescale(const double denominatorArg)
   updateGL();
 }
 
-void openglWid::reinit(void)
+void openglWid::resizeGL(int w, int h)
 {
-  BISHOP_HEIGHT = 68;
-  BISHOP_WIDTH = 42;
-  BISHOP_X_OFFSET = 20;
-  BISHOP_Y_OFFSET = 5;
-  KING_BT_HEIGHT = 5;
-  KING_BT_WIDTH = 32;
-  KING_B_HEIGHT = 10;
-  KING_B_WIDTH = 42;
-  KING_HCROSS_HEIGHT = 10;
-  KING_HCROSS_WIDTH = 26;
-  KING_HEIGHT = 30;
-  KING_VCROSS_HEIGHT = 20;
-  KING_VCROSS_WIDTH = 14;
-  KING_WIDTH = 26;
-  KING_X_OFFSET = 20;
-  KING_Y_OFFSET = 5;
-  KNIGHT_HEIGHT = 64;
-  KNIGHT_WIDTH = 42;
-  KNIGHT_X_OFFSET = 20;
-  KNIGHT_Y_OFFSET = 5;
-  PAWN_HEIGHT = 24;
-  PAWN_WIDTH = 18;
-  PAWN_X_OFFSET = 30;
-  PAWN_Y_OFFSET = 5;
-  QUEEN_BT_HEIGHT = 5;
-  QUEEN_BT_WIDTH = 32;
-  QUEEN_B_HEIGHT = 10;
-  QUEEN_B_WIDTH = 42;
-  QUEEN_HEIGHT = 30;
-  QUEEN_WIDTH = 26;
-  QUEEN_X_OFFSET = 20;
-  QUEEN_Y_OFFSET = 5;
-  ROOK_B_HEIGHT = 10;
-  ROOK_B_WIDTH = 42;
-  ROOK_HEIGHT = 32;
-  ROOK_T_HEIGHT = 20;
-  ROOK_T_WIDTH = 32;
-  ROOK_WIDTH = 22;
-  ROOK_X_OFFSET = 20;
-  ROOK_Y_OFFSET = 5;
-  block_size = 80; // Good default value.
-  denominator = 1.0;
-  mouse_pressed = 0;
-  point_pressed.x = point_pressed.y = -1;
-  point_selected.x = point_selected.y = -1;
-  px = py = 4; // Reasonable default value.
-  showValid = false;
-}
-
-openglWid::openglWid(QWidget *parent):QGLWidget(parent)
-{
-  mouse_pressed = 0;
-  showValid = false;
-  reinit();
-  point_pressed.x = point_pressed.y = -1;
-  setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
+  px = (w - 8 * block_size) / 2;
+  py = (h - 8 * block_size) / 2;
+  glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0.0, w, 0.0, h, -1.0, 1.0);
+  glMatrixMode(GL_MODELVIEW);
 }
 
 void openglWid::showValidMoves(void)
@@ -1180,30 +1206,4 @@ void openglWid::showValidMoves(void)
       showValid = true;
       updateGL();
     }
-}
-
-void openglWid::highlightSquare(const double x, const double y)
-{
-  glLineWidth(2.0);
-  glBegin(GL_LINES);
-
-  /*
-  ** Horizontal lines.
-  */
-
-  glVertex2d(x + 2, y + 2);
-  glVertex2d(x + block_size - 2, y + 2);
-  glVertex2d(x + 2, y + block_size - 2);
-  glVertex2d(x + block_size - 2, y + block_size - 2);
-
-  /*
-  ** Vertical lines.
-  */
-
-  glVertex2d(x + 2 , y + 2);
-  glVertex2d(x + 2, y + block_size - 2);
-  glVertex2d(x + block_size - 2, y + 2);
-  glVertex2d(x + block_size - 2, y + block_size - 2);
-  glEnd();
-  glFlush();
 }
