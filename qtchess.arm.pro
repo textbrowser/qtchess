@@ -32,10 +32,10 @@ QMAKE_EXTRA_TARGETS = purge
 
 RESOURCES       = Images/images.qrc
 
-FORMS		= UI/helpDialog.ui \
-                  UI/mainwindow.ui \
-                  UI/promotionDialog.ui \
-                  UI/setupDialog.ui
+FORMS		= UI/qtchess_helpDialog.ui \
+                  UI/qtchess_mainwindow.ui \
+                  UI/qtchess_promotionDialog.ui \
+                  UI/qtchess_setupDialog.ui
 
 HEADERS		= Source/qtchess.h \
                   Source/qtchess_comm.h \
