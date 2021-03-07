@@ -25,6 +25,8 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QCryptographicHash>
+
 #include "qtchess.h"
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"
@@ -32,6 +34,7 @@
 extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;
+static QByteArray s_eof = "\n";
 
 qtchess_comm::qtchess_comm(void):QObject()
 {
@@ -40,6 +43,63 @@ qtchess_comm::qtchess_comm(void):QObject()
 	  SIGNAL(newConnection(void)),
 	  this,
 	  SLOT(acceptConnection(void)));
+}
+
+QByteArray qtchess_comm::XOR(const QByteArray &a, const QByteArray &b) const
+{
+  QByteArray bytes(qMin(a.length(), b.length()), 0);
+
+  for(int i = 0; i < bytes.length(); i++)
+    bytes[i] = static_cast<char> (a[i] ^ b[i]);
+
+  return bytes;
+}
+
+QByteArray qtchess_comm::digest(const QByteArray &data) const
+{
+  QByteArray key;
+
+  if(m_clientConnection)
+    {
+      QHostAddress a(m_clientConnection->localAddress());
+      QHostAddress b(m_clientConnection->peerAddress());
+
+      key = XOR(a.toString().toUtf8(), b.toString().toUtf8());
+      key = XOR(QByteArray::number(m_clientConnection->localPort()), key);
+      key = XOR(QByteArray::number(m_clientConnection->peerPort()), key);
+      key = XOR(key, m_caissa.toUtf8());
+    }
+
+  static const int s_block_length = 512;
+
+  if(s_block_length < key.length())
+    key = sha1(key);
+
+  if(s_block_length > key.length())
+    key.append(QByteArray(s_block_length - key.length(), 0));
+
+  QByteArray left(s_block_length, 0);
+  const QByteArray ipad(s_block_length, 0x36);
+  const QByteArray opad(s_block_length, 0x5c);
+
+  for(int i = 0; i < s_block_length; i++)
+    left[i] = static_cast<char> (key.at(i) ^ opad.at(i));
+
+  QByteArray right(s_block_length, 0);
+
+  for(int i = 0; i < s_block_length; i++)
+    right[i] = static_cast<char> (key.at(i) ^ ipad.at(i));
+
+  return sha1(left.append(sha1(right.append(data))));
+
+}
+
+QByteArray qtchess_comm::sha1(const QByteArray &data) const
+{
+  QCryptographicHash sha1(QCryptographicHash::Sha1);
+
+  sha1.addData(data);
+  return sha1.result();
 }
 
 bool qtchess_comm::isConnectedRemotely(void) const
@@ -73,6 +133,18 @@ bool qtchess_comm::isSet(void) const
     return true;
   else
     return false;
+}
+
+bool qtchess_comm::memcmp(const QByteArray &a, const QByteArray &b) const
+{
+  int length = qMax(a.length(), b.length());
+  quint64 rc = 0;
+
+  for(int i = 0; i < length; i++)
+    rc |= (i < a.length() ? static_cast<quint64> (a.at(i)) : 0ULL) ^
+      (i < b.length() ? static_cast<quint64> (b.at(i)) : 0ULL);
+
+  return rc == 0;
 }
 
 void qtchess_comm::acceptConnection(void)
@@ -319,7 +391,8 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
 	buffer.append(" ");
       }
 
-  buffer.append("\n");
+  buffer.append(digest(buffer).toHex());
+  buffer.append(s_eof);
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -338,6 +411,11 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
       if(chess)
 	chess->setTurn(THEIR_TURN);
     }
+}
+
+void qtchess_comm::setCaissa(const QString &caissa)
+{
+  m_caissa = caissa;
 }
 
 void qtchess_comm::setConnected(const bool connected_arg)
@@ -430,7 +508,17 @@ void qtchess_comm::updateBoard(void)
 	  QApplication::restoreOverrideCursor();
 
 	  if(chess)
-	    chess->updateBoard(buffer);
+	    {
+	      buffer = buffer.mid(0, buffer.indexOf(s_eof));
+
+	      QByteArray d
+		(QByteArray::fromHex(buffer.mid(buffer.length() - 40)));
+
+	      buffer = buffer.mid(0, buffer.length() - 40);
+
+	      if(memcmp(d, digest(buffer)))
+		chess->updateBoard(buffer);
+	    }
 
 	  break;
 	}

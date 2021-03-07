@@ -35,7 +35,7 @@
      <item>
       <widget class="QLineEdit" name="caissa">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Data authentication is provided by SHA-1 (Qt 4) and SHA-3 (Qt 5, etc.). The secret key is created from the local and remote peer information. The optional secret will be mixed into the key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Data authentication is provided by SHA-1. The secret key is created from the local and remote peer information. The optional secret will be mixed into the key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="placeholderText">
         <string>Optional Secret</string>

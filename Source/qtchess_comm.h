@@ -68,15 +68,21 @@ class qtchess_comm: public QObject
   void init(void);
   void quit(void);
   void sendMove(const struct move_s &);
+  void setCaissa(const QString &caissa);
   void setConnected(const bool);
   void setListen(void);
   void stopListening(void);
 
  private:
+  QString m_caissa;
   QPointer<QTcpSocket> m_clientConnection;
   QTcpServer listening_sock;
   bool connected;
   static const int s_buffer_size = 1024;
+  bool memcmp(const QByteArray &a, const QByteArray &b) const;
+  QByteArray XOR(const QByteArray &a, const QByteArray &b) const;
+  QByteArray digest(const QByteArray &data) const;
+  QByteArray sha1(const QByteArray &data) const;
 
  private slots:
   void acceptConnection(void);
