@@ -70,7 +70,7 @@ QByteArray qtchess_comm::digest(const QByteArray &data) const
       key.append(m_caissa.toUtf8());
     }
 
-  static const int s_block_length = 512;
+  static const int s_block_length = 512 / CHAR_BIT;
 
   if(s_block_length < key.length())
     key = sha1(key);
