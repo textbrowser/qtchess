@@ -10,7 +10,6 @@ QMAKE_CLEAN	+= QtChess
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
                    -Wcast-qual \
-                   -Wconversion \
                    -Wdouble-promotion \
                    -Werror \
                    -Werror=format-security \
@@ -31,7 +30,8 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 
 linux-* {
-QMAKE_CXXFLAGS  += -Wformat-overflow=2 \
+QMAKE_CXXFLAGS  += -Wconversion \
+                   -Wformat-overflow=2 \
                    -Wsign-conversion \
                    -pie
 }
