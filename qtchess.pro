@@ -20,7 +20,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wno-deprecated-copy \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
-                   -Wsign-conversion \
                    -Wstack-protector \
                    -Wstrict-overflow=5 \
                    -Wundef \
@@ -33,6 +32,7 @@ QMAKE_CXXFLAGS  += -Wall \
 
 linux-* {
 QMAKE_CXXFLAGS  += -Wformat-overflow=2 \
+                   -Wsign-conversion \
                    -pie
 }
 
