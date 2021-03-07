@@ -30,8 +30,12 @@ QMAKE_CXXFLAGS  += -Wall \
                    -fstack-protector-all \
                    -fwrapv \
                    -pedantic \
-                   -pie \
                    -std=c++11
+
+linux-* {
+QMAKE_CXXFLAGS  += -pie
+}
+
 QMAKE_EXTRA_TARGETS = purge
 
 RESOURCES       = Images/images.qrc
