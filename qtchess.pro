@@ -17,7 +17,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wextra \
                    -Wfloat-equal \
                    -Wformat=2 \
-                   -Wformat-overflow=2 \
                    -Wno-deprecated-copy \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
@@ -33,7 +32,8 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 
 linux-* {
-QMAKE_CXXFLAGS  += -pie
+QMAKE_CXXFLAGS  += -Wformat-overflow=2 \
+                   -pie
 }
 
 QMAKE_EXTRA_TARGETS = purge
