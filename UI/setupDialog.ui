@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>626</height>
+    <height>720</height>
    </rect>
   </property>
   <property name="font">
@@ -23,6 +23,27 @@
     <normaloff>:/chess.png</normaloff>:/chess.png</iconset>
   </property>
   <layout class="QVBoxLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_8">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Caissa</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="caissa">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Data authentication is provided by SHA-1 (Qt 4) and SHA-3 (Qt 5, etc.). The secret key is created from the local and remote peer information. The optional secret will be mixed into the key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="placeholderText">
+        <string>Optional Secret</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item>
     <widget class="QRadioButton" name="local">
      <property name="text">
@@ -440,6 +461,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>caissa</tabstop>
   <tabstop>local</tabstop>
   <tabstop>lipv4</tabstop>
   <tabstop>lipv6</tabstop>
