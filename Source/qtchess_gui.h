@@ -89,6 +89,7 @@ class qtchess_setup_dialog: public QDialog
   void slotListen(void);
   void slotProtocolChanged(void);
   void slotRemote(bool state);
+  void slotSetCaissa(void);
 };
 
 class qtchess_promote_dialog: public QDialog

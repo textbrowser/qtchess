@@ -42,6 +42,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="set_caissa">
+       <property name="text">
+        <string>Set</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -462,6 +469,7 @@
  </widget>
  <tabstops>
   <tabstop>caissa</tabstop>
+  <tabstop>set_caissa</tabstop>
   <tabstop>local</tabstop>
   <tabstop>lipv4</tabstop>
   <tabstop>lipv6</tabstop>

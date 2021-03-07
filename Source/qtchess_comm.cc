@@ -67,7 +67,7 @@ QByteArray qtchess_comm::digest(const QByteArray &data) const
       key = XOR(a.toString().toUtf8(), b.toString().toUtf8());
       key = XOR(QByteArray::number(m_clientConnection->localPort()), key);
       key = XOR(QByteArray::number(m_clientConnection->peerPort()), key);
-      key = XOR(key, m_caissa.toUtf8());
+      key.append(m_caissa.toUtf8());
     }
 
   static const int s_block_length = 512;
