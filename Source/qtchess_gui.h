@@ -29,10 +29,10 @@
 #define _QTCHESS_GUI_
 
 #include "qtchess_gui_opengl.h"
-#include "ui_helpDialog.h"
-#include "ui_mainwindow.h"
-#include "ui_promotionDialog.h"
-#include "ui_setupDialog.h"
+#include "ui_qtchess_helpDialog.h"
+#include "ui_qtchess_mainwindow.h"
+#include "ui_qtchess_promotionDialog.h"
+#include "ui_qtchess_setupDialog.h"
 
 #include <QCloseEvent>
 #include <QComboBox>
