@@ -160,11 +160,11 @@ void openglWid::paintGL(void)
 	     point_pressed.y >= (py + j * block_size) &&
 	     point_pressed.y <= (py + (j + 1) * block_size))
 	    {
-	      found = 1;
-	      X = px + i * block_size;
-	      Y = py + j * block_size;
 	      I = i;
 	      J = j;
+	      X = px + i * block_size;
+	      Y = py + j * block_size;
+	      found = 1;
 	    }
 
 	/*
@@ -1227,8 +1227,7 @@ void openglWid::showValidMoves(void)
   if(!chess || !comm)
     return;
 
-  if(chess->getTurn() == MY_TURN && !chess->isGameOver() &&
-     comm->isReady())
+  if(chess->getTurn() == MY_TURN && !chess->isGameOver() && comm->isReady())
     {
       showValid = true;
       updateGL();
