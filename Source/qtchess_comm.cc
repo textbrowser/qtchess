@@ -64,10 +64,10 @@ QByteArray qtchess_comm::digest(const QByteArray &data) const
       QHostAddress a(m_clientConnection->localAddress());
       QHostAddress b(m_clientConnection->peerAddress());
 
-      key = XOR(a.toString().toUtf8(), b.toString().toUtf8());
-      key = XOR(QByteArray::number(m_clientConnection->localPort()), key);
-      key = XOR(QByteArray::number(m_clientConnection->peerPort()), key);
-      key.append(m_caissa.toUtf8());
+      key = XOR(a.toString().toUtf8().toHex(), b.toString().toUtf8().toHex());
+      key.append(QByteArray::number(m_clientConnection->localPort() ^
+				    m_clientConnection->peerPort()).toHex());
+      key.append(m_caissa.toUtf8().toHex());
     }
 
   static const int s_block_length = 512 / CHAR_BIT;
