@@ -496,6 +496,7 @@ void qtchess_comm::stopListening(void)
 void qtchess_comm::updateBoard(void)
 {
   int ntries = 1;
+  static const int s_sha1_output_size = 40;
 
   while(m_clientConnection && m_clientConnection->canReadLine() && ntries <= 5)
     {
@@ -512,9 +513,10 @@ void qtchess_comm::updateBoard(void)
 	      buffer = buffer.mid(0, buffer.indexOf(s_eof));
 
 	      QByteArray d
-		(QByteArray::fromHex(buffer.mid(buffer.length() - 40)));
+		(QByteArray::fromHex(buffer.mid(buffer.length() -
+						s_sha1_output_size)));
 
-	      buffer = buffer.mid(0, buffer.length() - 40);
+	      buffer = buffer.mid(0, buffer.length() - s_sha1_output_size);
 
 	      if(memcmp(d, digest(buffer)))
 		chess->updateBoard(buffer);
