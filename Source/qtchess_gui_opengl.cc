@@ -138,6 +138,9 @@ void openglWid::paintGL(void)
   ** First an empty board.
   */
 
+  int auto_screen_scale_factor =
+    qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt();
+
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
@@ -154,18 +157,24 @@ void openglWid::paintGL(void)
 		px + (i + 1) * block_size,
 		py + (j + 1) * block_size);
 
-	if(mouse_pressed)
-	  if(point_pressed.x >= (px + i * block_size) &&
-	     point_pressed.x <= (px + (i + 1) * block_size) &&
-	     point_pressed.y >= (py + j * block_size) &&
-	     point_pressed.y <= (py + (j + 1) * block_size))
-	    {
-	      I = i;
-	      J = j;
-	      X = px + i * block_size;
-	      Y = py + j * block_size;
-	      found = 1;
-	    }
+	if(auto_screen_scale_factor == 0)
+	  {
+	    if(mouse_pressed)
+	      if(point_pressed.x >= (px + i * block_size) &&
+		 point_pressed.x <= (px + (i + 1) * block_size) &&
+		 point_pressed.y >= (py + j * block_size) &&
+		 point_pressed.y <= (py + (j + 1) * block_size))
+		{
+		  I = i;
+		  J = j;
+		  X = px + i * block_size;
+		  Y = py + j * block_size;
+		  found = 1;
+		}
+	  }
+	else
+	  {
+	  }
 
 	/*
 	** Highlight the selected piece's valid moves.
@@ -719,7 +728,7 @@ void openglWid::paintGL(void)
     (QFont::StyleStrategy(QFont::OpenGLCompatible | QFont::PreferAntialias));
 
   for(int m = 1; m <= NSQUARES; m++)
-    if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 0)
+    if(auto_screen_scale_factor == 0)
       {
 	renderText((int) (px + m * block_size - block_size / 2 - 5),
 		   (int) (py - 5),
