@@ -91,7 +91,6 @@ QByteArray qtchess_comm::digest(const QByteArray &data) const
     right[i] = static_cast<char> (key.at(i) ^ ipad.at(i));
 
   return sha1(left.append(sha1(right.append(data))));
-
 }
 
 QByteArray qtchess_comm::sha1(const QByteArray &data) const
