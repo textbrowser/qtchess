@@ -174,6 +174,23 @@ void openglWid::paintGL(void)
 	  }
 	else
 	  {
+	    if(mouse_pressed)
+	      {
+		int x1 = static_cast<int> (px + i * block_size / 2);
+		int x2 = static_cast<int> (px + (i + 1) * block_size / 2);
+		int y1 = static_cast<int> (py + j * block_size / 2);
+		int y2 = static_cast<int> (py + (j + 1) * block_size / 2);
+
+		if(point_pressed.x >= x1 && point_pressed.x <= x2 &&
+		   point_pressed.y >= y1 && point_pressed.y <= y2)
+		  {
+		    I = i;
+		    J = j;
+		    X = px + i * block_size;
+		    Y = py + j * block_size;
+		    found = 1;
+		  }
+	      }
 	  }
 
 	/*

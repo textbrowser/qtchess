@@ -499,6 +499,7 @@ void qtchess_gui::newGame(void)
     current_move.y1 =
     current_move.y2 = -1;
   memset(current_move.departure, 0, sizeof(current_move.departure));
+  current_move.departure[0] = '0';
 
   if(comm)
     comm->sendMove(current_move);
