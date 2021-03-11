@@ -45,16 +45,6 @@ qtchess_comm::qtchess_comm(void):QObject()
 	  SLOT(acceptConnection(void)));
 }
 
-QByteArray qtchess_comm::XOR(const QByteArray &a, const QByteArray &b) const
-{
-  QByteArray bytes(qMin(a.length(), b.length()), 0);
-
-  for(int i = 0; i < bytes.length(); i++)
-    bytes[i] = static_cast<char> (a[i] ^ b[i]);
-
-  return bytes;
-}
-
 QByteArray qtchess_comm::digest(const QByteArray &data) const
 {
   QByteArray key;
@@ -64,12 +54,19 @@ QByteArray qtchess_comm::digest(const QByteArray &data) const
       QHostAddress a(m_clientConnection->localAddress());
       QHostAddress b(m_clientConnection->peerAddress());
 
-      key = XOR(a.toString().toUtf8().toHex(), b.toString().toUtf8().toHex());
+      key = xorArrays
+	(a.toString().toUtf8().toHex(), b.toString().toUtf8().toHex());
       key.append(QByteArray::number(m_clientConnection->localPort() ^
 				    m_clientConnection->peerPort()).toHex());
       key.append(m_caissa.toUtf8().toHex());
     }
 
+  return hmac(data, hmac(key, QByteArray("QtChess").append(0x01)));
+}
+
+QByteArray qtchess_comm::hmac(const QByteArray &data, const QByteArray &k) const
+{
+  QByteArray key(k);
   static const int s_block_length = 512 / CHAR_BIT;
 
   if(s_block_length < key.length())
@@ -99,6 +96,17 @@ QByteArray qtchess_comm::sha1(const QByteArray &data) const
 
   sha1.addData(data);
   return sha1.result();
+}
+
+QByteArray qtchess_comm::xorArrays
+(const QByteArray &a, const QByteArray &b) const
+{
+  QByteArray bytes(qMin(a.length(), b.length()), 0);
+
+  for(int i = 0; i < bytes.length(); i++)
+    bytes[i] = static_cast<char> (a[i] ^ b[i]);
+
+  return bytes;
 }
 
 bool qtchess_comm::isConnectedRemotely(void) const

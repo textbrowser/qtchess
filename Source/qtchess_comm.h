@@ -80,9 +80,10 @@ class qtchess_comm: public QObject
   bool connected;
   static const int s_buffer_size = 1024;
   bool memcmp(const QByteArray &a, const QByteArray &b) const;
-  QByteArray XOR(const QByteArray &a, const QByteArray &b) const;
   QByteArray digest(const QByteArray &data) const;
+  QByteArray hmac(const QByteArray &data, const QByteArray &k) const;
   QByteArray sha1(const QByteArray &data) const;
+  QByteArray xorArrays(const QByteArray &a, const QByteArray &b) const;
 
  private slots:
   void acceptConnection(void);
