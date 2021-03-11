@@ -1,6 +1,7 @@
 purge.commands = rm -f *~ && rm -f */*~
 
 CONFIG		+= qt release warn_on
+DEFINES		+= QT_DEPRECATED_WARNINGS
 INCLUDEPATH	+= /usr/include/GL
 LANGUAGE        = C++
 LIBS            += -lGL -lGLU

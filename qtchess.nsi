@@ -18,10 +18,10 @@ setOutPath $INSTDIR
 
 # Specify files to go in output path.
 
-file /r .\release\plugins
-file .\release\qt.conf
 file .\release\*.dll
 file .\release\QtChess.exe
+file .\release\qt.conf
+file /r .\release\plugins
 
 # Define uninstaller name.
 

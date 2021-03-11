@@ -2,6 +2,7 @@ cache()
 purge.commands = rm -f *~ && rm -f */*~
 
 CONFIG		+= app_bundle qt release warn_on
+DEFINES		+= QT_DEPRECATED_WARNINGS
 ICON            = Images/chess.icns
 LANGUAGE        = C++
 QT		+= network opengl
