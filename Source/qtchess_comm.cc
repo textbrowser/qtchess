@@ -235,7 +235,7 @@ void qtchess_comm::clientDisconnected(void)
     }
 
   if(gui)
-    gui->setStatusText(tr("Status: Ready"));
+    gui->setStatusText(tr("Status: Peer Disconnected"));
 
   emit disconnectedFromClient();
   setConnected(false);

@@ -242,7 +242,8 @@ void qtchess_gui::init(void)
   denominator = 4.0 / 3.8;
   ui.menu_Setup->setVisible(false);
 
-  if((statusLabel = new(std::nothrow) QLabel(tr("Status: Ready"))) == nullptr)
+  if((statusLabel = new(std::nothrow)
+      QLabel(tr("Status: Peer Disconnected"))) == nullptr)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -519,7 +520,7 @@ void qtchess_gui::notifyConnection(const QString &address,
 				   const quint16 port)
 {
   setStatusText
-    (tr("Status: Host %1:%2 Connected").arg(address).arg(port));
+    (tr("Status: Peer %1:%2 Connected").arg(address).arg(port));
 }
 
 void qtchess_gui::quit(void)
