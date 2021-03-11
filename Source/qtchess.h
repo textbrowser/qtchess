@@ -32,9 +32,7 @@
 
 #include "qtchess_defs.h"
 
-#define QTCHESS_VERSION "2020.02.15"
-
-static struct move_s emptyMoveStruct;
+#define QTCHESS_VERSION "2021.03.10"
 
 class qtchess
 {
@@ -58,7 +56,7 @@ class qtchess
     first = -1;
     game_over = false;
     king_has_moved = false;
-    last_opponent_move = emptyMoveStruct;
+    last_opponent_move = {};
     my_color = -1;
     rook1_has_moved = false;
     rook2_has_moved = false;
