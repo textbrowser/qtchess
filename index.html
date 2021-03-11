@@ -5,11 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,maximum-scale=2">
     <link rel="stylesheet" type="text/css" media="screen" href="style.css">
-
     <!-- Begin Jekyll SEO tag v2.7.1 -->
     <title>QtChess</title>
     <meta name="generator" content="Jekyll v3.9.0">
-    <meta property="og:title" content="Welcome to GitHub Pages">
+    <meta property="og:title" content="Welcome to QtChess">
     <meta property="og:locale" content="en_US">
     <meta name="description" content="QtChess is a peer-to-peer chess program sporting a Qt/OpenGL interface.">
     <meta property="og:description" content="QtChess is a peer-to-peer chess program sporting a Qt/OpenGL interface.">
@@ -17,9 +16,9 @@
     <meta property="og:url" content="https://textbrowser.github.io/qtchess/">
     <meta property="og:site_name" content="qtchess">
     <meta name="twitter:card" content="summary">
-    <meta property="twitter:title" content="Welcome to GitHub Pages">
+    <meta property="twitter:title" content="Welcome to QtChess">
     <script type="application/ld+json">
-      {"@type":"WebSite","headline":"Welcome to GitHub Pages","url":"https://textbrowser.github.io/qtchess/","description":"QtChess is a peer-to-peer chess program sporting a Qt/OpenGL interface.","name":"qtchess","@context":"https://schema.org"}    </script>
+      {"@type":"WebSite","headline":"Welcome to QtChess","url":"https://textbrowser.github.io/qtchess/","description":"QtChess is a peer-to-peer chess program sporting a Qt/OpenGL interface.","name":"qtchess","@context":"https://schema.org"}    </script>
     <!-- End Jekyll SEO tag -->
   </head>
   <body>
@@ -28,41 +27,303 @@
       <header class="inner">
         <a id="forkme_banner" href="https://github.com/textbrowser/qtchess">View on GitHub</a>
         <h1 id="project_title">QtChess</h1>
-        <h2 id="project_tagline">QtChess is a peer-to-peer chess program sporting a Qt/OpenGL interface.</h2>
+        <h2 id="project_tagline">QtChess is a peer-to-peer chess program. Written in C++, it sports a 2-D OpenGL/Qt user interface and utilizes TCP/IP for communications.</h2>
       </header>
     </div>
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2 id="welcome-to-github-pages">Welcome to GitHub Pages</h2>
-	<p>You can use the <a href="https://github.com/textbrowser/qtchess/edit/gh-pages/index.md">editor on GitHub</a> to maintain and preview the content for your website in Markdown files.</p>
-	<p>Whenever you commit to this repository, GitHub Pages will run <a href="https://jekyllrb.com/">Jekyll</a> to rebuild the pages in your site, from the content in your Markdown files.</p>
-	<h3 id="markdown">Markdown</h3>
-	<p>Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for</p>
-	<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Syntax highlighted code block
-		<span class="gh"># Header 1</span>
-		<span class="gu">## Header 2</span>
-		<span class="gu">### Header 3</span>
-		<span class="p">
-		  -</span> Bulleted
-		<span class="p">-</span> List
-		<span class="p">
-		  1.</span> Numbered
-		<span class="p">2.</span> List
-		<span class="gs">**Bold**</span> and _Italic_ and <span class="sb">`Code`</span> text
-		<span class="p">[</span><span class="nv">Link</span><span class="p">](</span><span class="sx">url</span><span class="p">)</span> and !<span class="p">[</span><span class="nv">Image</span><span class="p">](</span><span class="sx">src</span><span class="p">)</span>
-	</code></pre></div></div>
-	<p>For more details see <a href="https://guides.github.com/features/mastering-markdown/">GitHub Flavored Markdown</a>.</p>
-	<h3 id="jekyll-themes">Jekyll Themes</h3>
-	<p>Your Pages site will use the layout and styles from the Jekyll theme you have selected in your <a href="https://github.com/textbrowser/qtchess/settings">repository settings</a>. The name of this theme is saved in the Jekyll <code class="language-plaintext highlighter-rouge">_config.yml</code> configuration file.</p>
-	<h3 id="support-or-contact">Support or Contact</h3>
-	<p>Having trouble with Pages? Check out our <a href="https://docs.github.com/categories/github-pages-basics/">documentation</a> or <a href="https://support.github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+        <h2 id="welcome-to-github-pages">Welcome to QtChess</h2>
+	QtChess is available on a variety of operating systems, including FreeBSD, MacOS, Linux, and Windows.
+	<h4>Release Notes</h4>
+	February 15, 2020.
+	<ul>
+	  <li>Version 2020.02.15 has been released.
+	  <li>Antialiasing.
+	  <li>C++11.
+	  <li>Corrected castling.
+	  <li>Debian Qt 5 package.
+	  <li>Initialize variables.
+	  <li>Qt 4.8.7 on W32.
+	</ul>
+	September 4, 2016.
+	<ul>
+	  <li>Version 2016.09.04 is ready.
+	  <li>Upgraded Qt libraries to version 5.7.0 on Windows.
+	</ul>
+	March 11, 2016.
+	<ul>
+	  <li>Version 2016.03.11 is ready.
+	  <li>Corrected initialization of containers.
+	  <li>Purge socket data.
+	</ul>
+	January 1, 2016.
+	<ul>
+	  <li>Version 2016.01.01 is ready.
+	  <li>ARM support.
+	  <li>New board size.
+	  <li>Upgraded Qt products to version 5.5.1 on Windows. OpenGL text rendering is flawed.
+	</ul>
+	October 16, 2015.
+	<ul>
+	  <li>Version 2015.10.16 is now available.
+	  <li>Corrected the About dialog's image.
+	  <li>Removed OpenGL sampling as it causes errors on OS X and Qt 5.
+	</ul>
+	August 14, 2015.
+	<ul>
+	  <li>Version 2015.08.14 is now available.
+	  <li>OpenGL sampling.
+	  <li>Prevent editing of history items.
+	</ul>
+	August 1, 2015.
+	<ul>
+	  <li>Version 2015.08.01 is now available.
+	  <li>Colorful clocks.
+	  <li>Single sockets.
+	  <li>Upgraded Qt to version 4.8.7 on OS X and version 5.4.2 on Windows.
+	</ul>
+	January 24, 2015.
+	<ul>
+	  <li>Happy New Year!
+	  <li>Version 3.20 is now available.
+	  <li>Allow custom listening ports.
+	  <li>Upgraded Qt to version 5.3.2 for Windows.
+	</ul>
+	August 27, 2014.
+	<ul>
+	  <li>Version 3.19 has been released. QtChess is ten years old!
+	  <li>Added the Wformat=2 compiler flag to various project files.
+	  <li>Corrected valid moves highlighting. Locations should only be highlighted if a valid game is in progress.
+	  <li>Prevent divisions by zero.
+	  <li>Respect array boundaries.
+	  <li>Upgraded Qt to version 5.3.1 for Windows.
+	</ul>
+	March 14, 2014.
+	<ul>
+	  <li>Version 3.18 has been released.
+	  <li>Corrected layout usage.
+	  <li>Guard against invalid pointers.
+	  <li>Specify formats in fprintf().
+	  <li>Upgraded Qt products to version Qt 5.2.1 on Windows.
+	</ul>
+	February 4, 2014.
+	<ul>
+	  <li>Version 3.17 has been released.
+	  <li>Corrected queen-side castling.
+	  <li>Inspect received network data.
+	  <li>Protect array boundaries.
+	  <li>Upgraded Qt products to version 4.8.5 on OS X.
+	</ul>
+	May 25, 2013.
+	<ul>
+	  <li>Upgraded Qt products to version Qt 4.8.4 on OS X and Windows platforms.
+	</ul>
+	February 19, 2012.
+	<ul>
+	  <li>Version 3.16 is now available.
+	  <li>Added support for IPv6.
+	  <li>Improved piece validation.
+	  <li>Improved pointer safety.
+	  <li>Improved the Connection Configuration panel.
+	  <li>Removed stale source.
+	  <li>Replaced gluOrtho2D() with glOrtho().
+	  <li>Updated Qt products to version 4.8.0 for OS X and Windows platforms.
+	</ul>
+	November 6, 2011.
+	<ul>
+	  <li>The OS X bundle has been upgraded in support of OS X 10.6.
+	  <li>Updated Qt products to version 4.7.4.
+	</ul>
+	October 11, 2009.
+	<ul>
+	  <li>Version 3.15 is available.
+	  <li>Insignificant display update.
+	</ul>
+	September 13, 2009.
+	<ul>
+	  <li>Released version 3.14.
+	  <li>Security enhancements.
+	</ul>
+	August 21, 2009.
+	<ul>
+	  <li>Removed old versions.
+	</ul>
+	July 1, 2009.
+	<ul>
+	  <li>Version 3.13 is now available.
+	  <li>User interface improvements.
+	</ul>
+	June 14, 2009.
+	<ul>
+	  <li>Version 3.12 will be available shortly.
+	  <li>A new OS X installer.
+	  <li>A new Windows XP installer.
+	  <li>Various board sizes.
+	</ul>
+	February 2, 2008.
+	<ul>
+	  <li>Released version 3.11.
+	  <li>Resolved a size issue on X11 systems.
+	</ul>
+	February 1, 2008.
+	<ul>
+	  <li>Version 3.10 is now available.
+	  <li>Initial, and to be continued, release of QtChess as a plugin (for the <a href="http://retroshare.sourceforge.net" target="_blank">Retroshare Instant Messenger</a>).
+	  <li>Integrated the Clocks and History dialogs into the main window.
+	  <li>Introduced Algebraic Chess Notation for recording moves. Checkmates are not recorded.
+	  <li>Qt 4.3.3 is required.
+	</ul>
+	November 17, 2007.
+	<ul>
+	  <li>Released version 3.09.
+	  <li>Added more descriptive status messages.
+	  <li>Beautified the board.
+	  <li>Created an INSTALL file.
+	</ul>
+	November 13, 2007.
+	<ul>
+	  <li>Version 3.08 is now available. A Windows XP release will be available sometime this week.
+	  <li>Added an option that provides the user with the valid moves for a selected piece.
+	  <li>Fixed a validation error with the pawn piece.
+	  <li>Included support for translations.
+	</ul>
+	November 3, 2007.
+	<ul>         
+	  <li>Released version 3.07 for Windows XP.
+	  <li>Resolved a compilation issue on FreeBSD. Version remains at 3.07.
+	</ul>
+	November 2, 2007.
+	<ul>
+	  <li>Fixed a minor discrepancy with a figure's dimensions.
+	  <li>Modified the board size options.
+	</ul>
+	October 31, 2007.
+	<ul>
+	  <li>A Halloween release! Version 3.06 is now available.
+	  <li>Allow the board to be resized.
+	</ul>
+	October 14, 2007.
+	<ul>
+	  <li>Released version 3.05.
+	  <li>Removed an unnecessary frame.
+	</ul>
+	October 14, 2007.
+	<ul>
+	  <li>Released version 3.05.
+	  <li>Removed an unnecessary frame.
+	</ul>
+	October 7, 2007.
+	<ul>
+	  <li>Released version 3.04 for Windows XP. This version uses Qt 4.3.2.
+	</ul>
+	September 28, 2007.
+	<ul>
+	  <li>Released version 3.04. A Windows XP release will be available shortly.
+	  <li>Enlarged some of the buttons.
+	  <li>Removed a toxic reference to an include file.
+	  <li>This version relies on Qt 4.3.1.
+	</ul>
+	April 25, 2007.
+	<ul>
+	  <li>Released version 3.03 for Windows XP.
+	</ul>
+	April 24, 2007.
+	<ul>
+	  <li>Released version 3.03. The clocks won't begin ticking until all connections have been established.
+	</ul>
+	April 15, 2007.
+	<ul>
+	  <li>Released version 3.02. A Windows XP binary is included in this release.
+	  <li>Beautified the board.
+	</ul>
+	April 15, 2007.
+	<ul>
+	  <li>Released version 3.01.
+	  <li>Communications now function without the use of threads.
+	  <li>Removed all Qt 3 support, that is, QtChess 3.01 uses only Qt 4.
+	</ul>
+	April 9, 2007.
+	<ul>
+	  <li>Released version 3.00. Qt 4.2.3 is required.
+	  <li>A Windows XP version is also included.
+	</ul>
+	April 7, 2007.
+	<ul>
+	  <li>Version remains at 2.05.
+	  <li>A Windows XP release of 2.05 may not become available. Stay tuned.
+	  <li>Fixed an incorrect usage of updateGL().
+	</ul>
+	April 6, 2007.
+	<ul>
+	  <li>Released version 2.05.
+	  <li>Added a dialog that displays player and opponent clocks.
+	  <li>Added labels to the board.
+	</ul>
+	April 2, 2007.
+	<ul>
+	  <li>Released version 2.04 for Windows XP.
+	</ul>
+	March 29, 2007.
+	<ul>
+	  <li>Released version 2.04 for non-Windows.
+	  <li>Resolved a potential memory problem in the communication thread.
+	</ul>
+	March 28, 2007.
+	<ul>
+	  <li>Version 2.03 has been released.
+	  <li>Modified the help information.
+	  <li>Removed a potential segmentation fault.
+	</ul>
+	March 27, 2007.
+	<ul>
+	  <li>Version 2.02 has been released.
+	  <li>Some minor display issues with the Windows release have been resolved.
+	</ul>
+	March 26, 2007.
+	<ul>
+	  <li>Version 2.01 has been released.
+	  <li>Resolved some painting and stickiness issues in Windows XP.
+	</ul>
+	March 25, 2007.
+	<ul>
+	  <li>Some code cleanup. Version remains at 2.00.
+	  <li>Released version 2.00 for Windows XP. The folder includes the Qt 3.3.8 shared library.
+	</ul>
+	March 24, 2007.
+	<ul>
+	  <li>Version 2.00 has been released.
+	  <li>A Windows XP version may be released today as well.
+	  <li>Removed all XDR dependencies.
+	</ul>
+	March 23, 2007.
+	<ul>
+	  <li>Fixed an issue with a missing include file. This fix only applies to Solaris 10 systems.
+	</ul>
+	March 20, 2007.
+	<ul>
+	  <li>Version 1.01 has been released.
+	  <li>Additional code cleaning.
+	</ul>
+	March 13, 2007.
+	<ul>
+	  <li>Some trivial code cleaning.
+	  <li>Updated the README file.
+	</ul>
+	February 23, 2006.
+	<ul>
+	  <li>Set an eight second alarm before calling connect().
+	</ul>
+	August 16, 2004.
+	<ul>
+	  <li>Version 1.00 is available for download.
+	</ul>
       </section>
     </div>
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">QtChess is maintained by <a href="https://github.com/textbrowser">textbrowser</a>.</p>
+	<p class="copyright">QtChess is maintained by <a href="https://github.com/textbrowser">textbrowser</a>.</p>
       </footer>
     </div>
 </body></html>
