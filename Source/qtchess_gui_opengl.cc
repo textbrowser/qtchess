@@ -109,6 +109,8 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 
       updateGL();
     }
+
+  QGLWidget::mousePressEvent(e);
 }
 
 void openglWid::newGame(void)
@@ -235,7 +237,7 @@ void openglWid::paintGL(void)
 
 	      if(isValid)
 		{
-		  glColor3f((GLfloat) 1.2, (GLfloat) 2.05, (GLfloat) 0.75);
+		  glColor3f((GLfloat) 0.56, (GLfloat) 0.93, (GLfloat) 0.56);
 		  glRectd((double) x + 1,
 			  (double) y + 1,
 			  px + (i + 1) * block_size - 1,
@@ -297,7 +299,7 @@ void openglWid::paintGL(void)
 		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
 		       20 / denominator);
 	    glEnd();
-	    glColor3f(0.0, 0.0, 0.0);
+	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    glBegin(GL_LINE_LOOP);
 	    glVertex2d(x + BISHOP_X_OFFSET,
 		       y + BISHOP_Y_OFFSET);
@@ -361,7 +363,7 @@ void openglWid::paintGL(void)
 		    y + KING_Y_OFFSET + KING_B_HEIGHT +
 		    KING_BT_HEIGHT + KING_HEIGHT + KING_HCROSS_HEIGHT +
 		    5 / denominator);
-	    glColor3f(0.0, 0.0, 0.0);
+	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    glBegin(GL_LINE_LOOP);
 	    glVertex2d(x + KING_X_OFFSET, y + KING_Y_OFFSET);
 	    glVertex2d(x + KING_X_OFFSET + KING_B_WIDTH,
@@ -518,7 +520,7 @@ void openglWid::paintGL(void)
 		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
 		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 7 / denominator);
 	    glEnd();
-	    glColor3f(0.0, 0.0, 0.0);
+	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    glBegin(GL_LINE_LOOP);
 	    glVertex2d(x + QUEEN_X_OFFSET, y + QUEEN_Y_OFFSET);
 	    glVertex2d(x + QUEEN_X_OFFSET + QUEEN_B_WIDTH,
@@ -621,7 +623,7 @@ void openglWid::paintGL(void)
 		       1 / denominator,
  		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 5 / denominator);
 	    glEnd();
-	    glColor3f(0.0, 0.0, 0.0);
+	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    glBegin(GL_LINE_LOOP);
 	    glVertex2d(x + KNIGHT_X_OFFSET, y + KNIGHT_Y_OFFSET);
 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 2 / denominator,
@@ -664,7 +666,7 @@ void openglWid::paintGL(void)
 		    x + ROOK_X_OFFSET + 5 / denominator + ROOK_T_WIDTH,
 		    y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT +
 		    ROOK_T_HEIGHT);
-	    glColor3f(0.0, 0.0, 0.0);
+	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    glBegin(GL_LINE_LOOP);
 	    glVertex2d(x + ROOK_X_OFFSET, y + ROOK_Y_OFFSET);
 	    glVertex2d(x + ROOK_X_OFFSET + ROOK_B_WIDTH, y + ROOK_Y_OFFSET);
@@ -713,7 +715,7 @@ void openglWid::paintGL(void)
 		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 20 / denominator);
 	    glVertex2d(x + PAWN_X_OFFSET, y + PAWN_Y_OFFSET + PAWN_HEIGHT);
 	    glEnd();
-	    glColor3f(0.0, 0.0, 0.0);
+	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    glBegin(GL_LINE_LOOP);
 	    glVertex2d(x + PAWN_X_OFFSET, y + PAWN_Y_OFFSET);
 	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH, y + PAWN_Y_OFFSET);
@@ -739,7 +741,7 @@ void openglWid::paintGL(void)
   ** Add the coordinate labels.
   */
 
-  glColor3f(0.0, 0.0, 0.0);
+  glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
   font.setBold(false);
   font.setStyleStrategy
     (QFont::StyleStrategy(QFont::OpenGLCompatible | QFont::PreferAntialias));
@@ -844,7 +846,7 @@ void openglWid::paintGL(void)
 	      mouse_pressed = 0;
 	      point_selected.x = -1;
 	      point_selected.y = -1;
-	      glColor3f(1.0, 0.0, 0.0);
+	      glColor3f((GLfloat) 1.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    }
 	  else if(chess->getMyColor() == BLACK &&
 		  !qtchess_validate::isBlack(chess->board[I][J]))
@@ -852,13 +854,13 @@ void openglWid::paintGL(void)
 	      mouse_pressed = 0;
 	      point_selected.x = -1;
 	      point_selected.y = -1;
-	      glColor3f(1.0, 0.0, 0.0);
+	      glColor3f((GLfloat) 1.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    }
 	  else
 	    {
 	      point_selected.x = I;
 	      point_selected.y = J;
-	      glColor3f(0.0, 1.0, 0.0);
+	      glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	    }
 	}
       else if(mouse_pressed == 2 &&
@@ -866,7 +868,7 @@ void openglWid::paintGL(void)
 	      qFuzzyCompare(point_selected.y, static_cast<double> (J)))
 	{
 	  mouse_pressed = 1;
-	  glColor3f(0.0, 1.0, 0.0);
+	  glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	}
       else if(mouse_pressed == 2 && isValid &&
 	      qtchess_validate::areValidCoordinates((int) point_selected.x,
@@ -899,7 +901,7 @@ void openglWid::paintGL(void)
 
 	  mouse_pressed = 0;
 	  showValid = false;
-	  glColor3f(0.0, 1.0, 0.0);
+	  glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	  current_move.x1 = (int) point_selected.y;
 	  current_move.y1 = (int) point_selected.x;
 	  current_move.x2 = J;
@@ -1111,14 +1113,14 @@ void openglWid::paintGL(void)
 	      mouse_pressed = 1;
 	      point_selected.x = I;
 	      point_selected.y = J;
-	      glColor3f(0.0, 1.0, 0.0);
+	      glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	    }
 	  else
 	    {
 	      mouse_pressed = 0;
 	      point_selected.x = -1;
 	      point_selected.y = -1;
-	      glColor3f(1.0, 0.0, 0.0);
+	      glColor3f((GLfloat) 1.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    }
 	}
 
