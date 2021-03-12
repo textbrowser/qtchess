@@ -998,6 +998,7 @@ void qtchess_setup_dialog::slotLocal(bool state)
       ui.remote->setChecked(false);
       ui.remote->blockSignals(false);
       ui.remote_gb->setEnabled(false);
+      ui.scrollArea->verticalScrollBar()->setValue(0);
     }
   else
     {
