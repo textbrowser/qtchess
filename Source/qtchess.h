@@ -32,7 +32,7 @@
 
 #include "qtchess_defs.h"
 
-#define QTCHESS_VERSION "2021.03.10"
+#define QTCHESS_VERSION "2021.03.15"
 
 class qtchess
 {
