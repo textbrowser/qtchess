@@ -70,12 +70,9 @@ void qtchess_gui::about(void)
 	"Copyright (c) 2003 - 2021 Guess Who?<br>"
 	"Qt version %2."
 	"<hr>"
-	"Please visit <a href=\"https://qtchess.sourceforge.io\">"
-	"https://qtchess.sourceforge.io</a> for "
-	"project information.<br>"
-	"For release notes, please visit "
-	"<a href=\"https://qtchess.sourceforge.io/release_news.html\">"
-	"https://qtchess.sourceforge.io/release_news.html</a>.<br>").
+	"Please visit <a href=\"https://textbrowser.github.io/qtchess\">"
+	"https://textbrowser.github.io/qtchess</a> for "
+	"project information.").
      arg(QTCHESS_VERSION).
      arg(QT_VERSION_STR));
   mb.setStandardButtons(QMessageBox::Ok);
