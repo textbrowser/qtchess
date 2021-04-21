@@ -1,3 +1,4 @@
 1. Chess engine.
 2. Newer Qt on Windows.
-3. Windows DPI.
+3. Render text using new OpenGL.
+4. Windows DPI.
