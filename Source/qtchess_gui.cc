@@ -35,6 +35,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QStatusBar>
 
 extern qtchess *chess;
 extern qtchess_comm *comm;
@@ -471,7 +474,10 @@ void qtchess_gui::newGame(void)
   if(gui && gui->getGLBoard())
     {
       gui->getGLBoard()->newGame();
+#if QT_VERSION <= 0x040807
       gui->getGLBoard()->updateGL();
+#else
+#endif
       gui->getGLBoard()->update();
     }
 

@@ -41,13 +41,19 @@ extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;
 
+#if QT_VERSION <= 0x040807
 openglWid::openglWid(QWidget *parent):QGLWidget(parent)
+#else
+openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
+#endif
 {
   mouse_pressed = 0;
   showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
+#if QT_VERSION <= 0x040807
   setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
+#endif
 }
 
 void openglWid::highlightSquare(const double x, const double y)
@@ -107,10 +113,18 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 	  point_pressed.y = height() - e->y();
 	}
 
+#if QT_VERSION <= 0x040807
       updateGL();
+#else
+      update();
+#endif
     }
 
+#if QT_VERSION <= 0x040807
   QGLWidget::mousePressEvent(e);
+#else
+  QOpenGLWidget::mousePressEvent(e);
+#endif
 }
 
 void openglWid::newGame(void)
@@ -749,21 +763,25 @@ void openglWid::paintGL(void)
   for(int m = 1; m <= NSQUARES; m++)
     if(auto_screen_scale_factor == 0)
       {
+#if QT_VERSION <= 0x040807
 	renderText((int) (px + m * block_size - block_size / 2 - 5),
 		   (int) (py - 5),
 		   QString((char) 96 + m), font);
 	renderText((int) (px - 15),
 		   (int) (py + m * block_size - block_size / 2 + 5),
 		   QString::number(9 - m), font);
+#endif
       }
     else
       {
+#if QT_VERSION <= 0x040807
 	renderText((int) (px + m * block_size / 2 - block_size / 2 + 20),
 		   (int) (py - 20),
 		   QString((char) 96 + m), font);
 	renderText((int) (px - 25),
 		   (int) (py + m * block_size / 2 - block_size / 2 + 30),
 		   QString::number(9 - m), font);
+#endif
       }
 
   /*
@@ -1089,7 +1107,10 @@ void openglWid::paintGL(void)
 	  if(comm)
 	    comm->sendMove(current_move);
 
+#if QT_VERSION <= 0x040807
 	  updateGL();
+#else
+#endif
 	  update();
 	  chess->setGameOver(game_over);
 
@@ -1236,7 +1257,11 @@ void openglWid::rescale(const double denominatorArg)
   point_selected.x = point_selected.y = -1;
   px /= denominator;
   py /= denominator;
+#if QT_VERSION <= 0x040807
   updateGL();
+#else
+  update();
+#endif
 }
 
 void openglWid::resizeGL(int w, int h)
@@ -1258,6 +1283,10 @@ void openglWid::showValidMoves(void)
   if(chess->getTurn() == MY_TURN && !chess->isGameOver() && comm->isReady())
     {
       showValid = true;
+#if QT_VERSION <= 0x040807
       updateGL();
+#else
+      update();
+#endif
     }
 }

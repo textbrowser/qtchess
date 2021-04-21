@@ -182,7 +182,11 @@ void qtchess::updateBoard(const QByteArray &buffer)
       if(gui)
 	{
 	  if(gui->getGLBoard())
+#if QT_VERSION <= 0x040807
 	    gui->getGLBoard()->updateGL();
+#else
+	    gui->getGLBoard()->update();
+#endif
 
 	  gui->clearHistory();
 	  gui->showNewGameInfo();
@@ -243,7 +247,11 @@ void qtchess::updateBoard(const QByteArray &buffer)
 	  gui->addHistoryMove(current_move, color);
 
 	  if(gui->getGLBoard())
+#if QT_VERSION <= 0x040807
 	    gui->getGLBoard()->updateGL();
+#else
+	    gui->getGLBoard()->update();
+#endif
 
 	  gui->update();
 	}

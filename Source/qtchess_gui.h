@@ -40,6 +40,7 @@
 #include <QHostAddress>
 #include <QTextEdit>
 #include <QTimeEdit>
+#include <QTimer>
 
 class qtchess_help_dialog: public QDialog
 {

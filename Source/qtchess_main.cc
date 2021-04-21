@@ -59,11 +59,13 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
+#if QT_VERSION <= 0x040807
   if(!QGLFormat::hasOpenGL())
     {
       qDebug() << "OpenGL is not supported on this system.";
       return EXIT_FAILURE;
     }
+#endif
 
   if((chess = new(std::nothrow) qtchess()) == nullptr)
     {
