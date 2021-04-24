@@ -154,8 +154,12 @@ void openglWid::paintGL(void)
   ** First an empty board.
   */
 
+#if QT_VERSION < 0x050400
   int auto_screen_scale_factor =
     qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt();
+#else
+  int auto_screen_scale_factor = 0;
+#endif
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)

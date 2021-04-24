@@ -415,9 +415,11 @@ void qtchess_gui::init(void)
 
   if(glboard)
     {
+#if QT_VERSION < 0x050400
       if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
 	rescale = 0.5;
       else
+#endif
 	rescale = denominator;
 
       glboard->rescale(rescale);
@@ -624,9 +626,11 @@ void qtchess_gui::slotChangeSize(void)
 
       if(glboard)
 	{
+#if QT_VERSION < 0x050400
 	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
 	    rescale = 0.475;
 	  else
+#endif
 	    rescale = denominator;
 
 	  glboard->reinit();
@@ -650,9 +654,11 @@ void qtchess_gui::slotChangeSize(void)
 
       if(glboard)
 	{
+#if QT_VERSION < 0x050400
 	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
 	    rescale = 0.60;
 	  else
+#endif
 	    rescale = denominator;
 
 	  glboard->reinit();
@@ -677,9 +683,11 @@ void qtchess_gui::slotChangeSize(void)
 
       if(glboard)
 	{
+#if QT_VERSION < 0x050400
 	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
 	    rescale = 0.5;
 	  else
+#endif
 	    rescale = denominator;
 
 	  glboard->reinit();
