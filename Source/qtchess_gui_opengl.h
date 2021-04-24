@@ -30,7 +30,7 @@
 
 #include <QEvent>
 #include <QMouseEvent>
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
 #include <QtOpenGL>
 #else
 #include <QOpenGLWidget>
@@ -43,7 +43,7 @@ class point
   double y;
 };
 
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
 class openglWid: public QGLWidget
 #else
 class openglWid: public QOpenGLWidget

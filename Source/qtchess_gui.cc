@@ -474,7 +474,7 @@ void qtchess_gui::newGame(void)
   if(gui && gui->getGLBoard())
     {
       gui->getGLBoard()->newGame();
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
       gui->getGLBoard()->updateGL();
 #else
 #endif

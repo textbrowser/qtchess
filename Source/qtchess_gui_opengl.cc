@@ -41,7 +41,7 @@ extern qtchess *chess;
 extern qtchess_comm *comm;
 extern qtchess_gui *gui;
 
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
 openglWid::openglWid(QWidget *parent):QGLWidget(parent)
 #else
 openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
@@ -51,7 +51,7 @@ openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
   showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
   setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
 #endif
 }
@@ -113,14 +113,14 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 	  point_pressed.y = height() - e->y();
 	}
 
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
       updateGL();
 #else
       update();
 #endif
     }
 
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
   QGLWidget::mousePressEvent(e);
 #else
   QOpenGLWidget::mousePressEvent(e);
@@ -763,7 +763,7 @@ void openglWid::paintGL(void)
   for(int m = 1; m <= NSQUARES; m++)
     if(auto_screen_scale_factor == 0)
       {
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
 	renderText((int) (px + m * block_size - block_size / 2 - 5),
 		   (int) (py - 5),
 		   QString((char) 96 + m), font);
@@ -774,7 +774,7 @@ void openglWid::paintGL(void)
       }
     else
       {
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
 	renderText((int) (px + m * block_size / 2 - block_size / 2 + 20),
 		   (int) (py - 20),
 		   QString((char) 96 + m), font);
@@ -1107,7 +1107,7 @@ void openglWid::paintGL(void)
 	  if(comm)
 	    comm->sendMove(current_move);
 
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
 	  updateGL();
 #else
 #endif
@@ -1257,7 +1257,7 @@ void openglWid::rescale(const double denominatorArg)
   point_selected.x = point_selected.y = -1;
   px /= denominator;
   py /= denominator;
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
   updateGL();
 #else
   update();
@@ -1283,7 +1283,7 @@ void openglWid::showValidMoves(void)
   if(chess->getTurn() == MY_TURN && !chess->isGameOver() && comm->isReady())
     {
       showValid = true;
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
       updateGL();
 #else
       update();

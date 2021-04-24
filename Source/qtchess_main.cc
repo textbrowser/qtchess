@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
-#if QT_VERSION <= 0x040807
+#if QT_VERSION < 0x050400
   if(!QGLFormat::hasOpenGL())
     {
       qDebug() << "OpenGL is not supported on this system.";
