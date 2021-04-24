@@ -26,6 +26,7 @@
 */
 
 #include <QMouseEvent>
+#include <QPainter>
 
 #ifdef Q_PROCESSOR_ARM
 #include <GL/gl.h>
@@ -774,6 +775,15 @@ void openglWid::paintGL(void)
 	renderText((int) (px - 15),
 		   (int) (py + m * block_size - block_size / 2 + 5),
 		   QString::number(9 - m), font);
+#else
+	QPainter painter(this);
+
+	painter.drawText((int) (px + m * block_size - block_size / 2 - 5),
+			 (int) (py - 5),
+			 QString((char) 96 + m));
+	painter.drawText((int) (px - 15),
+			 (int) (py + m * block_size - block_size / 2 + 5),
+			 QString::number(9 - m));
 #endif
       }
     else
@@ -785,6 +795,15 @@ void openglWid::paintGL(void)
 	renderText((int) (px - 25),
 		   (int) (py + m * block_size / 2 - block_size / 2 + 30),
 		   QString::number(9 - m), font);
+#else
+	QPainter painter(this);
+
+	painter.drawText((int) (px + m * block_size / 2 - block_size / 2 + 20),
+			 (int) (py - 20),
+			 QString((char) 96 + m));
+	painter.drawText((int) (px - 25),
+			 (int) (py + m * block_size / 2 - block_size / 2 + 30),
+			 QString::number(9 - m));
 #endif
       }
 
