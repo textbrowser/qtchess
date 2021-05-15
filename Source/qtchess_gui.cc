@@ -461,7 +461,7 @@ void qtchess_gui::newGame(void)
       mb.setText
 	(tr("Are you sure that you wish to initiate a new game? "
 	    "Your board and your opponent's board will be reset."));
-      mb.setWindowModality(Qt::WindowModal);
+      mb.setWindowModality(Qt::ApplicationModal);
       mb.setWindowTitle(tr("QtChess: Confirmation"));
 
       if(mb.exec() != QMessageBox::Yes)
@@ -540,7 +540,7 @@ void qtchess_gui::quit(void)
 	  mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
 	  mb.setText
 	    (tr("A game is in progress. Are you sure that you wish to quit?"));
-	  mb.setWindowModality(Qt::WindowModal);
+	  mb.setWindowModality(Qt::ApplicationModal);
 	  mb.setWindowTitle(tr("QtChess: Confirmation"));
 
 	  if(mb.exec() != QMessageBox::Yes)
