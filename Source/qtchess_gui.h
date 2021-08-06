@@ -86,8 +86,8 @@ class qtchess_setup_dialog: public QDialog
   void slotConnectedToClient(void);
   void slotDisconnect(void);
   void slotDisconnectedFromClient(void);
-  void slotLocal(bool state);
   void slotListen(void);
+  void slotLocal(bool state);
   void slotProtocolChanged(void);
   void slotRemote(bool state);
   void slotSetCaissa(void);
