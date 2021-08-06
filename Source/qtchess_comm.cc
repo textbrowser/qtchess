@@ -43,6 +43,11 @@ qtchess_comm::qtchess_comm(void):QObject()
 	  SIGNAL(newConnection(void)),
 	  this,
 	  SLOT(acceptConnection(void)));
+  connect(&m_specialTimer,
+	  SIGNAL(timeout(void)),
+	  this,
+	  SLOT(slotSpecialTimerTimeout(void)));
+  m_specialTimer.setInterval(1);
 }
 
 QByteArray qtchess_comm::digest(const QByteArray &data) const
@@ -186,7 +191,6 @@ void qtchess_comm::acceptConnection(void)
       if(QHostAddress(str) != m_clientConnection->peerAddress())
 	{
 	  m_clientConnection->abort();
-	  m_clientConnection->deleteLater();
 	  return;
 	}
     }
@@ -223,7 +227,8 @@ void qtchess_comm::clientDisconnected(void)
   QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
 
   if(m_clientConnection && m_clientConnection == socket)
-    m_clientConnection->deleteLater();
+    {
+    }
   else if(socket)
     socket->deleteLater();
 
@@ -268,10 +273,11 @@ void qtchess_comm::connectRemotely(void)
   if(m_clientConnection)
     {
       m_clientConnection->abort();
-      m_clientConnection->deleteLater();
     }
 
-  m_clientConnection = new QTcpSocket(this);
+  if(!m_clientConnection)
+    m_clientConnection = new QTcpSocket(this);
+
   connect(m_clientConnection,
 	  SIGNAL(connected(void)),
 	  this,
@@ -296,13 +302,30 @@ void qtchess_comm::connectRemotely(void)
 	  SIGNAL(readyRead(void)),
 	  this,
 	  SLOT(updateBoard(void)));
-  m_clientConnection->connectToHost(address, remotePort);
+
+  if(remotePort == 4710)
+    {
+      /*
+      ** Special port.
+      */
+
+      m_clientConnection->bind
+	(QHostAddress(QString::fromLatin1(qgetenv("ADDRESS").constData())),
+	 remotePort,
+	 QAbstractSocket::ReuseAddressHint | QAbstractSocket::ShareAddress);
+      m_clientConnection->setProperty("address", address.toString());
+      m_clientConnection->setProperty("port", remotePort);
+      m_specialTimer.start();
+    }
+  else
+    m_clientConnection->connectToHost(address, remotePort);
 }
 
 void qtchess_comm::disconnectRemotely(void)
 {
   if(m_clientConnection)
-    m_clientConnection->deleteLater();
+    {
+    }
 
   if(chess)
     {
@@ -341,7 +364,8 @@ void qtchess_comm::quit(void)
   */
 
   if(m_clientConnection)
-    m_clientConnection->deleteLater();
+    {
+    }
 
   listening_sock.close();
   setConnected(false);
@@ -493,6 +517,21 @@ void qtchess_comm::slotClientConnected(void)
   if(m_clientConnection)
     gui->notifyConnection(m_clientConnection->peerAddress().toString(),
 			  m_clientConnection->peerPort());
+}
+
+void qtchess_comm::slotSpecialTimerTimeout(void)
+{
+  if(m_clientConnection)
+    {
+      if(m_clientConnection->state() == QAbstractSocket::ConnectedState)
+	m_specialTimer.stop();
+      else if(m_clientConnection->state() == QAbstractSocket::BoundState ||
+	      m_clientConnection->state() == QAbstractSocket::UnconnectedState)
+	m_clientConnection->connectToHost
+	  (m_clientConnection->property("address").toString(),
+	   static_cast<quint16> (m_clientConnection->property("port").
+				 toInt()));
+    }
 }
 
 void qtchess_comm::stopListening(void)

@@ -31,6 +31,7 @@
 #include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTimer>
 
 class qtchess_comm: public QObject
 {
@@ -74,9 +75,10 @@ class qtchess_comm: public QObject
   void stopListening(void);
 
  private:
-  QString m_caissa;
   QPointer<QTcpSocket> m_clientConnection;
+  QString m_caissa;
   QTcpServer listening_sock;
+  QTimer m_specialTimer;
   bool connected;
   static const int s_buffer_size = 1024;
   bool memcmp(const QByteArray &a, const QByteArray &b) const;
@@ -89,6 +91,7 @@ class qtchess_comm: public QObject
   void acceptConnection(void);
   void clientDisconnected(void);
   void slotClientConnected(void);
+  void slotSpecialTimerTimeout(void);
   void updateBoard(void);
 
  signals:
