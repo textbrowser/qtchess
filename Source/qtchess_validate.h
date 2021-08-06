@@ -31,8 +31,6 @@
 namespace qtchess_validate
 {
   QString findDeparture(const int, const int, const int, const int, const int);
-  int color(const int);
-  int isValidMove(const int, const int, const int, const int, const int);
   bool areValidCoordinates(const int, const int);
   bool isBishop(const int);
   bool isBlack(const int);
@@ -42,12 +40,14 @@ namespace qtchess_validate
   bool isKingChecked(const struct move_s &);
   bool isKnight(const int);
   bool isPawn(const int);
+  bool isQueen(const int);
   bool isRook(const int);
   bool isRook1(const int);
   bool isRook2(const int);
-  bool isQueen(const int);
   bool isThreatened(const int, const int, const int);
   bool isWhite(const int);
+  int color(const int);
+  int isValidMove(const int, const int, const int, const int, const int);
 }
 
 #endif

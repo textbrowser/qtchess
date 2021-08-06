@@ -67,10 +67,10 @@ class openglWid: public QOpenGLWidget
   double BISHOP_WIDTH;
   double BISHOP_X_OFFSET;
   double BISHOP_Y_OFFSET;
-  double KING_B_HEIGHT;
-  double KING_B_WIDTH;
   double KING_BT_HEIGHT;
   double KING_BT_WIDTH;
+  double KING_B_HEIGHT;
+  double KING_B_WIDTH;
   double KING_HCROSS_HEIGHT;
   double KING_HCROSS_WIDTH;
   double KING_HEIGHT;
@@ -87,10 +87,10 @@ class openglWid: public QOpenGLWidget
   double PAWN_WIDTH;
   double PAWN_X_OFFSET;
   double PAWN_Y_OFFSET;
-  double QUEEN_B_HEIGHT;
-  double QUEEN_B_WIDTH;
   double QUEEN_BT_HEIGHT;
   double QUEEN_BT_WIDTH;
+  double QUEEN_B_HEIGHT;
+  double QUEEN_B_WIDTH;
   double QUEEN_HEIGHT;
   double QUEEN_WIDTH;
   double QUEEN_X_OFFSET;
