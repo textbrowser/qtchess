@@ -110,8 +110,13 @@ void openglWid::mousePressEvent(QMouseEvent *e)
 
       if(e)
 	{
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+	  point_pressed.x = e->position().x();
+	  point_pressed.y = height() - e->position().y();
+#else
 	  point_pressed.x = e->x();
 	  point_pressed.y = height() - e->y();
+#endif
 	}
 
 #if QT_VERSION < 0x050400
@@ -762,8 +767,13 @@ void openglWid::paintGL(void)
 
   glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
   font.setBold(false);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
   font.setStyleStrategy
     (QFont::StyleStrategy(QFont::OpenGLCompatible | QFont::PreferAntialias));
+#else
+  font.setStyleStrategy
+    (QFont::StyleStrategy(QFont::PreferAntialias));
+#endif
 
   for(int m = 1; m <= NSQUARES; m++)
     if(auto_screen_scale_factor == 0)
@@ -771,7 +781,7 @@ void openglWid::paintGL(void)
 #if QT_VERSION < 0x050400
 	renderText((int) (px + m * block_size - block_size / 2 - 5),
 		   (int) (py - 5),
-		   QString((char) 96 + m), font);
+		   QString(QChar((char) 96 + m)), font);
 	renderText((int) (px - 15),
 		   (int) (py + m * block_size - block_size / 2 + 5),
 		   QString::number(9 - m), font);
@@ -780,7 +790,7 @@ void openglWid::paintGL(void)
 
 	painter.drawText((int) (px + m * block_size - block_size / 2 - 5),
 			 (int) (py - 5),
-			 QString((char) 96 + m));
+			 QString(QChar((char) 96 + m)));
 	painter.drawText((int) (px - 15),
 			 (int) (py + m * block_size - block_size / 2 + 5),
 			 QString::number(9 - m));
@@ -791,7 +801,7 @@ void openglWid::paintGL(void)
 #if QT_VERSION < 0x050400
 	renderText((int) (px + m * block_size / 2 - block_size / 2 + 20),
 		   (int) (py - 20),
-		   QString((char) 96 + m), font);
+		   QString(QChar((char) 96 + m)), font);
 	renderText((int) (px - 25),
 		   (int) (py + m * block_size / 2 - block_size / 2 + 30),
 		   QString::number(9 - m), font);
@@ -800,7 +810,7 @@ void openglWid::paintGL(void)
 
 	painter.drawText((int) (px + m * block_size / 2 - block_size / 2 + 20),
 			 (int) (py - 20),
-			 QString((char) 96 + m));
+			 QString(QChar((char) 96 + m)));
 	painter.drawText((int) (px - 25),
 			 (int) (py + m * block_size / 2 - block_size / 2 + 30),
 			 QString::number(9 - m));

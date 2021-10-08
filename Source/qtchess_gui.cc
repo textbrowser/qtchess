@@ -31,6 +31,7 @@
 #include "qtchess_gui.h"
 #include "qtchess_validate.h"
 
+#include <QActionGroup>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>

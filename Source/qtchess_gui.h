@@ -63,7 +63,6 @@ class qtchess_setup_dialog: public QDialog
 
  public:
   qtchess_setup_dialog(QWidget *);
-  qtchess_setup_dialog(void);
   QHostAddress getListeningAddress(void) const;
   QLineEdit *getAllowedHostField(void) const;
   QLineEdit *getHostField(void) const;

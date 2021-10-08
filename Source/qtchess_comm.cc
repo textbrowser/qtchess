@@ -197,10 +197,17 @@ void qtchess_comm::acceptConnection(void)
 	  SIGNAL(disconnected(void)),
 	  this,
 	  SLOT(clientDisconnected(void)));
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
   connect(m_clientConnection,
 	  SIGNAL(error(QAbstractSocket::SocketError)),
 	  m_clientConnection,
 	  SIGNAL(disconnected(void)));
+#else
+  connect(m_clientConnection,
+	  SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
+	  m_clientConnection,
+	  SIGNAL(disconnected(void)));
+#endif
   connect(m_clientConnection,
 	  SIGNAL(readyRead(void)),
 	  this,
@@ -288,10 +295,17 @@ void qtchess_comm::connectRemotely(void)
 	  SIGNAL(disconnected(void)),
 	  this,
 	  SIGNAL(disconnectedFromClient(void)));
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
   connect(m_clientConnection,
 	  SIGNAL(error(QAbstractSocket::SocketError)),
 	  m_clientConnection,
 	  SIGNAL(disconnected(void)));
+#else
+  connect(m_clientConnection,
+	  SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
+	  m_clientConnection,
+	  SIGNAL(disconnected(void)));
+#endif
   connect(m_clientConnection,
 	  SIGNAL(readyRead(void)),
 	  this,

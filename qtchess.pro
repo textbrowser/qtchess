@@ -6,7 +6,9 @@ LANGUAGE        = C++
 QT		+= network
 TEMPLATE        = app
 
-lessThan(QT_MAJOR_VERSION, 5) {
+greaterThan(QT_MAJOR_VERSION, 5) {
+QT += openglwidgets
+} else:lessThan(QT_MAJOR_VERSION, 5) {
 QT += opengl
 } else {
 QT += widgets
@@ -26,7 +28,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
                    -Wstack-protector \
-                   -Wstrict-overflow=5 \
+                   -Wstrict-overflow=1 \
                    -Wundef \
                    -Wzero-as-null-pointer-constant \
                    -fPIE \
@@ -36,9 +38,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 
 linux-* {
-QMAKE_CXXFLAGS  += -Wconversion \
-                   -Wformat-overflow=2 \
-                   -Wsign-conversion \
+QMAKE_CXXFLAGS  += -Wformat-overflow=2 \
                    -pie
 }
 
