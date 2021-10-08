@@ -71,7 +71,7 @@ void qtchess_gui::about(void)
   mb.setTextFormat(Qt::RichText);
   mb.setText
     (tr("<html>QtChess Version %1.<br>"
-	"Copyright (c) 2003 - 2021 Guess Who?<br>"
+	"Copyright (c) 2003 - 2021 X.<br>"
 	"Qt version %2."
 	"<hr>"
 	"Please visit <a href=\"https://textbrowser.github.io/qtchess\">"
