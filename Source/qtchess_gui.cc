@@ -585,7 +585,7 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):QDialog(parent)
 	"To prevent peer connections, please set the "
 	"Allowed IP Address to 0.0.0.0 (:: for IPv6).\n"
 	"To view a selected piece's valid moves, "
-	"double-click the selected piece."
+	"double-click the selected piece while the Control key is depressed."
 	));
 }
 

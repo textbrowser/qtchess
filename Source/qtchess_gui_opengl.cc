@@ -512,6 +512,9 @@ void openglWid::reinit(void)
 
 void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
 {
+  if(!(QApplication::keyboardModifiers() & Qt::ControlModifier))
+    return;
+
   if(!chess || !piece)
     return;
 
@@ -539,8 +542,7 @@ void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
 	** Highlight the selected piece's valid moves.
 	*/
 
-	if(m_labels[i][j] == piece ||
-	   qtchess_validate::
+	if(qtchess_validate::
 	   isValidMove(y, x, j, i, chess->board[x][y]) != INVALID)
 	  m_labels[i][j]->setStyleSheet
 	    ("QLabel {background-color: orange; border: 1px solid navy;}");
@@ -549,6 +551,9 @@ void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
 
 void openglWid::slotPiecePressed(qtchess_piece *piece)
 {
+  if(QApplication::keyboardModifiers() & Qt::ControlModifier)
+    return;
+
 #ifdef QTCHESS_DEBUG
   if(!piece)
     return;
