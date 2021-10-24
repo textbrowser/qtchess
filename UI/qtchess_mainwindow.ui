@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mainWindow</class>
- <widget class="QMainWindow" name="mainWindow">
+ <class>qtchess_mainWindow</class>
+ <widget class="QMainWindow" name="qtchess_mainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>315</width>
-    <height>625</height>
+    <width>500</width>
+    <height>500</height>
    </rect>
-  </property>
-  <property name="font">
-   <font>
-    <pointsize>10</pointsize>
-   </font>
   </property>
   <property name="windowTitle">
    <string>QtChess</string>
@@ -23,9 +18,9 @@
     <normaloff>:/chess.png</normaloff>:/chess.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QFrame" name="boardFrame">
         <property name="frameShape">
@@ -34,151 +29,123 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QVBoxLayout"/>
+        <layout class="QVBoxLayout" name="_3"/>
        </widget>
       </item>
       <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QVBoxLayout">
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="title">
-         <string>Clocks</string>
-        </property>
-        <layout class="QGridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Player</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QTimeEdit" name="playerClock">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-           <property name="displayFormat">
-            <string>hh:mm:ss</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Opponent</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QTimeEdit" name="opponentClock">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="buttonSymbols">
-            <enum>QAbstractSpinBox::NoButtons</enum>
-           </property>
-           <property name="displayFormat">
-            <string>hh:mm:ss</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="title">
-         <string>History</string>
-        </property>
-        <layout class="QVBoxLayout">
-         <item>
-          <widget class="QTableWidget" name="history">
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::SingleSelection</enum>
-           </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
-           </property>
-           <property name="verticalScrollMode">
-            <enum>QAbstractItemView::ScrollPerPixel</enum>
-           </property>
-           <property name="horizontalScrollMode">
-            <enum>QAbstractItemView::ScrollPerPixel</enum>
-           </property>
-           <property name="cornerButtonEnabled">
-            <bool>false</bool>
-           </property>
-           <property name="columnCount">
-            <number>2</number>
-           </property>
-           <attribute name="horizontalHeaderMinimumSectionSize">
-            <number>115</number>
-           </attribute>
-           <attribute name="horizontalHeaderStretchLastSection">
-            <bool>true</bool>
-           </attribute>
-           <column>
-            <property name="text">
-             <string>Beige</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Crimson</string>
-            </property>
-           </column>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QVBoxLayout" name="_2">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Clocks</string>
+          </property>
+          <layout class="QGridLayout" name="_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Player</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QTimeEdit" name="playerClock">
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
+             <property name="displayFormat">
+              <string>hh:mm:ss</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Opponent</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTimeEdit" name="opponentClock">
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
+             <property name="displayFormat">
+              <string>hh:mm:ss</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>History</string>
+          </property>
+          <layout class="QVBoxLayout" name="_5">
+           <item>
+            <widget class="QTableWidget" name="history">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="verticalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
+             </property>
+             <property name="horizontalScrollMode">
+              <enum>QAbstractItemView::ScrollPerPixel</enum>
+             </property>
+             <property name="cornerButtonEnabled">
+              <bool>false</bool>
+             </property>
+             <property name="columnCount">
+              <number>2</number>
+             </property>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>115</number>
+             </attribute>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Beige</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Crimson</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -189,16 +156,11 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>315</width>
-     <height>23</height>
+     <width>500</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="title">
      <string>&amp;File</string>
     </property>
@@ -207,32 +169,12 @@
     <addaction name="action_Quit"/>
    </widget>
    <widget class="QMenu" name="menu_Setup">
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="title">
      <string>&amp;Setup</string>
     </property>
     <addaction name="action_Connection_Configuration"/>
    </widget>
-   <widget class="QMenu" name="menu_View">
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="title">
-     <string>&amp;View</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menu_Help">
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
     <property name="windowTitle">
      <string>QtChess</string>
     </property>
@@ -245,15 +187,11 @@
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Setup"/>
-   <addaction name="menu_View"/>
    <addaction name="menu_Help"/>
   </widget>
   <action name="action_New_Game">
    <property name="text">
     <string>&amp;New Game</string>
-   </property>
-   <property name="font">
-    <font/>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -271,9 +209,6 @@
    <property name="text">
     <string>&amp;Connection Configuration...</string>
    </property>
-   <property name="font">
-    <font/>
-   </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
    </property>
@@ -282,16 +217,10 @@
    <property name="text">
     <string>&amp;About...</string>
    </property>
-   <property name="font">
-    <font/>
-   </property>
   </action>
   <action name="action_Help">
    <property name="text">
     <string>&amp;Help...</string>
-   </property>
-   <property name="font">
-    <font/>
    </property>
   </action>
  </widget>

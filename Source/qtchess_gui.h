@@ -28,19 +28,17 @@
 #ifndef _QTCHESS_GUI_
 #define _QTCHESS_GUI_
 
+#include <QCloseEvent>
+#include <QComboBox>
+#include <QHostAddress>
+#include <QPointer>
+#include <QTimer>
+
 #include "qtchess_gui_opengl.h"
 #include "ui_qtchess_helpDialog.h"
 #include "ui_qtchess_mainwindow.h"
 #include "ui_qtchess_promotionDialog.h"
 #include "ui_qtchess_setupDialog.h"
-
-#include <QCloseEvent>
-#include <QComboBox>
-#include <QFrame>
-#include <QHostAddress>
-#include <QTextEdit>
-#include <QTimeEdit>
-#include <QTimer>
 
 class qtchess_help_dialog: public QDialog
 {
@@ -118,39 +116,8 @@ class qtchess_gui: public QMainWindow
   Q_OBJECT
 
  public:
-  qtchess_gui(void)
-  {
-    action_Large_Size = nullptr;
-    action_Miniature_Size = nullptr;
-    action_Normal_Size = nullptr;
-    denominator = 1.0;
-    glboard = nullptr;
-    help_dialog = nullptr;
-    opponentt = nullptr;
-    playert = nullptr;
-    promote_dialog = nullptr;
-    rescale = 1.0;
-    setup_dialog = nullptr;
-    statusLabel = nullptr;
-  }
-
-  ~qtchess_gui()
-  {
-    if(help_dialog != nullptr)
-      help_dialog->deleteLater();
-
-    if(opponentt != nullptr)
-      opponentt->deleteLater();
-
-    if(playert != nullptr)
-      playert->deleteLater();
-
-    if(promote_dialog != nullptr)
-      promote_dialog->deleteLater();
-
-    if(setup_dialog != nullptr)
-      setup_dialog->deleteLater();
-  }
+  qtchess_gui();
+  ~qtchess_gui();
 
   QString color(void) const
   {
@@ -159,13 +126,6 @@ class qtchess_gui: public QMainWindow
     else
       return "";
   }
-
-  Ui_mainWindow getUI(void) const
-  {
-    return ui;
-  }
-
-  int exec(void);
 
   openglWid *getGLBoard(void) const
   {
@@ -176,7 +136,6 @@ class qtchess_gui: public QMainWindow
   qtchess_setup_dialog *getSetupDialog(void) const;
   void addHistoryMove(const struct move_s &, const int);
   void clearHistory(void);
-  void display(void);
   void init(void);
   void initClocks(void);
   void notifyConnection(const QString &, const quint16);
@@ -189,19 +148,14 @@ class qtchess_gui: public QMainWindow
   void stopTimers(const int);
 
  private:
-  QAction *action_Large_Size;
-  QAction *action_Miniature_Size;
-  QAction *action_Normal_Size;
-  QLabel *statusLabel;
-  QTimer *opponentt;
-  QTimer *playert;
-  Ui_mainWindow ui;
-  double denominator;
-  double rescale;
-  openglWid *glboard;
-  qtchess_help_dialog *help_dialog;
-  qtchess_promote_dialog *promote_dialog;
-  qtchess_setup_dialog *setup_dialog;
+  QPointer<QLabel> statusLabel;
+  QPointer<QTimer> opponentt;
+  QPointer<QTimer> playert;
+  QPointer<openglWid> glboard;
+  QPointer<qtchess_help_dialog> help_dialog;
+  QPointer<qtchess_promote_dialog> promote_dialog;
+  QPointer<qtchess_setup_dialog> setup_dialog;
+  Ui_qtchess_mainWindow ui;
 
   void closeEvent(QCloseEvent *event)
   {
@@ -211,15 +165,12 @@ class qtchess_gui: public QMainWindow
     quit();
   }
 
-  void resizeEvent(QResizeEvent *event);
-
  private slots:
   void about(void);
   void help(void);
   void newGame(void);
   void quit(void);
   void setup(void);
-  void slotChangeSize(void);
   void slotShowValidMoves(void);
   void updateOpponent(void);
   void updatePlayer(void);

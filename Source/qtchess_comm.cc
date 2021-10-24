@@ -31,9 +31,9 @@
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"
 
-extern qtchess *chess;
-extern qtchess_comm *comm;
-extern qtchess_gui *gui;
+extern QPointer<qtchess> chess;
+extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_gui> gui;
 static QByteArray s_eof = "\n";
 
 qtchess_comm::qtchess_comm(void):QObject()
@@ -458,7 +458,7 @@ void qtchess_comm::setListen(void)
   QHostAddress address(QHostAddress::Any);
   quint16 port = 0;
 
-  if(gui && gui->getSetupDialog())
+  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
     {
       address = gui->getSetupDialog()->getListeningAddress();
       port = gui->getSetupDialog()->getPortField()->text().toUShort();

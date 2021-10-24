@@ -32,8 +32,8 @@
 #include "qtchess_gui.h"
 #include "qtchess_validate.h"
 
-extern qtchess_comm *comm;
-extern qtchess_gui *gui;
+extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_gui> gui;
 
 bool qtchess::isReady(void)
 {
@@ -181,13 +181,6 @@ void qtchess::updateBoard(const QByteArray &buffer)
 
       if(gui)
 	{
-	  if(gui->getGLBoard())
-#if QT_VERSION < 0x050400
-	    gui->getGLBoard()->updateGL();
-#else
-	    gui->getGLBoard()->update();
-#endif
-
 	  gui->clearHistory();
 	  gui->showNewGameInfo();
 	  gui->initClocks();
@@ -245,14 +238,6 @@ void qtchess::updateBoard(const QByteArray &buffer)
       if(gui)
 	{
 	  gui->addHistoryMove(current_move, color);
-
-	  if(gui->getGLBoard())
-#if QT_VERSION < 0x050400
-	    gui->getGLBoard()->updateGL();
-#else
-	    gui->getGLBoard()->update();
-#endif
-
 	  gui->update();
 	}
 

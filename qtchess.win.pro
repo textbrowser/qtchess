@@ -4,7 +4,7 @@ CONFIG	        += qt release warn_on
 ICON            = Images\\chess.png
 LANGUAGE        = C++
 RC_FILE		= qtchess.win.rc
-QT		+= network opengl
+QT		+= gui network opengl
 TEMPLATE	= app
 
 QMAKE_CLEAN	+= QtChess
@@ -22,7 +22,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 QMAKE_EXTRA_TARGETS = purge
 
-LIBS += -lopengl32
 RESOURCES = Images\\images.qrc
 
 FORMS	=	UI\\qtchess_helpDialog.ui \

@@ -28,14 +28,16 @@
 #ifndef _QTCHESS_
 #define _QTCHESS_
 
-#include <QByteArray>
+#include <QObject>
 
 #include "qtchess_defs.h"
 
-#define QTCHESS_VERSION "2021.05.05"
+#define QTCHESS_VERSION "2021.11.15"
 
-class qtchess
+class qtchess: public QObject
 {
+  Q_OBJECT
+
  public:
   /*
   ** -- Members --
@@ -47,7 +49,7 @@ class qtchess
   ** -- Methods --
   */
 
-  qtchess(void)
+  qtchess(void):QObject()
   {
     for(int i = 0; i < NSQUARES; i++)
       for(int j = 0; j < NSQUARES; j++)

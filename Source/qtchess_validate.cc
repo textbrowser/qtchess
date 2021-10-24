@@ -31,12 +31,13 @@ extern "C"
 #include <stdlib.h>
 }
 
+#include <QPointer>
 #include <QString>
 
 #include "qtchess.h"
 #include "qtchess_validate.h"
 
-extern qtchess *chess;
+extern QPointer<qtchess> chess;
 
 QString qtchess_validate::findDeparture(const int X1,
 					const int Y1,

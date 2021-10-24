@@ -25,112 +25,73 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <QMouseEvent>
-#include <QPainter>
-
-#ifdef Q_PROCESSOR_ARM
-#include <GL/gl.h>
-#endif
-
 #include "qtchess.h"
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"
 #include "qtchess_gui_opengl.h"
 #include "qtchess_validate.h"
 
-extern qtchess *chess;
-extern qtchess_comm *comm;
-extern qtchess_gui *gui;
+extern QPointer<qtchess> chess;
+extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_gui> gui;
 
-#if QT_VERSION < 0x050400
-openglWid::openglWid(QWidget *parent):QGLWidget(parent)
-#else
-openglWid::openglWid(QWidget *parent):QOpenGLWidget(parent)
-#endif
+openglWid::openglWid(QObject *parent):QObject(parent)
 {
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      {
+	m_labels[i][j] = new openglWidLabel(this);
+
+	QColor color;
+	auto font(m_labels[i][j]->font());
+
+	font.setPointSize(25);
+	m_labels[i][j]->setAlignment(Qt::AlignCenter);
+	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
+	m_labels[i][j]->setFont(font);
+	m_labels[i][j]->setSizePolicy
+	  (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+	if((i + j) % 2 == 0)
+	  color = QColor(255, 87, 51);
+	else
+	  color = QColor(255, 255, 237);
+
+	m_labels[i][j]->setStyleSheet
+	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
+	   arg(color.name()));
+	m_labels[i][j]->setTextFormat(Qt::RichText);
+      }
+
   mouse_pressed = 0;
   showValid = false;
   reinit();
   point_pressed.x = point_pressed.y = -1;
-#if QT_VERSION < 0x050400
-  setFormat(QGLFormat(QGL::DepthBuffer | QGL::DoubleBuffer));
-#endif
+}
+
+void openglWid::add(QFrame *frame)
+{
+  if(!frame)
+    return;
+
+  auto layout = qobject_cast<QGridLayout *> (frame->layout());
+
+  if(!layout)
+    return;
+
+  layout->setSpacing(0);
+
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      layout->addWidget(m_labels[i][j], i, j);
+
+  paintGL();
 }
 
 void openglWid::highlightSquare(const double x, const double y)
 {
-  glLineWidth(2.0);
-  glBegin(GL_LINES);
-
-  /*
-  ** Horizontal lines.
-  */
-
-  glVertex2d(x + 2, y + 2);
-  glVertex2d(x + block_size - 2, y + 2);
-  glVertex2d(x + 2, y + block_size - 2);
-  glVertex2d(x + block_size - 2, y + block_size - 2);
-
-  /*
-  ** Vertical lines.
-  */
-
-  glVertex2d(x + 2 , y + 2);
-  glVertex2d(x + 2, y + block_size - 2);
-  glVertex2d(x + block_size - 2, y + 2);
-  glVertex2d(x + block_size - 2, y + block_size - 2);
-  glEnd();
-  glFlush();
-}
-
-void openglWid::initializeGL(void)
-{
-  /*
-  ** Initialize OpenGL.
-  */
-
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glClearColor(1.0, 1.0, 1.0, 1.0); // White background.
-  glEnable(GL_BLEND);
-  glEnable(GL_LINE_SMOOTH);
-  glEnable(GL_POINT_SMOOTH);
-  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-  glShadeModel(GL_FLAT);
-}
-
-void openglWid::mousePressEvent(QMouseEvent *e)
-{
-  if(e && e->type() == QEvent::MouseButtonDblClick)
-    showValidMoves();
-  else
-    {
-      mouse_pressed += 1;
-      showValid = false;
-
-      if(e)
-	{
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
-	  point_pressed.x = e->position().x();
-	  point_pressed.y = height() - e->position().y();
-#else
-	  point_pressed.x = e->x();
-	  point_pressed.y = height() - e->y();
-#endif
-	}
-
-#if QT_VERSION < 0x050400
-      updateGL();
-#else
-      update();
-#endif
-    }
-
-#if QT_VERSION < 0x050400
-  QGLWidget::mousePressEvent(e);
-#else
-  QOpenGLWidget::mousePressEvent(e);
-#endif
+  Q_UNUSED(x);
+  Q_UNUSED(y);
 }
 
 void openglWid::newGame(void)
@@ -149,75 +110,31 @@ void openglWid::paintGL(void)
   struct move_s current_move = {};
 
   /*
-  ** All the drawing occurs here.
-  */
-
-  glLineWidth(1.0);
-  glPointSize(2.0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the screen.
-
-  /*
   ** First an empty board.
   */
-
-#if QT_VERSION < 0x050400
-  int auto_screen_scale_factor =
-    qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt();
-#else
-  int auto_screen_scale_factor = 0;
-#endif
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
 	if((i + j) % 2 != 0)
-	  glColor3f((GLfloat) 0.8, (GLfloat) 0.7, (GLfloat) 0.5);
-	else
-	  glColor3f((GLfloat) 0.5, (GLfloat) 0.5, (GLfloat) 0.6);
-
-	int x = static_cast<int> (px + i * block_size);
-	int y = static_cast<int> (py + j * block_size);
-
-	glRectd((double) x,
-		(double) y,
-		px + (i + 1) * block_size,
-		py + (j + 1) * block_size);
-
-	if(auto_screen_scale_factor == 0)
 	  {
-	    if(mouse_pressed)
-	      if(point_pressed.x >= (px + i * block_size) &&
-		 point_pressed.x <= (px + (i + 1) * block_size) &&
-		 point_pressed.y >= (py + j * block_size) &&
-		 point_pressed.y <= (py + (j + 1) * block_size))
-		{
-		  I = i;
-		  J = j;
-		  X = px + i * block_size;
-		  Y = py + j * block_size;
-		  found = 1;
-		}
 	  }
 	else
 	  {
-	    if(mouse_pressed)
-	      {
-		int x1 = static_cast<int> (px + i * block_size / 2);
-		int x2 = static_cast<int> (px + (i + 1) * block_size / 2);
-		int y1 = static_cast<int> (py + j * block_size / 2);
-		int y2 = static_cast<int> (py + (j + 1) * block_size / 2);
-
-		if(point_pressed.x >= x1 && point_pressed.x <= x2 &&
-		   point_pressed.y >= y1 && point_pressed.y <= y2)
-		  {
-		    I = i;
-		    J = j;
-		    X = px + i * block_size;
-		    Y = py + j * block_size;
-		    found = 1;
-		  }
-	      }
 	  }
+
+	if(mouse_pressed)
+	  if(point_pressed.x >= (px + i * block_size) &&
+	     point_pressed.x <= (px + (i + 1) * block_size) &&
+	     point_pressed.y >= (py + j * block_size) &&
+	     point_pressed.y <= (py + (j + 1) * block_size))
+	    {
+	      I = i;
+	      J = j;
+	      X = px + i * block_size;
+	      Y = py + j * block_size;
+	      found = 1;
+	    }
 
 	/*
 	** Highlight the selected piece's valid moves.
@@ -261,587 +178,54 @@ void openglWid::paintGL(void)
 
 	      if(isValid)
 		{
-		  glColor3f((GLfloat) 0.56, (GLfloat) 0.93, (GLfloat) 0.56);
-		  glRectd((double) x + 1,
-			  (double) y + 1,
-			  px + (i + 1) * block_size - 1,
-			  py + (j + 1) * block_size - 1);
 		}
 	    }
 
 	if((i + j) % 2 != 0)
-	  glColor3f((GLfloat) 0.8, (GLfloat) 0.7, (GLfloat) 0.5);
+	  {
+	  }
 	else
-	  glColor3f((GLfloat) 0.5, (GLfloat) 0.5, (GLfloat) 0.6);
+	  {
+	  }
 
 	/*
 	** Draw the pieces.
 	*/
 
+	int offset = 0;
+	int piece = 0;
+
 	if(chess && !qtchess_validate::isEmpty(chess->board[i][j]))
 	  {
 	    if(qtchess_validate::isWhite(chess->board[i][j]))
-	      glColor3f((GLfloat) 0.96, (GLfloat) 0.96, (GLfloat) 0.86);
+	      offset = 0;
 	    else
-	      glColor3f((GLfloat) 0.65, (GLfloat) 0.16, (GLfloat) 0.16);
+	      offset = 6;
 	  }
 
 	if(chess && qtchess_validate::isBishop(chess->board[i][j]))
-	  {
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + BISHOP_X_OFFSET,
-		       y + BISHOP_Y_OFFSET);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH,
-		       y + BISHOP_Y_OFFSET);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 +
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 -
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glEnd();
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 +
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 +
-		       18 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       10 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT +
-		       2 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 -
-		       18 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       10 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 -
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glEnd();
-	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + BISHOP_X_OFFSET,
-		       y + BISHOP_Y_OFFSET);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH,
-		       y + BISHOP_Y_OFFSET);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 +
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 -
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 +
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 +
-		       18 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       10 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT +
-		       2 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 -
-		       18 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       10 / denominator);
-	    glVertex2d(x + BISHOP_X_OFFSET + BISHOP_WIDTH / 2 -
-		       8 / denominator,
-		       y + BISHOP_Y_OFFSET + BISHOP_HEIGHT -
-		       20 / denominator);
-	    glEnd();
-	  }
+	  piece = 9815 + offset;
 	else if(chess && qtchess_validate::isKing(chess->board[i][j]))
-	  {
-	    glRectd(x + KING_X_OFFSET, y + KING_Y_OFFSET,
-		    x + KING_X_OFFSET + KING_B_WIDTH,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT);
-	    glRectd(x + KING_X_OFFSET + 5 / denominator,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT,
-		    x + KING_X_OFFSET + 5 / denominator + KING_BT_WIDTH,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT + KING_BT_HEIGHT);
-	    glRectd(x + KING_X_OFFSET + 8 / denominator,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT + KING_BT_HEIGHT,
-		    x + KING_X_OFFSET + 8 / denominator + KING_WIDTH,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT + KING_BT_HEIGHT +
-		    KING_HEIGHT);
-	    glRectd(x + KING_X_OFFSET + 14 / denominator,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT +
-		    KING_BT_HEIGHT + KING_HEIGHT,
-		    x + KING_X_OFFSET + 14 / denominator + KING_VCROSS_WIDTH,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT +
-		    KING_BT_HEIGHT + KING_HEIGHT + KING_VCROSS_HEIGHT);
-	    glRectd(x + KING_X_OFFSET + 8 / denominator,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT +
-		    KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator,
-		    x + KING_X_OFFSET + 8 / denominator + KING_HCROSS_WIDTH,
-		    y + KING_Y_OFFSET + KING_B_HEIGHT +
-		    KING_BT_HEIGHT + KING_HEIGHT + KING_HCROSS_HEIGHT +
-		    5 / denominator);
-	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + KING_X_OFFSET, y + KING_Y_OFFSET);
-	    glVertex2d(x + KING_X_OFFSET + KING_B_WIDTH,
-		       y + KING_Y_OFFSET);
-	    glVertex2d(x + KING_X_OFFSET + KING_B_WIDTH,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + KING_X_OFFSET + 5 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 5 / denominator +
-		       KING_BT_WIDTH,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 5 / denominator +
-		       KING_BT_WIDTH,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 5 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + KING_X_OFFSET + 8 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 8 / denominator +
-		       KING_WIDTH,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 8 / denominator +
-		       KING_WIDTH,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 8 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + KING_X_OFFSET + KING_VCROSS_WIDTH +
-		       14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + KING_VCROSS_WIDTH +
-		       14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + KING_VCROSS_WIDTH +
-		       20 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + KING_VCROSS_WIDTH +
-		       20 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + KING_HCROSS_HEIGHT +
-		       5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + KING_VCROSS_WIDTH +
-		       14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator +
-		       KING_HCROSS_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + KING_VCROSS_WIDTH +
-		       14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator +
-		       KING_HCROSS_HEIGHT + 5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + 14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator +
-		       KING_HCROSS_HEIGHT + 5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + 14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator +
-		       KING_HCROSS_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 8 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator +
-		       KING_HCROSS_HEIGHT);
-	    glVertex2d(x + KING_X_OFFSET + 8 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + 14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT + 5 / denominator);
-	    glVertex2d(x + KING_X_OFFSET + 14 / denominator,
-		       y + KING_Y_OFFSET + KING_B_HEIGHT +
-		       KING_BT_HEIGHT + KING_HEIGHT);
-	    glEnd();
-	  }
+	  piece = 9812 + offset;
 	else if(chess && qtchess_validate::isQueen(chess->board[i][j]))
-	  {
-	    glRectd(x + QUEEN_X_OFFSET, y + QUEEN_Y_OFFSET,
-		    x + QUEEN_X_OFFSET + QUEEN_B_WIDTH,
-		    y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT);
-	    glRectd(x + QUEEN_X_OFFSET + 5 / denominator,
-		    y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT,
-		    x + QUEEN_X_OFFSET + 5 / denominator + QUEEN_BT_WIDTH,
-		    y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT + QUEEN_BT_HEIGHT);
-	    glRectd(x + QUEEN_X_OFFSET + 8 / denominator,
-		    y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT + QUEEN_BT_HEIGHT,
-		    x + QUEEN_X_OFFSET + 8 / denominator + QUEEN_WIDTH,
-		    y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT + QUEEN_BT_HEIGHT +
-		    QUEEN_HEIGHT);
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH + 10 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 5 / denominator);
-	    glEnd();
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 5 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET - 2 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glEnd();
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 5 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       3 * QUEEN_WIDTH / 4,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 7 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 4,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 7 / denominator);
-	    glEnd();
-	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + QUEEN_X_OFFSET, y + QUEEN_Y_OFFSET);
-	    glVertex2d(x + QUEEN_X_OFFSET + QUEEN_B_WIDTH,
-		       y + QUEEN_Y_OFFSET);
-	    glVertex2d(x + QUEEN_X_OFFSET + QUEEN_B_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + QUEEN_X_OFFSET + 5 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 5 / denominator +
-		       QUEEN_BT_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 5 / denominator +
-		       QUEEN_BT_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 5 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH + 10 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       3 * QUEEN_WIDTH / 4,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 8 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 2,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator +
-		       QUEEN_WIDTH / 4,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 8 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET - 2 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + QUEEN_X_OFFSET + 8 / denominator,
-		       y + QUEEN_Y_OFFSET + QUEEN_B_HEIGHT +
-		       QUEEN_BT_HEIGHT + QUEEN_HEIGHT);
-	    glEnd();
-	  }
+	  piece = 9813 + offset;
 	else if(chess && qtchess_validate::isKnight(chess->board[i][j]))
-	  {
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + KNIGHT_X_OFFSET, y + KNIGHT_Y_OFFSET);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 2 / denominator,
-		       y + KNIGHT_Y_OFFSET);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 23 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 +
-		       1 / denominator,
- 		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 5 / denominator);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 -
-		       4 / denominator,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 -
-		       4 / denominator,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT);
-	    glVertex2d(x + KNIGHT_X_OFFSET, y + KNIGHT_Y_OFFSET +
-		       42 / denominator);
-	    glEnd();
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 23 / denominator);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 5 / denominator,
-		       y + KNIGHT_Y_OFFSET + 15 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 5 / denominator,
- 		       y + KNIGHT_Y_OFFSET + 25 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 +
-		       15 / denominator,
- 		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 10 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 +
-		       1 / denominator,
- 		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 5 / denominator);
-	    glEnd();
-	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + KNIGHT_X_OFFSET, y + KNIGHT_Y_OFFSET);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 2 / denominator,
-		       y + KNIGHT_Y_OFFSET);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 23 / denominator);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 5 / denominator,
-		       y + KNIGHT_Y_OFFSET + 15 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH + 5 / denominator,
- 		       y + KNIGHT_Y_OFFSET + 25 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 +
-		       15 / denominator,
- 		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 10 / denominator);
- 	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 +
-		       1 / denominator,
- 		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT - 5 / denominator);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 -
-		       4 / denominator,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT);
-	    glVertex2d(x + KNIGHT_X_OFFSET + KNIGHT_WIDTH / 2 -
-		       4 / denominator,
-		       y + KNIGHT_Y_OFFSET + KNIGHT_HEIGHT);
-	    glVertex2d(x + KNIGHT_X_OFFSET, y + KNIGHT_Y_OFFSET +
-		       42 / denominator);
-	    glEnd();
-	  }
+	  piece = 9816 + offset;
 	else if(chess && qtchess_validate::isRook(chess->board[i][j]))
-	  {
-	    glRectd(x + ROOK_X_OFFSET,
-		    y + ROOK_Y_OFFSET,
-		    x + ROOK_X_OFFSET + ROOK_B_WIDTH,
-		    y + ROOK_Y_OFFSET + ROOK_B_HEIGHT);
-	    glRectd(x + ROOK_X_OFFSET + (ROOK_B_WIDTH - ROOK_WIDTH) / 2,
-		    y + ROOK_Y_OFFSET + ROOK_B_HEIGHT,
-		    x + ROOK_X_OFFSET + (ROOK_B_WIDTH - ROOK_WIDTH) / 2 +
-		    ROOK_WIDTH,
-		    y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT);
-	    glRectd(x + ROOK_X_OFFSET + 5 / denominator,
-		    y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT,
-		    x + ROOK_X_OFFSET + 5 / denominator + ROOK_T_WIDTH,
-		    y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT +
-		    ROOK_T_HEIGHT);
-	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + ROOK_X_OFFSET, y + ROOK_Y_OFFSET);
-	    glVertex2d(x + ROOK_X_OFFSET + ROOK_B_WIDTH, y + ROOK_Y_OFFSET);
-	    glVertex2d(x + ROOK_X_OFFSET + ROOK_B_WIDTH,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + ROOK_X_OFFSET + 10 / denominator + ROOK_WIDTH,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET + 10 / denominator + ROOK_WIDTH,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET + 10 / denominator,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET + 10 / denominator,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + ROOK_X_OFFSET + 5 / denominator,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET + 5 / denominator + ROOK_T_WIDTH,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET + 5 / denominator + ROOK_T_WIDTH,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT +
-		       ROOK_T_HEIGHT);
-	    glVertex2d(x + ROOK_X_OFFSET + 5 / denominator,
-		       y + ROOK_Y_OFFSET + ROOK_B_HEIGHT + ROOK_HEIGHT +
-		       ROOK_T_HEIGHT);
-	    glEnd();
-	  }
+	  piece = 9814 + offset;
 	else if(chess && qtchess_validate::isPawn(chess->board[i][j]))
-	  {
-	    glRectd(x + PAWN_X_OFFSET,
-		    y + PAWN_Y_OFFSET,
-		    x + PAWN_X_OFFSET + PAWN_WIDTH,
-		    y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glBegin(GL_POLYGON);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH + 10 / denominator,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH / 2,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 27 / denominator);
-	    glVertex2d(x + PAWN_X_OFFSET - 10 / denominator,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + PAWN_X_OFFSET, y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glEnd();
-	    glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + PAWN_X_OFFSET, y + PAWN_Y_OFFSET);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH, y + PAWN_Y_OFFSET);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glVertex2d(x + PAWN_X_OFFSET, y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glEnd();
-	    glBegin(GL_LINE_LOOP);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH + 10 / denominator,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + PAWN_X_OFFSET + PAWN_WIDTH / 2,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 27 / denominator);
-	    glVertex2d(x + PAWN_X_OFFSET - 10 / denominator,
-		       y + PAWN_Y_OFFSET + PAWN_HEIGHT + 20 / denominator);
-	    glVertex2d(x + PAWN_X_OFFSET, y + PAWN_Y_OFFSET + PAWN_HEIGHT);
-	    glEnd();
-	  }
+	  piece = 9817 + offset;
+
+	if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES)
+	  m_labels[i][j]->setText(QString("&#%1;").arg(piece));
       }
 
   /*
   ** Add the coordinate labels.
   */
 
-  glColor3f((GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 0.0);
   font.setBold(false);
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-  font.setStyleStrategy
-    (QFont::StyleStrategy(QFont::OpenGLCompatible | QFont::PreferAntialias));
-#else
-  font.setStyleStrategy
-    (QFont::StyleStrategy(QFont::PreferAntialias));
-#endif
-
-  for(int m = 1; m <= NSQUARES; m++)
-    if(auto_screen_scale_factor == 0)
-      {
-#if QT_VERSION < 0x050400
-	renderText((int) (px + m * block_size - block_size / 2 - 5),
-		   (int) (py - 5),
-		   QString(QChar((char) 96 + m)), font);
-	renderText((int) (px - 15),
-		   (int) (py + m * block_size - block_size / 2 + 5),
-		   QString::number(9 - m), font);
-#else
-	QPainter painter(this);
-
-	painter.drawText((int) (px + m * block_size - block_size / 2 - 5),
-			 (int) (py - 5),
-			 QString(QChar((char) 96 + m)));
-	painter.drawText((int) (px - 15),
-			 (int) (py + m * block_size - block_size / 2 + 5),
-			 QString::number(9 - m));
-#endif
-      }
-    else
-      {
-#if QT_VERSION < 0x050400
-	renderText((int) (px + m * block_size / 2 - block_size / 2 + 20),
-		   (int) (py - 20),
-		   QString(QChar((char) 96 + m)), font);
-	renderText((int) (px - 25),
-		   (int) (py + m * block_size / 2 - block_size / 2 + 30),
-		   QString::number(9 - m), font);
-#else
-	QPainter painter(this);
-
-	painter.drawText((int) (px + m * block_size / 2 - block_size / 2 + 20),
-			 (int) (py - 20),
-			 QString(QChar((char) 96 + m)));
-	painter.drawText((int) (px - 25),
-			 (int) (py + m * block_size / 2 - block_size / 2 + 30),
-			 QString::number(9 - m));
-#endif
-      }
-
-  /*
-  ** Now add some black borders to the board.
-  */
-
-  glBegin(GL_LINES);
-
-  for(int i = 0; i < NSQUARES + 1; i++)
-    {
-      /*
-      ** Vertical lines.
-      */
-
-      glVertex2d(px + i * block_size, py);
-      glVertex2d(px + i * block_size, py + 8 * block_size);
-
-      /*
-      ** Horizontal lines.
-      */
-
-      glVertex2d(px, py + i * block_size);
-      glVertex2d(px + 8 * block_size, py + i * block_size);
-    }
-
-  glEnd();
-  glFlush();
+  font.setStyleStrategy(QFont::StyleStrategy(QFont::PreferAntialias));
 
   /*
   ** Highlight the selected square.
@@ -897,7 +281,6 @@ void openglWid::paintGL(void)
 	      mouse_pressed = 0;
 	      point_selected.x = -1;
 	      point_selected.y = -1;
-	      glColor3f((GLfloat) 1.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    }
 	  else if(chess->getMyColor() == BLACK &&
 		  !qtchess_validate::isBlack(chess->board[I][J]))
@@ -905,13 +288,11 @@ void openglWid::paintGL(void)
 	      mouse_pressed = 0;
 	      point_selected.x = -1;
 	      point_selected.y = -1;
-	      glColor3f((GLfloat) 1.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    }
 	  else
 	    {
 	      point_selected.x = I;
 	      point_selected.y = J;
-	      glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	    }
 	}
       else if(mouse_pressed == 2 &&
@@ -919,7 +300,6 @@ void openglWid::paintGL(void)
 	      qFuzzyCompare(point_selected.y, static_cast<double> (J)))
 	{
 	  mouse_pressed = 1;
-	  glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	}
       else if(mouse_pressed == 2 && isValid &&
 	      qtchess_validate::areValidCoordinates((int) point_selected.x,
@@ -952,7 +332,6 @@ void openglWid::paintGL(void)
 
 	  mouse_pressed = 0;
 	  showValid = false;
-	  glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	  current_move.x1 = (int) point_selected.y;
 	  current_move.y1 = (int) point_selected.x;
 	  current_move.x2 = J;
@@ -1140,11 +519,6 @@ void openglWid::paintGL(void)
 	  if(comm)
 	    comm->sendMove(current_move);
 
-#if QT_VERSION < 0x050400
-	  updateGL();
-#else
-#endif
-	  update();
 	  chess->setGameOver(game_over);
 
 	  if(game_over)
@@ -1167,14 +541,12 @@ void openglWid::paintGL(void)
 	      mouse_pressed = 1;
 	      point_selected.x = I;
 	      point_selected.y = J;
-	      glColor3f((GLfloat) 0.0, (GLfloat) 1.0, (GLfloat) 0.0);
 	    }
 	  else
 	    {
 	      mouse_pressed = 0;
 	      point_selected.x = -1;
 	      point_selected.y = -1;
-	      glColor3f((GLfloat) 1.0, (GLfloat) 0.0, (GLfloat) 0.0);
 	    }
 	}
 
@@ -1182,8 +554,6 @@ void openglWid::paintGL(void)
     }
   else
     mouse_pressed = 0;
-
-  glFlush();
 }
 
 void openglWid::reinit(void)
@@ -1229,83 +599,11 @@ void openglWid::reinit(void)
   ROOK_X_OFFSET = 20;
   ROOK_Y_OFFSET = 5;
   block_size = 80; // Good default value.
-  denominator = 1.0;
   mouse_pressed = 0;
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
   px = py = 4; // Reasonable default value.
   showValid = false;
-}
-
-void openglWid::rescale(const double denominatorArg)
-{
-  denominator = denominatorArg;
-
-  if(denominator <= 0.0)
-    denominator = 1.0;
-
-  BISHOP_HEIGHT /= denominator;
-  BISHOP_WIDTH /= denominator;
-  BISHOP_X_OFFSET /= denominator;
-  BISHOP_Y_OFFSET /= denominator;
-  KING_BT_HEIGHT /= denominator;
-  KING_BT_WIDTH /= denominator;
-  KING_B_HEIGHT /= denominator;
-  KING_B_WIDTH /= denominator;
-  KING_HCROSS_HEIGHT /= denominator;
-  KING_HCROSS_WIDTH /= denominator;
-  KING_HEIGHT /= denominator;
-  KING_VCROSS_HEIGHT /= denominator;
-  KING_VCROSS_WIDTH /= denominator;
-  KING_WIDTH /= denominator;
-  KING_X_OFFSET /= denominator;
-  KING_Y_OFFSET /= denominator;
-  KNIGHT_HEIGHT /= denominator;
-  KNIGHT_WIDTH /= denominator;
-  KNIGHT_X_OFFSET /= denominator;
-  KNIGHT_Y_OFFSET /= denominator;
-  PAWN_HEIGHT /= denominator;
-  PAWN_WIDTH /= denominator;
-  PAWN_X_OFFSET /= denominator;
-  PAWN_Y_OFFSET /= denominator;
-  QUEEN_BT_HEIGHT /= denominator;
-  QUEEN_BT_WIDTH /= denominator;
-  QUEEN_B_HEIGHT /= denominator;
-  QUEEN_B_WIDTH /= denominator;
-  QUEEN_HEIGHT /= denominator;
-  QUEEN_WIDTH /= denominator;
-  QUEEN_X_OFFSET /= denominator;
-  QUEEN_Y_OFFSET /= denominator;
-  ROOK_B_HEIGHT /= denominator;
-  ROOK_B_WIDTH /= denominator;
-  ROOK_HEIGHT /= denominator;
-  ROOK_T_HEIGHT /= denominator;
-  ROOK_T_WIDTH /= denominator;
-  ROOK_WIDTH /= denominator;
-  ROOK_X_OFFSET /= denominator;
-  ROOK_Y_OFFSET /= denominator;
-  block_size /= denominator;
-  mouse_pressed = 0;
-  point_pressed.x = point_pressed.y = -1;
-  point_selected.x = point_selected.y = -1;
-  px /= denominator;
-  py /= denominator;
-#if QT_VERSION < 0x050400
-  updateGL();
-#else
-  update();
-#endif
-}
-
-void openglWid::resizeGL(int w, int h)
-{
-  px = (w - 8 * block_size) / 2;
-  py = (h - 8 * block_size) / 2;
-  glViewport(0, 0, (GLsizei) w, (GLsizei) h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0.0, w, 0.0, h, -1.0, 1.0);
-  glMatrixMode(GL_MODELVIEW);
 }
 
 void openglWid::showValidMoves(void)
@@ -1316,10 +614,5 @@ void openglWid::showValidMoves(void)
   if(chess->getTurn() == MY_TURN && !chess->isGameOver() && comm->isReady())
     {
       showValid = true;
-#if QT_VERSION < 0x050400
-      updateGL();
-#else
-      update();
-#endif
     }
 }

@@ -28,13 +28,10 @@
 #ifndef _QTCHESS_GUI_OPENGL_
 #define _QTCHESS_GUI_OPENGL_
 
-#include <QEvent>
-#include <QMouseEvent>
-#if QT_VERSION < 0x050400
-#include <QtOpenGL>
-#else
-#include <QOpenGLWidget>
-#endif
+#include <QLabel>
+#include <QPointer>
+
+#include "qtchess_defs.h"
 
 class point
 {
@@ -43,22 +40,39 @@ class point
   double y;
 };
 
-#if QT_VERSION < 0x050400
-class openglWid: public QGLWidget
-#else
-class openglWid: public QOpenGLWidget
-#endif
+class openglWidLabel: public QLabel
 {
+  Q_OBJECT
+
  public:
-  openglWid(QWidget *);
+  openglWidLabel(QObject *parent):QLabel(nullptr)
+  {
+    Q_UNUSED(parent);
+  };
+
+  void resizeEvent(QResizeEvent *event)
+  {
+    Q_UNUSED(event);
+
+    auto font(this->font());
+    auto p = font.pointSizeF();
+
+    p = qMin(size().height(), size().width()) / 2.5;
+    font.setPointSizeF(p);
+    setFont(font);
+  }
+};
+
+class openglWid: public QObject
+{
+  Q_OBJECT
+
+ public:
+  openglWid(QObject *);
+  void add(QFrame *frame);
   void highlightSquare(const double, const double);
-  void initializeGL(void);
-  void mousePressEvent(QMouseEvent *);
   void newGame(void);
-  void paintGL(void);
   void reinit(void);
-  void rescale(const double);
-  void resizeGL(int, int);
   void showValidMoves(void);
 
  private:
@@ -104,12 +118,15 @@ class openglWid: public QOpenGLWidget
   double ROOK_X_OFFSET;
   double ROOK_Y_OFFSET;
   double block_size;
-  double denominator;
   double px; // Used for centering the board.
   double py; // Used for centering the board.
   int mouse_pressed;
   point point_pressed;
   point point_selected;
+  QPointer<openglWidLabel> m_labels[NSQUARES][NSQUARES];
+
+ private slots:
+  void paintGL(void);
 };
 
 #endif

@@ -40,16 +40,21 @@
 #include <QScrollBar>
 #include <QStatusBar>
 
-extern qtchess *chess;
-extern qtchess_comm *comm;
-extern qtchess_gui *gui;
+extern QPointer<qtchess> chess;
+extern QPointer<qtchess_comm> comm;
 
-int qtchess_gui::exec(void)
+qtchess_gui::qtchess_gui(void):QMainWindow()
 {
-  if(QApplication::instance())
-    return QApplication::instance()->exec();
-  else
-    return EXIT_FAILURE;
+  ui.setupUi(this);
+
+  if(menuBar())
+    menuBar()->setNativeMenuBar(true);
+}
+
+qtchess_gui::~qtchess_gui()
+{
+  if(glboard)
+    glboard->deleteLater();
 }
 
 qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
@@ -207,6 +212,13 @@ void qtchess_gui::addHistoryMove(const struct move_s &current_move,
 	ui.history->setItem(ui.history->rowCount() - 1, 0, item);
       else if(color == BLACK)
 	ui.history->setItem(ui.history->rowCount() - 1, 1, item);
+      else
+	{
+	  delete item;
+
+	  if(ui.history->rowCount() > 0)
+	    ui.history->setRowCount(ui.history->rowCount() - 1);
+	}
 
       ui.history->scrollToBottom();
     }
@@ -217,10 +229,6 @@ void qtchess_gui::clearHistory(void)
   ui.history->setRowCount(0);
   ui.history->scrollToTop();
   ui.history->horizontalScrollBar()->setValue(0);
-}
-
-void qtchess_gui::display(void)
-{
 }
 
 void qtchess_gui::help(void)
@@ -236,81 +244,29 @@ void qtchess_gui::init(void)
   if(s_initialized)
     return;
 
-  QActionGroup *ag1 = nullptr;
-
-  ui.setupUi(this);
   setWindowTitle(tr("QtChess"));
-  denominator = 4.0 / 3.8;
-  ui.menu_Setup->setVisible(false);
 
-  if((statusLabel = new(std::nothrow)
-      QLabel(tr("Status: Peer Disconnected"))) == nullptr)
+  if(statusBar())
     {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
+      if((statusLabel = new(std::nothrow)
+	  QLabel(tr("Status: Peer Disconnected"))) == nullptr)
+	{
+	  if(chess)
+	    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+	  else
+	    exit(EXIT_FAILURE);
+	}
+
+      statusLabel->setMargin(5);
+      statusLabel->setFrameShadow(QFrame::Raised);
+      statusLabel->setFrameShape(QFrame::NoFrame);
+      statusBar()->setSizeGripEnabled(false);
+      statusBar()->setStyleSheet("QStatusBar::item {"
+				 "border: none; "
+				 "}");
+      statusBar()->addWidget(statusLabel, 100);
     }
 
-  if((ag1 = new(std::nothrow) QActionGroup(this)) == nullptr)
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
-
-  if((action_Large_Size = new(std::nothrow) QAction(tr("&Large Size"),
-						    this)) == nullptr)
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
-
-  action_Large_Size->setData("L");
-
-  if((action_Miniature_Size = new(std::nothrow) QAction(tr("&Miniature Size"),
-							this)) == nullptr)
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
-
-  action_Miniature_Size->setData("M");
-
-  if((action_Normal_Size = new(std::nothrow) QAction(tr("&Normal Size"),
-						     this)) == nullptr)
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
-
-  action_Normal_Size->setData("N");
-  ag1->setExclusive(true);
-  ag1->addAction(action_Large_Size);
-  ag1->addAction(action_Miniature_Size);
-  ag1->addAction(action_Normal_Size);
-  ui.menu_View->addAction(action_Large_Size);
-  ui.menu_View->addAction(action_Miniature_Size);
-  ui.menu_View->addAction(action_Normal_Size);
-  action_Large_Size->setCheckable(true);
-  action_Miniature_Size->setCheckable(true);
-  action_Normal_Size->setCheckable(true);
-  action_Normal_Size->setChecked(true);
-  statusLabel->setMargin(5);
-  statusLabel->setFrameShadow(QFrame::Raised);
-  statusLabel->setFrameShape(QFrame::NoFrame);
-  statusBar()->setSizeGripEnabled(false);
-  statusBar()->setStyleSheet("QStatusBar::item {"
-			     "border: none; "
-			     "}");
-  statusBar()->addWidget(statusLabel, 100);
   connect(ui.action_New_Game,
 	  SIGNAL(triggered(void)),
 	  this,
@@ -323,18 +279,6 @@ void qtchess_gui::init(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(setup(void)));
-  connect(action_Large_Size,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(slotChangeSize(void)));
-  connect(action_Miniature_Size,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(slotChangeSize(void)));
-  connect(action_Normal_Size,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(slotChangeSize(void)));
   connect(ui.action_About,
 	  SIGNAL(triggered(void)),
 	  this,
@@ -343,6 +287,14 @@ void qtchess_gui::init(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(help(void)));
+
+  if((glboard = new(std::nothrow) openglWid(nullptr)) == nullptr)
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	exit(EXIT_FAILURE);
+    }
 
   if((playert = new(std::nothrow) QTimer(this)) != nullptr)
     {
@@ -399,36 +351,15 @@ void qtchess_gui::init(void)
 	exit(EXIT_FAILURE);
     }
 
-  if((glboard = new(std::nothrow) openglWid(this)) == nullptr)
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
+  delete ui.boardFrame->layout();
+  ui.boardFrame->setLayout(new QGridLayout());
 
   if(glboard)
-    ui.boardFrame->layout()->addWidget(glboard);
+    glboard->add(ui.boardFrame);
 
-  /*
-  ** Add the OpenGL board.
-  */
-
-  if(glboard)
-    {
-#if QT_VERSION < 0x050400
-      if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
-	rescale = 0.5;
-      else
+#ifndef Q_OS_ANDROID
+  resize(800, 600);
 #endif
-	rescale = denominator;
-
-      glboard->rescale(rescale);
-      glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
-		      (int) (1.0 / denominator * OPEN_GL_DIMENSION));
-      ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
-    }
-
 #if QT_VERSION < 0x050000
   ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   ui.history->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
@@ -437,12 +368,8 @@ void qtchess_gui::init(void)
   ui.history->verticalHeader()->setSectionResizeMode
     (QHeaderView::ResizeToContents);
 #endif
-  ui.boardFrame->hide();
-  ui.boardFrame->show();
-  resize(minimumSize());
-  ui.boardFrame->setFocus();
-  show();
   s_initialized = true;
+  show();
 }
 
 void qtchess_gui::initClocks(void)
@@ -474,15 +401,8 @@ void qtchess_gui::newGame(void)
   if(chess)
     chess->init();
 
-  if(gui && gui->getGLBoard())
-    {
-      gui->getGLBoard()->newGame();
-#if QT_VERSION < 0x050400
-      gui->getGLBoard()->updateGL();
-#else
-#endif
-      gui->getGLBoard()->update();
-    }
+  if(getGLBoard())
+    getGLBoard()->newGame();
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -554,11 +474,6 @@ void qtchess_gui::quit(void)
     exit(EXIT_FAILURE);
 }
 
-void qtchess_gui::resizeEvent(QResizeEvent *event)
-{
-  QMainWindow::resizeEvent(event);
-}
-
 void qtchess_gui::setStatusText(const QString &str)
 {
   statusLabel->setText(tr(str.toLatin1()));
@@ -571,8 +486,10 @@ void qtchess_gui::setup(void)
       if(setup_dialog->getHostField())
 	setup_dialog->getHostField()->setFocus();
 
+#ifndef Q_OS_ANDROID
       setup_dialog->resize
 	(setup_dialog->width(), setup_dialog->sizeHint().height());
+#endif
       setup_dialog->exec();
     }
 }
@@ -608,102 +525,6 @@ void qtchess_gui::showGameOver(const int turn)
 
 void qtchess_gui::showNewGameInfo(void)
 {
-}
-
-void qtchess_gui::slotChangeSize(void)
-{
-  QAction *action = qobject_cast<QAction *> (sender());
-  QString data = "";
-
-  if(action)
-    data = action->data().toString();
-
-  if(data == "L")
-    {
-      if(qFuzzyCompare(1.0, denominator))
-	return;
-
-      denominator = 1.0;
-
-      if(glboard)
-	{
-#if QT_VERSION < 0x050400
-	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
-	    rescale = 0.475;
-	  else
-#endif
-	    rescale = denominator;
-
-	  glboard->reinit();
-	  glboard->rescale(rescale);
-	  glboard->resize(OPEN_GL_DIMENSION, OPEN_GL_DIMENSION);
-	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
-	}
-
-      ui.boardFrame->hide();
-      ui.boardFrame->show();
-      resize(minimumSize());
-      ui.history->scrollToBottom();
-      ui.boardFrame->setFocus();
-    }
-  else if(data == "M")
-    {
-      if(qFuzzyCompare(1.25, denominator))
-	return;
-
-      denominator = 1.25;
-
-      if(glboard)
-	{
-#if QT_VERSION < 0x050400
-	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
-	    rescale = 0.60;
-	  else
-#endif
-	    rescale = denominator;
-
-	  glboard->reinit();
-	  glboard->rescale(rescale);
-	  glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
-			  (int) (1.0 / denominator * OPEN_GL_DIMENSION));
-	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
-	}
-
-      ui.boardFrame->hide();
-      ui.boardFrame->show();
-      resize(minimumSize());
-      ui.history->scrollToBottom();
-      ui.boardFrame->setFocus();
-    }
-  else if(data == "N")
-    {
-      if(qFuzzyCompare(4.0 / 3.8, denominator))
-	return;
-
-      denominator = 4.0 / 3.8;
-
-      if(glboard)
-	{
-#if QT_VERSION < 0x050400
-	  if(qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR").toInt() == 1)
-	    rescale = 0.5;
-	  else
-#endif
-	    rescale = denominator;
-
-	  glboard->reinit();
-	  glboard->rescale(rescale);
-	  glboard->resize((int) (1.0 / denominator * OPEN_GL_DIMENSION),
-			  (int) (1.0 / denominator * OPEN_GL_DIMENSION));
-	  ui.boardFrame->setFixedSize(glboard->size() + QSize(25, 25));
-	}
-
-      ui.boardFrame->hide();
-      ui.boardFrame->show();
-      resize(minimumSize());
-      ui.history->scrollToBottom();
-      ui.boardFrame->setFocus();
-    }
 }
 
 void qtchess_gui::slotShowValidMoves(void)
@@ -792,8 +613,7 @@ void qtchess_help_dialog::setup(void)
   show();
 }
 
-qtchess_promote_dialog::qtchess_promote_dialog(QWidget *parent):
-  QDialog(parent)
+qtchess_promote_dialog::qtchess_promote_dialog(QWidget *parent):QDialog(parent)
 {
   ui.setupUi(this);
   connect(ui.ok,
@@ -817,17 +637,23 @@ void qtchess_promote_dialog::setup(void)
 qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):QDialog(parent)
 {
   ui.setupUi(this);
+  ui.host->setText(QHostAddress(QHostAddress::LocalHost).toString());
   ui.lScopeId->setEnabled(false);
   ui.rScopeId->setEnabled(false);
   ui.rhost->setText(QHostAddress(QHostAddress::LocalHost).toString());
-  connect(comm,
-	  SIGNAL(connectedToClient(void)),
-	  this,
-	  SLOT(slotConnectedToClient(void)));
-  connect(comm,
-	  SIGNAL(disconnectedFromClient(void)),
-	  this,
-	  SLOT(slotDisconnectedFromClient(void)));
+
+  if(comm)
+    {
+      connect(comm,
+	      SIGNAL(connectedToClient(void)),
+	      this,
+	      SLOT(slotConnectedToClient(void)));
+      connect(comm,
+	      SIGNAL(disconnectedFromClient(void)),
+	      this,
+	      SLOT(slotDisconnectedFromClient(void)));
+    }
+
   connect(ui.cancel,
 	  SIGNAL(clicked(void)),
 	  this,

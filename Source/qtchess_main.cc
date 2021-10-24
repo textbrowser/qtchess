@@ -36,19 +36,15 @@
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"
 
-qtchess *chess = nullptr;
-qtchess_comm *comm = nullptr;
-qtchess_gui *gui = nullptr;
+QPointer<qtchess> chess;
+QPointer<qtchess_comm> comm;
+QPointer<qtchess_gui> gui;
 
 int main(int argc, char *argv[])
 {
-#ifdef Q_OS_WIN32
-#if QT_VERSION >= 0x050300
-  QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
-#endif
-#endif
   QApplication application(argc, argv);
 
+  application.setAttribute(Qt::AA_DontUseNativeDialogs);
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x050000
   /*
@@ -59,44 +55,23 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
-#if QT_VERSION < 0x050400
-  if(!QGLFormat::hasOpenGL())
-    {
-      qDebug() << "OpenGL is not supported on this system.";
-      return EXIT_FAILURE;
-    }
-#endif
-
   if((chess = new(std::nothrow) qtchess()) == nullptr)
     {
       qDebug() << "Memory allocation failure.";
       return EXIT_FAILURE;
     }
-
-  chess->init();
-
-  if((gui = new(std::nothrow) qtchess_gui()) == nullptr)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+  else
+    chess->init();
 
   if((comm = new(std::nothrow) qtchess_comm()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
+  else
+    comm->init();
 
-  /*
-  ** Must be called early.
-  */
+  if((gui = new(std::nothrow) qtchess_gui()) == nullptr)
+    chess->quit("Memory allocation failure.", EXIT_FAILURE);
+  else
+    gui->init();
 
-  gui->init();
-
-  /*
-  ** Initialize communications.
-  */
-
-  comm->init();
-
-  /*
-  ** Display the board according to its configuration.
-  */
-
-  gui->display();
-  return gui->exec();
+  return application.exec();
 }
