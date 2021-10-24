@@ -123,13 +123,11 @@ class openglWid: public QObject
 
  private:
   QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];
-  bool m_show_valid;
   int m_mouse_pressed;
   point m_point_pressed;
   point m_point_selected;
   void highlightSquare(const int i, const int j);
   void paint(void);
-  void showValidMoves(void);
 
  private slots:
   void slotPieceDoubleClicked(qtchess_piece *piece);

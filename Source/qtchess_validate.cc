@@ -293,8 +293,10 @@ int qtchess_validate::color(const int piece)
     return WHITE;
 }
 
-int qtchess_validate::isValidMove(const int row_from, const int col_from,
-				  const int row_to, const int col_to,
+int qtchess_validate::isValidMove(const int row_from,
+				  const int col_from,
+				  const int row_to,
+				  const int col_to,
 				  const int piece)
 {
   int rc = INVALID;
