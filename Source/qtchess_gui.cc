@@ -523,16 +523,6 @@ void qtchess_gui::showGameOver(const int turn)
      QMessageBox::Ok | QMessageBox::Default);
 }
 
-void qtchess_gui::showNewGameInfo(void)
-{
-}
-
-void qtchess_gui::slotShowValidMoves(void)
-{
-  if(glboard)
-    glboard->showValidMoves();
-}
-
 void qtchess_gui::startTimers(const int which)
 {
   Q_UNUSED(which);

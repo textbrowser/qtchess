@@ -70,13 +70,19 @@ void qtchess::init(void)
     for(int j = 0; j < NSQUARES; j++)
       board[j][i] = EMPTY_SQUARE;
 
-  last_opponent_move.x1 = last_opponent_move.x2 = last_opponent_move.y1 =
-    last_opponent_move.y2 = last_opponent_move.r_x1 =
-    last_opponent_move.r_x2 = last_opponent_move.r_y1 =
-    last_opponent_move.r_y2 = last_opponent_move.piece =
+  last_opponent_move.x1 =
+    last_opponent_move.x2 =
+    last_opponent_move.y1 =
+    last_opponent_move.y2 =
+    last_opponent_move.r_x1 =
+    last_opponent_move.r_x2 =
+    last_opponent_move.r_y1 =
+    last_opponent_move.r_y2 =
+    last_opponent_move.piece =
     last_opponent_move.rook = -1;
   last_opponent_move.promoted = last_opponent_move.pawn_2 = 0;
-  memset(last_opponent_move.departure, 0,
+  memset(last_opponent_move.departure,
+	 0,
 	 sizeof(last_opponent_move.departure));
 }
 
@@ -182,7 +188,6 @@ void qtchess::updateBoard(const QByteArray &buffer)
       if(gui)
 	{
 	  gui->clearHistory();
-	  gui->showNewGameInfo();
 	  gui->initClocks();
 	  gui->update();
 	}

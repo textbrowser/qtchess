@@ -143,7 +143,6 @@ class qtchess_gui: public QMainWindow
   void showDisconnect(void);
   void showErrorMsg(const char *);
   void showGameOver(const int);
-  void showNewGameInfo(void);
   void startTimers(const int);
   void stopTimers(const int);
 
@@ -171,7 +170,6 @@ class qtchess_gui: public QMainWindow
   void newGame(void);
   void quit(void);
   void setup(void);
-  void slotShowValidMoves(void);
   void updateOpponent(void);
   void updatePlayer(void);
 };

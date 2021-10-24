@@ -40,7 +40,15 @@ openglWid::openglWid(QObject *parent):QObject(parent)
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
-	m_labels[i][j] = new openglWidLabel(this);
+	m_labels[i][j] = new qtchess_piece(i, j, this);
+	connect(m_labels[i][j],
+		SIGNAL(doubleClicked(qtchess_piece *)),
+		this,
+		SLOT(slotPieceDoubleClicked(qtchess_piece *)));
+	connect(m_labels[i][j],
+		SIGNAL(pressed(qtchess_piece *)),
+		this,
+		SLOT(slotPiecePressed(qtchess_piece *)));
 
 	QColor color;
 	auto font(m_labels[i][j]->font());
@@ -76,7 +84,7 @@ void openglWid::add(QFrame *frame)
 
   auto layout = qobject_cast<QGridLayout *> (frame->layout());
 
-  if(!layout)
+  if(!layout || layout->count() > 0)
     return;
 
   layout->setSpacing(0);
@@ -85,54 +93,39 @@ void openglWid::add(QFrame *frame)
     for(int j = 0; j < NSQUARES; j++)
       layout->addWidget(m_labels[i][j], i, j);
 
-  paintGL();
+  paint();
 }
 
-void openglWid::highlightSquare(const double x, const double y)
+void openglWid::highlightSquare(const int i, const int j)
 {
-  Q_UNUSED(x);
-  Q_UNUSED(y);
+  if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES)
+    m_labels[i][j]->setStyleSheet
+      ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
 
 void openglWid::newGame(void)
 {
   mouse_pressed = 0;
-  showValid = false;
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
+  showValid = false;
+  paint();
 }
 
-void openglWid::paintGL(void)
+void openglWid::paint(void)
 {
   QFont font;
-  double X = 0.0, Y = 0.0;
   int I = 0, J = 0, found = 0;
   struct move_s current_move = {};
-
-  /*
-  ** First an empty board.
-  */
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
-	if((i + j) % 2 != 0)
-	  {
-	  }
-	else
-	  {
-	  }
-
 	if(mouse_pressed)
-	  if(point_pressed.x >= (px + i * block_size) &&
-	     point_pressed.x <= (px + (i + 1) * block_size) &&
-	     point_pressed.y >= (py + j * block_size) &&
-	     point_pressed.y <= (py + (j + 1) * block_size))
+	  if(i == point_pressed.x && j == point_pressed.y)
 	    {
 	      I = i;
 	      J = j;
-	      X = px + i * block_size;
-	      Y = py + j * block_size;
 	      found = 1;
 	    }
 
@@ -143,36 +136,36 @@ void openglWid::paintGL(void)
 	if(showValid)
 	  if(chess &&
 	     qtchess_validate::
-	     areValidCoordinates((int) point_selected.x,
-				 (int) point_selected.y) &&
+	     areValidCoordinates(point_selected.x,
+				 point_selected.y) &&
 	     qtchess_validate::isValidMove
-	     ((int) point_selected.y,
-	      (int) point_selected.x,
+	     (point_selected.y,
+	      point_selected.x,
 	      j, i,
 	      chess->board
-	      [(int) point_selected.x]
-	      [(int) point_selected.y]) != INVALID)
+	      [point_selected.x]
+	      [point_selected.y]) != INVALID)
 	    {
 	      bool isValid = true;
 
 	      if(qtchess_validate::isKing
 		 (chess->board
-		  [(int) point_selected.x][(int) point_selected.y]))
+		  [point_selected.x][point_selected.y]))
 		{
 		  int piece1 = chess->board[i][j];
 		  int piece2 = chess->board
-		    [(int) point_selected.x][(int) point_selected.y];
+		    [point_selected.x][point_selected.y];
 
 		  chess->board[i][j] = piece2;
 		  chess->board
-		    [(int) point_selected.x][(int) point_selected.y] =
+		    [point_selected.x][point_selected.y] =
 		    EMPTY_SQUARE;
 		  isValid = !qtchess_validate::isThreatened
 		    (i, j, qtchess_validate::color(piece2) == BLACK ?
 		     WHITE : BLACK);
 		  chess->board[i][j] = piece1;
 		  chess->board
-		    [(int) point_selected.x][(int) point_selected.y] =
+		    [point_selected.x][point_selected.y] =
 		    piece2;
 		}
 
@@ -181,15 +174,8 @@ void openglWid::paintGL(void)
 		}
 	    }
 
-	if((i + j) % 2 != 0)
-	  {
-	  }
-	else
-	  {
-	  }
-
 	/*
-	** Draw the pieces.
+	** Label the pieces.
 	*/
 
 	int offset = 0;
@@ -207,17 +193,17 @@ void openglWid::paintGL(void)
 	  piece = 9815 + offset;
 	else if(chess && qtchess_validate::isKing(chess->board[i][j]))
 	  piece = 9812 + offset;
-	else if(chess && qtchess_validate::isQueen(chess->board[i][j]))
-	  piece = 9813 + offset;
 	else if(chess && qtchess_validate::isKnight(chess->board[i][j]))
 	  piece = 9816 + offset;
-	else if(chess && qtchess_validate::isRook(chess->board[i][j]))
-	  piece = 9814 + offset;
 	else if(chess && qtchess_validate::isPawn(chess->board[i][j]))
 	  piece = 9817 + offset;
+	else if(chess && qtchess_validate::isQueen(chess->board[i][j]))
+	  piece = 9813 + offset;
+	else if(chess && qtchess_validate::isRook(chess->board[i][j]))
+	  piece = 9814 + offset;
 
-	if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES)
-	  m_labels[i][j]->setText(QString("&#%1;").arg(piece));
+	if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES && piece > 0)
+	  m_labels[j][i]->setText(QString("&#%1;").arg(piece));
       }
 
   /*
@@ -233,26 +219,26 @@ void openglWid::paintGL(void)
 
   bool isValid = true;
 
-  if(qtchess_validate::areValidCoordinates((int) point_selected.x,
-					   (int) point_selected.y) &&
+  if(qtchess_validate::areValidCoordinates(point_selected.x,
+					   point_selected.y) &&
      qtchess_validate::isKing
      (chess->board
-      [(int) point_selected.x][(int) point_selected.y]))
+      [point_selected.x][point_selected.y]))
     {
       int piece1 = chess->board[I][J];
       int piece2 = chess->board
-	[(int) point_selected.x][(int) point_selected.y];
+	[point_selected.x][point_selected.y];
 
       chess->board[I][J] = piece2;
       chess->board
-	[(int) point_selected.x][(int) point_selected.y] =
+	[point_selected.x][point_selected.y] =
 	EMPTY_SQUARE;
       isValid = !qtchess_validate::isThreatened
 	(I, J, qtchess_validate::color(piece2) == BLACK ?
 	 WHITE : BLACK);
       chess->board[I][J] = piece1;
       chess->board
-	[(int) point_selected.x][(int) point_selected.y] =
+	[point_selected.x][point_selected.y] =
 	piece2;
     }
 
@@ -302,27 +288,27 @@ void openglWid::paintGL(void)
 	  mouse_pressed = 1;
 	}
       else if(mouse_pressed == 2 && isValid &&
-	      qtchess_validate::areValidCoordinates((int) point_selected.x,
-						    (int) point_selected.y) &&
+	      qtchess_validate::areValidCoordinates(point_selected.x,
+						    point_selected.y) &&
 	      (rc = qtchess_validate::isValidMove
-	       ((int) point_selected.y,
-		(int) point_selected.x,
+	       (point_selected.y,
+		point_selected.x,
 		J, I,
 		chess->board
-		[(int) point_selected.x]
-		[(int) point_selected.y])) != INVALID)
+		[point_selected.x]
+		[point_selected.y])) != INVALID)
 	{
 	  if(qtchess_validate::isRook1(chess->board
-				       [(int) point_selected.x]
-				       [(int) point_selected.y]))
+				       [point_selected.x]
+				       [point_selected.y]))
 	    chess->setRook1HasMoved(true);
 	  else if(qtchess_validate::isRook2(chess->board
-					    [(int) point_selected.x]
-					    [(int) point_selected.y]))
+					    [point_selected.x]
+					    [point_selected.y]))
 	    chess->setRook2HasMoved(true);
 	  else if(qtchess_validate::isKing(chess->board
-					   [(int) point_selected.x]
-					   [(int) point_selected.y]))
+					   [point_selected.x]
+					   [point_selected.y]))
 	    chess->setKingHasMoved(true);
 
 	  bool game_over = false;
@@ -332,12 +318,12 @@ void openglWid::paintGL(void)
 
 	  mouse_pressed = 0;
 	  showValid = false;
-	  current_move.x1 = (int) point_selected.y;
-	  current_move.y1 = (int) point_selected.x;
+	  current_move.x1 = point_selected.y;
+	  current_move.y1 = point_selected.x;
 	  current_move.x2 = J;
 	  current_move.y2 = I;
 	  current_move.piece =
-	    chess->board[(int) point_selected.x][(int) point_selected.y];
+	    chess->board[point_selected.x][point_selected.y];
 	  current_move.r_x1 = current_move.r_x2 = current_move.r_y1 =
 	    current_move.r_y2 = -1;
 	  current_move.promoted = 0;
@@ -357,7 +343,7 @@ void openglWid::paintGL(void)
 	  */
 
 	  if(qtchess_validate::isPawn
-	     (chess->board[(int) point_selected.x][(int) point_selected.y]) &&
+	     (chess->board[point_selected.x][point_selected.y]) &&
 	     (J == 0 || J == 7) &&
 	     !qtchess_validate::isKing(chess->board[I][J]))
 	    {
@@ -372,7 +358,7 @@ void openglWid::paintGL(void)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
-		      board[(int) point_selected.x][(int) point_selected.y]))
+		      board[point_selected.x][point_selected.y]))
 		    chess->board[I][J] = current_move.piece = BISHOP_BLACK;
 		  else
 		    chess->board[I][J] = current_move.piece = BISHOP_WHITE;
@@ -383,7 +369,7 @@ void openglWid::paintGL(void)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
-		      board[(int) point_selected.x][(int) point_selected.y]))
+		      board[point_selected.x][point_selected.y]))
 		    chess->board[I][J] = current_move.piece = KNIGHT_BLACK;
 		  else
 		    chess->board[I][J] = current_move.piece = KNIGHT_WHITE;
@@ -394,7 +380,7 @@ void openglWid::paintGL(void)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
-		      board[(int) point_selected.x][(int) point_selected.y]))
+		      board[point_selected.x][point_selected.y]))
 		    chess->board[I][J] = current_move.piece = QUEEN_BLACK;
 		  else
 		    chess->board[I][J] = current_move.piece = QUEEN_WHITE;
@@ -403,7 +389,7 @@ void openglWid::paintGL(void)
 		{
 		  if(qtchess_validate::isBlack
 		     (chess->
-		      board[(int) point_selected.x][(int) point_selected.y]))
+		      board[point_selected.x][point_selected.y]))
 		    chess->board[I][J] = current_move.piece = ROOK_BLACK;
 		  else
 		    chess->board[I][J] = current_move.piece = ROOK_WHITE;
@@ -411,7 +397,7 @@ void openglWid::paintGL(void)
 	    }
 	  else
 	    chess->board[I][J] = chess->
-	      board[(int) point_selected.x][(int) point_selected.y];
+	      board[point_selected.x][point_selected.y];
 
 	  if(rc == VALID_CASTLE)
 	    {
@@ -468,7 +454,7 @@ void openglWid::paintGL(void)
 		chess->board[I][J + 1] = EMPTY_SQUARE;
 	    }
 
-	  chess->board[(int) point_selected.x][(int) point_selected.y] =
+	  chess->board[point_selected.x][point_selected.y] =
 	    EMPTY_SQUARE;
 
 	  int origPiece = chess->board[I][J];
@@ -477,7 +463,7 @@ void openglWid::paintGL(void)
 	  snprintf
 	    (current_move.departure, sizeof(current_move.departure), "%s",
 	     qtchess_validate::findDeparture
-	     ((int) point_selected.x, (int) point_selected.y,
+	     (point_selected.x, point_selected.y,
 	      I, J, origPiece).toLatin1().constData());
 	  chess->board[I][J] = origPiece;
 
@@ -550,7 +536,7 @@ void openglWid::paintGL(void)
 	    }
 	}
 
-      highlightSquare(X, Y);
+      highlightSquare(I, J);
     }
   else
     mouse_pressed = 0;
@@ -558,6 +544,22 @@ void openglWid::paintGL(void)
 
 void openglWid::reinit(void)
 {
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      {
+	QColor color;
+
+	if((i + j) % 2 == 0)
+	  color = QColor(255, 87, 51);
+	else
+	  color = QColor(255, 255, 237);
+
+	m_labels[i][j]->clear();
+  	m_labels[i][j]->setStyleSheet
+	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
+	   arg(color.name()));
+      }
+
   BISHOP_HEIGHT = 68;
   BISHOP_WIDTH = 42;
   BISHOP_X_OFFSET = 20;
@@ -602,7 +604,6 @@ void openglWid::reinit(void)
   mouse_pressed = 0;
   point_pressed.x = point_pressed.y = -1;
   point_selected.x = point_selected.y = -1;
-  px = py = 4; // Reasonable default value.
   showValid = false;
 }
 
@@ -611,8 +612,52 @@ void openglWid::showValidMoves(void)
   if(!chess || !comm)
     return;
 
+#ifdef QTCHESS_DEBUG
+  showValid = true;
+#else
   if(chess->getTurn() == MY_TURN && !chess->isGameOver() && comm->isReady())
-    {
-      showValid = true;
-    }
+    showValid = true;
+#endif
+
+  paint();
+}
+
+void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
+{
+  if(!piece)
+    return;
+
+  showValidMoves();
+}
+
+void openglWid::slotPiecePressed(qtchess_piece *piece)
+{
+#ifdef QTCHESS_DEBUG
+  if(!piece)
+    return;
+#else
+  if(!chess || !chess->isGameOver() || !piece)
+    return;
+#endif
+
+  mouse_pressed = 1;
+
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      {
+	QColor color;
+
+	if((i + j) % 2 == 0)
+	  color = QColor(255, 87, 51);
+	else
+	  color = QColor(255, 255, 237);
+
+	if(m_labels[i][j] == piece)
+	  m_labels[i][j]->setStyleSheet
+	    ("QLabel {background-color: orange; border: 1px solid navy;}");
+	else
+	  m_labels[i][j]->setStyleSheet
+	    (QString("QLabel {background-color: %1; border: 1px solid navy;}").
+	     arg(color.name()));
+      }
 }

@@ -29,6 +29,7 @@
 #define _QTCHESS_GUI_OPENGL_
 
 #include <QLabel>
+#include <QMouseEvent>
 #include <QPointer>
 
 #include "qtchess_defs.h"
@@ -36,19 +37,36 @@
 class point
 {
  public:
-  double x;
-  double y;
+  point(void)
+  {
+    x = y = -1;
+  }
+
+  int x;
+  int y;
 };
 
-class openglWidLabel: public QLabel
+class qtchess_piece: public QLabel
 {
   Q_OBJECT
 
  public:
-  openglWidLabel(QObject *parent):QLabel(nullptr)
+  qtchess_piece(const int i, const int j, QObject *parent):QLabel(nullptr)
   {
     Q_UNUSED(parent);
+    m_i = i;
+    m_j = j;
   };
+
+  int i() const
+  {
+    return m_i;
+  }
+
+  int j() const
+  {
+    return m_j;
+  }
 
   void resizeEvent(QResizeEvent *event)
   {
@@ -61,6 +79,36 @@ class openglWidLabel: public QLabel
     font.setPointSizeF(p);
     setFont(font);
   }
+
+ private:
+  int m_i;
+  int m_j;
+
+  void mouseDoubleClickEvent(QMouseEvent *event)
+  {
+    if(!event)
+      return;
+
+    if(event->button() == Qt::LeftButton)
+      emit doubleClicked(this);
+
+    QLabel::mouseDoubleClickEvent(event);
+  }
+
+  void mousePressEvent(QMouseEvent *event)
+  {
+    if(!event)
+      return;
+
+    if(event->button() == Qt::LeftButton)
+      emit pressed(this);
+
+    QLabel::mousePressEvent(event);
+  }
+
+ signals:
+  void doubleClicked(qtchess_piece *piece);
+  void pressed(qtchess_piece *piece);
 };
 
 class openglWid: public QObject
@@ -70,10 +118,8 @@ class openglWid: public QObject
  public:
   openglWid(QObject *);
   void add(QFrame *frame);
-  void highlightSquare(const double, const double);
   void newGame(void);
   void reinit(void);
-  void showValidMoves(void);
 
  private:
   bool showValid;
@@ -118,15 +164,17 @@ class openglWid: public QObject
   double ROOK_X_OFFSET;
   double ROOK_Y_OFFSET;
   double block_size;
-  double px; // Used for centering the board.
-  double py; // Used for centering the board.
   int mouse_pressed;
   point point_pressed;
   point point_selected;
-  QPointer<openglWidLabel> m_labels[NSQUARES][NSQUARES];
+  QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];
+  void highlightSquare(const int i, const int j);
+  void paint(void);
+  void showValidMoves(void);
 
  private slots:
-  void paintGL(void);
+  void slotPieceDoubleClicked(qtchess_piece *piece);
+  void slotPiecePressed(qtchess_piece *piece);
 };
 
 #endif
