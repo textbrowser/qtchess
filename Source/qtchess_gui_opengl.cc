@@ -112,7 +112,9 @@ void openglWid::newGame(void)
 
 void openglWid::paint(void)
 {
-  QFont font;
+  if(!chess)
+    return;
+
   auto found = false;
   int I = 0, J = 0;
   struct move_s current_move = {};
@@ -127,7 +129,7 @@ void openglWid::paint(void)
 	int offset = 0;
 	int piece = 0;
 
-	if(chess && !qtchess_validate::isEmpty(chess->board[i][j]))
+	if(!qtchess_validate::isEmpty(chess->board[i][j]))
 	  {
 	    if(qtchess_validate::isWhite(chess->board[i][j]))
 	      offset = 0;
@@ -135,29 +137,22 @@ void openglWid::paint(void)
 	      offset = 6;
 	  }
 
-	if(chess && qtchess_validate::isBishop(chess->board[i][j]))
+	if(qtchess_validate::isBishop(chess->board[i][j]))
 	  piece = 9815 + offset;
-	else if(chess && qtchess_validate::isKing(chess->board[i][j]))
+	else if(qtchess_validate::isKing(chess->board[i][j]))
 	  piece = 9812 + offset;
-	else if(chess && qtchess_validate::isKnight(chess->board[i][j]))
+	else if(qtchess_validate::isKnight(chess->board[i][j]))
 	  piece = 9816 + offset;
-	else if(chess && qtchess_validate::isPawn(chess->board[i][j]))
+	else if(qtchess_validate::isPawn(chess->board[i][j]))
 	  piece = 9817 + offset;
-	else if(chess && qtchess_validate::isQueen(chess->board[i][j]))
+	else if(qtchess_validate::isQueen(chess->board[i][j]))
 	  piece = 9813 + offset;
-	else if(chess && qtchess_validate::isRook(chess->board[i][j]))
+	else if(qtchess_validate::isRook(chess->board[i][j]))
 	  piece = 9814 + offset;
 
 	if(piece > 0)
 	  m_labels[i][j]->setText(QString("&#%1;").arg(piece));
       }
-
-  /*
-  ** Add the coordinate labels.
-  */
-
-  font.setBold(false);
-  font.setStyleStrategy(QFont::StyleStrategy(QFont::PreferAntialias));
 
   /*
   ** Highlight the selected square.
@@ -547,6 +542,9 @@ void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
 	  m_labels[i][j]->setStyleSheet
 	    ("QLabel {background-color: orange; border: 1px solid navy;}");
       }
+
+  piece->setStyleSheet
+    ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
 
 void openglWid::slotPiecePressed(qtchess_piece *piece)
@@ -558,11 +556,15 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
   if(!piece)
     return;
 #else
-  if(!chess || !chess->isGameOver() || !piece)
+  if(chess->isGameOver() || chess->getTurn() != MY_TURN || !piece)
     return;
 #endif
 
-  m_mouse_pressed = 1;
+  auto x = piece->i();
+  auto y = piece->j();
+
+  if(m_mouse_pressed == 1)
+    goto move_label;
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -575,11 +577,22 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 	  color = QColor(255, 255, 237);
 
 	if(m_labels[i][j] == piece)
-	  m_labels[i][j]->setStyleSheet
-	    ("QLabel {background-color: orange; border: 1px solid navy;}");
+	  {
+	    m_labels[i][j]->setStyleSheet
+	      ("QLabel {background-color: orange; border: 1px solid navy;}");
+	    m_mouse_pressed = 1;
+	    m_point_selected.x = i;
+	    m_point_selected.y = j;
+	  }
 	else
 	  m_labels[i][j]->setStyleSheet
 	    (QString("QLabel {background-color: %1; border: 1px solid navy;}").
 	     arg(color.name()));
       }
+
+  return;
+
+ move_label:
+
+  m_mouse_pressed = 0;
 }
