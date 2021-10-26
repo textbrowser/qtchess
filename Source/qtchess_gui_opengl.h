@@ -124,7 +124,6 @@ class openglWid: public QObject
  private:
   QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];
   int m_mouse_pressed;
-  point m_point_pressed;
   point m_point_selected;
   void highlightSquare(const int i, const int j);
   void paint(void);

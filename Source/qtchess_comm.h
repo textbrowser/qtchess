@@ -45,16 +45,16 @@ class qtchess_comm: public QObject
 
   QHostAddress peerAddress(void) const
   {
-    if(m_clientConnection)
-      return m_clientConnection->peerAddress();
+    if(m_client_connection)
+      return m_client_connection->peerAddress();
     else
       return QHostAddress();
   }
 
   quint16 peerPort(void) const
   {
-    if(m_clientConnection)
-      return m_clientConnection->peerPort();
+    if(m_client_connection)
+      return m_client_connection->peerPort();
     else
       return 0;
   }
@@ -74,9 +74,9 @@ class qtchess_comm: public QObject
   void stopListening(void);
 
  private:
-  QPointer<QTcpSocket> m_clientConnection;
+  QPointer<QTcpSocket> m_client_connection;
   QString m_caissa;
-  QTcpServer listening_sock;
+  QTcpServer m_listening_sock;
   bool connected;
   static const int s_buffer_size = 1024;
   QByteArray digest(const QByteArray &data) const;
