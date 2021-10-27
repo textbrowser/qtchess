@@ -307,21 +307,17 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 	       (m_point_selected.y,
 		m_point_selected.x,
 		y, x,
-		chess->board
-		[m_point_selected.x]
-		[m_point_selected.y])) != INVALID)
+		chess->board[m_point_selected.x][m_point_selected.y])) !=
+	      INVALID)
 	{
-	  if(qtchess_validate::isRook1(chess->board
-				       [m_point_selected.x]
-				       [m_point_selected.y]))
+	  if(qtchess_validate::
+	     isRook1(chess->board[m_point_selected.x][m_point_selected.y]))
 	    chess->setRook1HasMoved(true);
-	  else if(qtchess_validate::isRook2(chess->board
-					    [m_point_selected.x]
-					    [m_point_selected.y]))
+	  else if(qtchess_validate::
+		  isRook2(chess->board[m_point_selected.x][m_point_selected.y]))
 	    chess->setRook2HasMoved(true);
-	  else if(qtchess_validate::isKing(chess->board
-					   [m_point_selected.x]
-					   [m_point_selected.y]))
+	  else if(qtchess_validate::
+		  isKing(chess->board[m_point_selected.x][m_point_selected.y]))
 	    chess->setKingHasMoved(true);
 
 	  auto game_over = false;
