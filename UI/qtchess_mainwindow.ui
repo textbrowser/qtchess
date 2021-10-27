@@ -97,6 +97,12 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="title">
            <string>History</string>
           </property>
@@ -157,7 +163,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>30</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
