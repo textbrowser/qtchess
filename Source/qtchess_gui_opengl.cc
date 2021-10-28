@@ -53,7 +53,7 @@ openglWid::openglWid(QObject *parent):QObject(parent)
 	QColor color;
 	auto font(m_labels[i][j]->font());
 
-	font.setPointSize(25);
+	font.setPointSize(50);
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
 	m_labels[i][j]->setFont(font);

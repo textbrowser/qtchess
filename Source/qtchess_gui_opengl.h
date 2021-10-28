@@ -70,14 +70,7 @@ class qtchess_piece: public QLabel
 
   void resizeEvent(QResizeEvent *event)
   {
-    Q_UNUSED(event);
-
-    auto font(this->font());
-    auto p = font.pointSizeF();
-
-    p = qMin(size().height(), size().width()) / 2.5;
-    font.setPointSizeF(p);
-    setFont(font);
+    QLabel::resizeEvent(event);
   }
 
  private:

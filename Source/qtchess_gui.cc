@@ -486,9 +486,10 @@ void qtchess_gui::setup(void)
       if(setup_dialog->getHostField())
 	setup_dialog->getHostField()->setFocus();
 
-#ifndef Q_OS_ANDROID
-      setup_dialog->resize
-	(setup_dialog->width(), setup_dialog->sizeHint().height());
+#ifdef Q_OS_ANDROID
+      setup_dialog->showMaximized();
+#else
+      setup_dialog->resize(setup_dialog->sizeHint());
 #endif
       setup_dialog->exec();
     }
