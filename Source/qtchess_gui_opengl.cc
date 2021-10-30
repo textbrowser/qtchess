@@ -53,7 +53,7 @@ openglWid::openglWid(QObject *parent):QObject(parent)
 	QColor color;
 	auto font(m_labels[i][j]->font());
 
-	font.setPointSize(50);
+	font.setPointSize(30);
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
 	m_labels[i][j]->setFont(font);
@@ -232,6 +232,12 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
   if(m_mouse_pressed == 1)
     goto move_label;
 
+  if(chess->board[x][y] == EMPTY_SQUARE)
+    {
+      m_mouse_pressed = 0;
+      return;
+    }
+
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
@@ -269,41 +275,26 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
     {
       int rc = 0;
 
-      if(m_mouse_pressed == 1 && qtchess_validate::isEmpty(chess->board[x][y]))
+      if(chess->getMyColor() == BLACK &&
+	 !qtchess_validate::isBlack(chess->board[x][y]))
 	{
+	  highlightSquare(x, y);
 	  m_mouse_pressed = 0;
-	  return;
+	  m_point_selected.x = -1;
+	  m_point_selected.y = -1;
 	}
-      else if(m_mouse_pressed == 1)
+      else if(chess->getMyColor() == WHITE &&
+	      !qtchess_validate::isWhite(chess->board[x][y]))
 	{
-	  if(chess->getMyColor() == BLACK &&
-	     !qtchess_validate::isBlack(chess->board[x][y]))
-	    {
-	      m_mouse_pressed = 0;
-	      m_point_selected.x = -1;
-	      m_point_selected.y = -1;
-	    }
-	  else if(chess->getMyColor() == WHITE &&
-		  !qtchess_validate::isWhite(chess->board[x][y]))
-	    {
-	      m_mouse_pressed = 0;
-	      m_point_selected.x = -1;
-	      m_point_selected.y = -1;
-	    }
-	  else
-	    {
-	      m_point_selected.x = x;
-	      m_point_selected.y = y;
-	    }
+	  highlightSquare(x, y);
+	  m_mouse_pressed = 0;
+	  m_point_selected.x = -1;
+	  m_point_selected.y = -1;
 	}
-      else if(m_mouse_pressed == 2 &&
-	      m_point_selected.x == x &&
+      else if(m_point_selected.x == x &&
 	      m_point_selected.y == y)
 	m_mouse_pressed = 1;
-      else if(m_mouse_pressed == 2 &&
-	      qtchess_validate::areValidCoordinates(m_point_selected.x,
-						    m_point_selected.y) &&
-	      (rc = qtchess_validate::isValidMove
+      else if((rc = qtchess_validate::isValidMove
 	       (m_point_selected.y,
 		m_point_selected.x,
 		y, x,
@@ -545,9 +536,8 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 	      m_point_selected.y = -1;
 	    }
 	}
-
-      highlightSquare(x, y);
     }
 
   m_mouse_pressed = 0;
+  paint();
 }
