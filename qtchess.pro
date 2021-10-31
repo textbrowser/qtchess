@@ -45,7 +45,7 @@ FORMS		= UI/qtchess_helpDialog.ui \
 
 HEADERS		= Source/qtchess.h \
                   Source/qtchess_comm.h \
-                  Source/qtchess_defs.h \
+                  Source/qtchess_definitions.h \
                   Source/qtchess_gui.h \
                   Source/qtchess_gui_opengl.h \
                   Source/qtchess_validate.h

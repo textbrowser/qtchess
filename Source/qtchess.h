@@ -30,155 +30,138 @@
 
 #include <QObject>
 
-#include "qtchess_defs.h"
+#include "qtchess_definitions.h"
 
-#define QTCHESS_VERSION "2021.11.15"
+#define QTCHESS_VERSION "2022.01.01"
 
 class qtchess: public QObject
 {
   Q_OBJECT
 
  public:
-  /*
-  ** -- Members --
-  */
-
-  int board[NSQUARES][NSQUARES];
-
-  /*
-  ** -- Methods --
-  */
-
   qtchess(void):QObject()
   {
     for(int i = 0; i < NSQUARES; i++)
       for(int j = 0; j < NSQUARES; j++)
-	board[i][j] = 0;
+	m_board[i][j] = 0;
 
-    first = -1;
-    game_over = false;
-    king_has_moved = false;
-    last_opponent_move = {};
-    my_color = -1;
-    rook1_has_moved = false;
-    rook2_has_moved = false;
-    turn = -1;
-    wonPiece = false;
+    m_first = -1;
+    m_game_over = false;
+    m_king_has_moved = false;
+    m_last_opponent_move = {};
+    m_my_color = -1;
+    m_rook1_has_moved = false;
+    m_rook2_has_moved = false;
+    m_turn = -1;
+    m_won_piece = false;
   }
 
-  bool hasKingMoved(void) const
+  bool has_king_moved(void) const
   {
-    return king_has_moved;
+    return m_king_has_moved;
   }
 
-  bool hasRook1Moved(void) const
+  bool has_rook1_moved(void) const
   {
-    return rook1_has_moved;
+    return m_rook1_has_moved;
   }
 
-  bool hasRook2Moved(void) const
+  bool has_rook2_moved(void) const
   {
-    return rook2_has_moved;
+    return m_rook2_has_moved;
   }
 
-  bool isGameOver(void) const
+  bool is_game_over(void) const
   {
-    return game_over;
+    return m_game_over;
   }
 
-  bool wasPieceWon(void) const
+  bool was_piece_won(void) const
   {
-    return wonPiece;
+    return m_won_piece;
   }
 
-  int getFirst(void) const
+  int get_first(void) const
   {
-    return first;
+    return m_first;
   }
 
-  int getMyColor(void) const
+  int get_my_color(void) const
   {
-    return my_color;
+    return m_my_color;
   }
 
-  int getTurn(void) const
+  int get_turn(void) const
   {
-    return turn;
+    return m_turn;
   }
 
-  struct move_s getLastOpponentMove(void) const
+  struct move_s get_last_opponent_move(void) const
   {
-    return last_opponent_move;
+    return m_last_opponent_move;
   }
 
-  void setFirst(const int first_arg)
+  void set_first(const int first)
   {
-    first = first_arg;
+    m_first = first;
   }
 
-  void setGameOver(const bool game_over_arg)
+  void set_game_over(const bool game_over)
   {
-    game_over = game_over_arg;
+    m_game_over = game_over;
   }
 
-  void setKingHasMoved(const bool king_has_moved_arg)
+  void set_king_has_moved(const bool king_has_moved)
   {
-    king_has_moved = king_has_moved_arg;
+    m_king_has_moved = king_has_moved;
   }
 
-  void setLastOpponentMove(const struct move_s &move)
+  void set_last_opponent_move(const struct move_s &move)
   {
-    last_opponent_move = move;
+    m_last_opponent_move = move;
   }
 
-  void setMyColor(const int my_color_arg)
+  void set_my_color(const int my_color)
   {
-    my_color = my_color_arg;
+    m_my_color = my_color;
   }
 
-  void setRook1HasMoved(const bool rook1_has_moved_arg)
+  void set_rook1_has_moved(const bool rook1_has_moved)
   {
-    rook1_has_moved = rook1_has_moved_arg;
+    m_rook1_has_moved = rook1_has_moved;
   }
 
-  void setRook2HasMoved(const bool rook2_has_moved_arg)
+  void set_rook2_has_moved(const bool rook2_has_moved)
   {
-    rook2_has_moved = rook2_has_moved_arg;
+    m_rook2_has_moved = rook2_has_moved;
   }
 
-  void setTurn(const int turn_arg)
+  void set_turn(const int turn)
   {
-    turn = turn_arg;
+    m_turn = turn;
   }
 
-  void setWonPiece(const bool wonPieceArg)
+  void set_won_piece(const bool won_piece)
   {
-    wonPiece = wonPieceArg;
+    m_won_piece = won_piece;
   }
 
-  bool isReady(void);
+  bool is_ready(void);
   void init(void);
-  void quit(const char *, const int);
-  void updateBoard(const QByteArray &buffer);
+  void quit(const char *message_text, const int exit_code);
+  void update_board(const QByteArray &buffer);
+  int m_board[NSQUARES][NSQUARES];
 
  private:
-  /*
-  ** -- Members --
-  */
-
-  bool game_over;
-  bool king_has_moved;
-  bool rook1_has_moved;
-  bool rook2_has_moved;
-  bool wonPiece;
-  int first;
-  int my_color;
-  int turn;
-  struct move_s last_opponent_move;
-
-  /*
-  ** -- Methods
-  */
+  bool m_game_over;
+  bool m_king_has_moved;
+  bool m_rook1_has_moved;
+  bool m_rook2_has_moved;
+  bool m_won_piece;
+  int m_first;
+  int m_my_color;
+  int m_turn;
+  struct move_s m_last_opponent_move;
 };
 
 #endif

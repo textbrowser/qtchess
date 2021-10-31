@@ -38,7 +38,6 @@ static QByteArray s_eof = "\n";
 
 qtchess_comm::qtchess_comm(void):QObject()
 {
-  connected = false;
   connect(&m_listening_sock,
 	  SIGNAL(newConnection(void)),
 	  this,
@@ -120,26 +119,9 @@ bool qtchess_comm::isListening(void) const
   return m_listening_sock.isListening();
 }
 
-bool qtchess_comm::isReady(void) const
+bool qtchess_comm::is_ready(void) const
 {
-  if(isSet())
-    {
-      if(m_client_connection &&
-	 m_client_connection->state() == QAbstractSocket::ConnectedState)
-	return true;
-      else
-	return false;
-    }
-  else
-    return false;
-}
-
-bool qtchess_comm::isSet(void) const
-{
-  if(connected)
-    return true;
-  else
-    return false;
+  return isConnectedRemotely();
 }
 
 bool qtchess_comm::memcmp(const QByteArray &a, const QByteArray &b) const
@@ -180,8 +162,8 @@ void qtchess_comm::acceptConnection(void)
      !gui->getSetupDialog()->getAllowedHostField()->text().
      trimmed().isEmpty())
     {
-      QString str(gui->getSetupDialog()->
-		  getAllowedHostField()->text().trimmed());
+      QString str
+	(gui->getSetupDialog()->getAllowedHostField()->text().trimmed());
 
       if(QHostAddress(str) != m_client_connection->peerAddress())
 	{
@@ -191,7 +173,6 @@ void qtchess_comm::acceptConnection(void)
 	}
     }
 
-  setConnected(true);
   emit connectedToClient();
   connect(m_client_connection,
 	  SIGNAL(disconnected(void)),
@@ -217,11 +198,11 @@ void qtchess_comm::acceptConnection(void)
     gui->notifyConnection(m_client_connection->peerAddress().toString(),
 			  m_client_connection->peerPort());
 
-  if(chess && chess->getFirst() == -1)
+  if(chess && chess->get_first() == -1)
     {
-      chess->setFirst(THEY_ARE_FIRST);
-      chess->setMyColor(BLACK);
-      chess->setTurn(THEIR_TURN);
+      chess->set_first(THEY_ARE_FIRST);
+      chess->set_my_color(BLACK);
+      chess->set_turn(THEIR_TURN);
     }
 }
 
@@ -236,16 +217,15 @@ void qtchess_comm::clientDisconnected(void)
 
   if(chess)
     {
-      chess->setFirst(-1);
-      chess->setMyColor(-1);
-      chess->setTurn(-1);
+      chess->set_first(-1);
+      chess->set_my_color(-1);
+      chess->set_turn(-1);
     }
 
   if(gui)
     gui->setStatusText(tr("Status: Peer Disconnected"));
 
   emit disconnectedFromClient();
-  setConnected(false);
 }
 
 void qtchess_comm::connectRemotely(void)
@@ -320,12 +300,10 @@ void qtchess_comm::disconnectRemotely(void)
 
   if(chess)
     {
-      chess->setFirst(-1);
-      chess->setMyColor(-1);
-      chess->setTurn(-1);
+      chess->set_first(-1);
+      chess->set_my_color(-1);
+      chess->set_turn(-1);
     }
-
-  setConnected(false);
 
   if(gui)
     gui->showDisconnect();
@@ -333,8 +311,6 @@ void qtchess_comm::disconnectRemotely(void)
 
 void qtchess_comm::init(void)
 {
-  connected = false;
-
   if(m_listening_sock.isListening())
     m_listening_sock.close();
 
@@ -358,7 +334,6 @@ void qtchess_comm::quit(void)
     m_client_connection->deleteLater();
 
   m_listening_sock.close();
-  setConnected(false);
 }
 
 void qtchess_comm::sendMove(const struct move_s &current_move)
@@ -374,41 +349,41 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
   ** Copy the structure.
   */
 
-  buffer.append(QByteArray::number(current_move.x1));
+  buffer.append(QByteArray::number(current_move.m_x1));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.x2));
+  buffer.append(QByteArray::number(current_move.m_x2));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.y1));
+  buffer.append(QByteArray::number(current_move.m_y1));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.y2));
+  buffer.append(QByteArray::number(current_move.m_y2));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.r_x1));
+  buffer.append(QByteArray::number(current_move.m_rook_x1));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.r_x2));
+  buffer.append(QByteArray::number(current_move.m_rook_x2));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.r_y1));
+  buffer.append(QByteArray::number(current_move.m_rook_y1));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.r_y2));
+  buffer.append(QByteArray::number(current_move.m_rook_y2));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.piece));
+  buffer.append(QByteArray::number(current_move.m_piece));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.rook));
+  buffer.append(QByteArray::number(current_move.m_rook));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.promoted));
+  buffer.append(QByteArray::number(current_move.m_promoted));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.pawn_2));
+  buffer.append(QByteArray::number(current_move.m_pawn2));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.enpassant));
+  buffer.append(QByteArray::number(current_move.m_enpassant));
   buffer.append(" ");
-  buffer.append(QByteArray::number(current_move.isOppKingThreat));
+  buffer.append(QByteArray::number(current_move.m_is_opponent_king_threat));
   buffer.append(" ");
-  buffer.append(current_move.departure);
+  buffer.append(current_move.m_departure);
   buffer.append(" ");
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
-	buffer.append(QByteArray::number(current_move.board[i][j]));
+	buffer.append(QByteArray::number(current_move.m_board[i][j]));
 	buffer.append(" ");
       }
 
@@ -430,18 +405,13 @@ void qtchess_comm::sendMove(const struct move_s &current_move)
       QApplication::restoreOverrideCursor();
 
       if(chess)
-	chess->setTurn(THEIR_TURN);
+	chess->set_turn(THEIR_TURN);
     }
 }
 
 void qtchess_comm::setCaissa(const QString &caissa)
 {
   m_caissa = caissa;
-}
-
-void qtchess_comm::setConnected(const bool connected_arg)
-{
-  connected = connected_arg;
 }
 
 void qtchess_comm::setListen(void)
@@ -486,17 +456,15 @@ void qtchess_comm::slotClientConnected(void)
       return;
     }
 
-  setConnected(true);
-
-  if(chess && chess->getFirst() == -1)
+  if(chess && chess->get_first() == -1)
     {
-      chess->setTurn(MY_TURN);
-      chess->setFirst(I_AM_FIRST);
+      chess->set_first(I_AM_FIRST);
+      chess->set_turn(MY_TURN);
 
       if(gui->color() == tr("Beige"))
-	chess->setMyColor(WHITE);
+	chess->set_my_color(WHITE);
       else if(gui->color() == tr("Crimson"))
-	chess->setMyColor(BLACK);
+	chess->set_my_color(BLACK);
       else
 	{
 	  clientDisconnected();
@@ -542,7 +510,7 @@ void qtchess_comm::updateBoard(void)
 	      buffer = buffer.mid(0, buffer.length() - s_sha1_output_size);
 
 	      if(memcmp(d, digest(buffer)))
-		chess->updateBoard(buffer);
+		chess->update_board(buffer);
 	    }
 
 	  break;

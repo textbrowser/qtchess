@@ -43,7 +43,7 @@ class qtchess_comm: public QObject
   {
   }
 
-  QHostAddress peerAddress(void) const
+  QHostAddress peer_address(void) const
   {
     if(m_client_connection)
       return m_client_connection->peerAddress();
@@ -51,7 +51,7 @@ class qtchess_comm: public QObject
       return QHostAddress();
   }
 
-  quint16 peerPort(void) const
+  quint16 peer_port(void) const
   {
     if(m_client_connection)
       return m_client_connection->peerPort();
@@ -61,15 +61,13 @@ class qtchess_comm: public QObject
 
   bool isConnectedRemotely(void) const;
   bool isListening(void) const;
-  bool isReady(void) const;
-  bool isSet(void) const;
+  bool is_ready(void) const;
   void connectRemotely(void);
   void disconnectRemotely(void);
   void init(void);
   void quit(void);
   void sendMove(const struct move_s &);
   void setCaissa(const QString &caissa);
-  void setConnected(const bool);
   void setListen(void);
   void stopListening(void);
 
@@ -77,7 +75,6 @@ class qtchess_comm: public QObject
   QPointer<QTcpSocket> m_client_connection;
   QString m_caissa;
   QTcpServer m_listening_sock;
-  bool connected;
   static const int s_buffer_size = 1024;
   QByteArray digest(const QByteArray &data) const;
   QByteArray hmac(const QByteArray &data, const QByteArray &k) const;

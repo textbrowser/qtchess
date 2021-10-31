@@ -25,8 +25,8 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _QTCHESS_DEFS_
-#define _QTCHESS_DEFS_
+#ifndef _QTCHESS_DEFINITIONS_
+#define _QTCHESS_DEFINITIONS_
 
 enum
 {
@@ -42,6 +42,17 @@ enum
 
 enum
 {
+  EMPTY_SQUARE = 0,
+  INVALID = 0,
+  NSQUARES = 8,
+  VALID = 1,
+  VALID_CASTLE = 2,
+  VALID_EN_PASSANT = 4,
+  VALID_PAWN_2 = 3
+};
+
+enum BlackPieces
+{
   BISHOP_BLACK = 100,
   KING_BLACK,
   KNIGHT_BLACK,
@@ -52,7 +63,7 @@ enum
   ROOK2_BLACK
 };
 
-enum
+enum WhitePieces
 {
   BISHOP_WHITE = 200,
   KING_WHITE,
@@ -64,35 +75,24 @@ enum
   ROOK2_WHITE
 };
 
-enum
-{
-  EMPTY_SQUARE = 0,
-  INVALID = 0,
-  NSQUARES = 8,
-  VALID = 1,
-  VALID_CASTLE = 2,
-  VALID_EN_PASSANT = 4,
-  VALID_PAWN_2 = 3
-};
-
 struct move_s
 {
-  char departure[3];
-  int board[NSQUARES][NSQUARES];
-  int enpassant;
-  int isOppKingThreat;
-  int pawn_2; // Did a pawn move two squares?
-  int piece;
-  int promoted;
-  int r_x1; // Castling.
-  int r_x2; // Castling.
-  int r_y1; // Castling.
-  int r_y2; // Castling.
-  int rook; // Castling.
-  int x1;
-  int x2;
-  int y1;
-  int y2;
+  char m_departure[3];
+  int m_board[NSQUARES][NSQUARES];
+  int m_enpassant;
+  int m_is_opponent_king_threat;
+  int m_pawn2; // Did a pawn move two squares?
+  int m_piece;
+  int m_promoted;
+  int m_rook; // Castling.
+  int m_rook_x1; // Castling.
+  int m_rook_x2; // Castling.
+  int m_rook_y1; // Castling.
+  int m_rook_y2; // Castling.
+  int m_x1;
+  int m_x2;
+  int m_y1;
+  int m_y2;
 };
 
 #endif

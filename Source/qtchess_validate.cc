@@ -64,7 +64,7 @@ QString qtchess_validate::findDeparture(const int X1,
 
   for(int i = 0; i < NSQUARES; i++)
     if(Y1 >= 0 && Y1 < NSQUARES)
-      if(chess->board[i][Y1] == piece)
+      if(chess->m_board[i][Y1] == piece)
 	{
 	  if(isValidMove(Y1, i, Y2, X2, piece) != INVALID)
 	    {
@@ -84,7 +84,7 @@ QString qtchess_validate::findDeparture(const int X1,
 
   for(int i = 0; i < NSQUARES; i++)
     if(X1 >= 0 && X1 < NSQUARES)
-      if(chess->board[X1][i] == piece)
+      if(chess->m_board[X1][i] == piece)
 	{
 	  if(isValidMove(i, X1, Y2, X2, piece) != INVALID)
 	    {
@@ -108,11 +108,6 @@ QString qtchess_validate::findDeparture(const int X1,
     departure[0] = (char) (97 + X1);
 
   return departure;
-}
-
-bool qtchess_validate::areValidCoordinates(const int x, const int y)
-{
-  return x >= 0 && x < NSQUARES && y >= 0 && y < NSQUARES;
 }
 
 bool qtchess_validate::isBishop(const int piece)
@@ -171,9 +166,10 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 
   for(int i = 0; i < NSQUARES && I == -1 && J == -1; i++)
     for(int j = 0; j < NSQUARES; j++)
-      if(chess->getMyColor() == WHITE)
+      if(chess->get_my_color() == WHITE)
 	{
-	  if(isColor(chess->board[i][j], BLACK) && isKing(chess->board[i][j]))
+	  if(isColor(chess->m_board[i][j], BLACK) &&
+	     isKing(chess->m_board[i][j]))
 	    {
 	      I = i;
 	      J = j;
@@ -182,7 +178,8 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
 	}
       else
 	{
-	  if(isColor(chess->board[i][j], WHITE) && isKing(chess->board[i][j]))
+	  if(isColor(chess->m_board[i][j], WHITE) &&
+	     isKing(chess->m_board[i][j]))
 	    {
 	      I = i;
 	      J = j;
@@ -193,9 +190,9 @@ bool qtchess_validate::isKingChecked(const struct move_s &current_move)
   if(I != -1 && J != -1)
     for(int i = 0; i < NSQUARES && !isChecked; i++)
       for(int j = 0; j < NSQUARES; j++)
-	if(isValidMove(j, i, J, I, chess->board[i][j]) != INVALID)
+	if(isValidMove(j, i, J, I, chess->m_board[i][j]) != INVALID)
 	  {
-	    if(i == current_move.y2 && j == current_move.x2)
+	    if(i == current_move.m_y2 && j == current_move.m_x2)
 	      {
 		isChecked = true;
 		break;
@@ -264,9 +261,9 @@ bool qtchess_validate::isThreatened(const int x, const int y, int color)
   if(chess)
     for(int i = 0; i < NSQUARES; i++)
       for(int j = 0; j < NSQUARES; j++)
-	if(!isEmpty(chess->board[i][j]))
-	  if(isColor(chess->board[i][j], color))
-	    if(isValidMove(j, i, y, x, chess->board[i][j]) != INVALID)
+	if(!isEmpty(chess->m_board[i][j]))
+	  if(isColor(chess->m_board[i][j], color))
+	    if(isValidMove(j, i, y, x, chess->m_board[i][j]) != INVALID)
 	      return true;
 
   return false;
@@ -339,7 +336,7 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_from == col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   isEmpty(chess->board[col_to][row_to]) &&
+	   isEmpty(chess->m_board[col_to][row_to]) &&
 	   row_from - 1 == row_to)
 	  {
 	    rc = VALID;
@@ -354,8 +351,8 @@ int qtchess_validate::isValidMove(const int row_from,
 
 	if(col_from == col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
-	   isEmpty(chess->board[col_to][5]) &&
-	   isEmpty(chess->board[col_to][4]) && row_from == 6 && row_to == 4)
+	   isEmpty(chess->m_board[col_to][5]) &&
+	   isEmpty(chess->m_board[col_to][4]) && row_from == 6 && row_to == 4)
 	  {
 	    rc = VALID_PAWN_2;
 	    break;
@@ -369,8 +366,8 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_from != col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   chess->board[col_to][row_to] != EMPTY_SQUARE &&
-	   row_from - 1 == row_to && !isBlack(chess->board[col_to][row_to]) &&
+	   chess->m_board[col_to][row_to] != EMPTY_SQUARE &&
+	   row_from - 1 == row_to && !isBlack(chess->m_board[col_to][row_to]) &&
 	   abs(col_from - col_to) == 1)
 	  {
 	    rc = VALID;
@@ -385,8 +382,8 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_from != col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   chess->board[col_to][row_to] != EMPTY_SQUARE &&
-	   isWhite(chess->board[col_to][row_to]) && row_from - 1 == row_to &&
+	   chess->m_board[col_to][row_to] != EMPTY_SQUARE &&
+	   isWhite(chess->m_board[col_to][row_to]) && row_from - 1 == row_to &&
 	   abs(col_from - col_to) == 1)
 	  {
 	    rc = VALID;
@@ -397,11 +394,11 @@ int qtchess_validate::isValidMove(const int row_from,
 	** En passant.
 	*/
 
-	struct move_s move = chess->getLastOpponentMove();
+	struct move_s move = chess->get_last_opponent_move();
 
-	if(move.pawn_2)
+	if(move.m_pawn2)
 	  {
-	    if(row_from == 3 && row_to == 2 && col_to == move.y1)
+	    if(row_from == 3 && row_to == 2 && col_to == move.m_y1)
 	      rc = VALID_EN_PASSANT;
 	  }
 
@@ -424,7 +421,7 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_from == col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   isEmpty(chess->board[col_to][row_to]) &&
+	   isEmpty(chess->m_board[col_to][row_to]) &&
 	   row_from + 1 == row_to)
 	  {
 	    rc = VALID;
@@ -439,8 +436,8 @@ int qtchess_validate::isValidMove(const int row_from,
 
 	if(col_from == col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
-	   isEmpty(chess->board[col_to][2]) &&
-	   isEmpty(chess->board[col_to][3]) && row_from == 1 && row_to == 3)
+	   isEmpty(chess->m_board[col_to][2]) &&
+	   isEmpty(chess->m_board[col_to][3]) && row_from == 1 && row_to == 3)
 	  {
 	    rc = VALID_PAWN_2;
 	    break;
@@ -454,8 +451,8 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_from != col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   chess->board[col_to][row_to] != EMPTY_SQUARE &&
-	   row_from + 1 == row_to && !isWhite(chess->board[col_to][row_to]) &&
+	   chess->m_board[col_to][row_to] != EMPTY_SQUARE &&
+	   row_from + 1 == row_to && !isWhite(chess->m_board[col_to][row_to]) &&
 	   abs(col_from - col_to) == 1)
 	  {
 	    rc = VALID;
@@ -470,8 +467,8 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_from != col_to &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   chess->board[col_to][row_to] != EMPTY_SQUARE &&
-	   isBlack(chess->board[col_to][row_to]) && row_from + 1 == row_to &&
+	   chess->m_board[col_to][row_to] != EMPTY_SQUARE &&
+	   isBlack(chess->m_board[col_to][row_to]) && row_from + 1 == row_to &&
 	   abs(col_from - col_to) == 1)
 	  {
 	    rc = VALID;
@@ -482,11 +479,11 @@ int qtchess_validate::isValidMove(const int row_from,
 	** En passant.
 	*/
 
-	struct move_s move = chess->getLastOpponentMove();
+	struct move_s move = chess->get_last_opponent_move();
 
-	if(move.pawn_2)
+	if(move.m_pawn2)
 	  {
-	    if(row_from == 4 && row_to == 5 && col_to == move.y1)
+	    if(row_from == 4 && row_to == 5 && col_to == move.m_y1)
 	      rc = VALID_EN_PASSANT;
 	  }
 
@@ -507,14 +504,14 @@ int qtchess_validate::isValidMove(const int row_from,
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       (isWhite(chess->board[col_to][row_to]) ||
-			isEmpty(chess->board[col_to][row_to])))
+		       (isWhite(chess->m_board[col_to][row_to]) ||
+			isEmpty(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			(isBlack(chess->board[col_to][row_to]) ||
-			 isEmpty(chess->board[col_to][row_to])))
+			(isBlack(chess->m_board[col_to][row_to]) ||
+			 isEmpty(chess->m_board[col_to][row_to])))
 		  rc = VALID;
 	      }
 	    else if(col_from - 1 == col_to)
@@ -523,14 +520,14 @@ int qtchess_validate::isValidMove(const int row_from,
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       (isWhite(chess->board[col_to][row_to]) ||
-			isEmpty(chess->board[col_to][row_to])))
+		       (isWhite(chess->m_board[col_to][row_to]) ||
+			isEmpty(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			(isBlack(chess->board[col_to][row_to]) ||
-			 isEmpty(chess->board[col_to][row_to])))
+			(isBlack(chess->m_board[col_to][row_to]) ||
+			 isEmpty(chess->m_board[col_to][row_to])))
 		  rc = VALID;
 	      }
 	    else if(col_from < col_to)
@@ -538,23 +535,23 @@ int qtchess_validate::isValidMove(const int row_from,
 		for(int i = col_from + 1; i < col_to; i++)
 		  if(i >= 0 && i < NSQUARES &&
 		     row_to >= 0 && row_to < NSQUARES &&
-		     !isEmpty(chess->board[i][row_to]))
+		     !isEmpty(chess->m_board[i][row_to]))
 		    goto done_label;
 
 		if(col_to >= 0 && col_to < NSQUARES &&
 		   row_to >= 0 && row_to < NSQUARES &&
-		   isEmpty(chess->board[col_to][row_to]))
+		   isEmpty(chess->m_board[col_to][row_to]))
 		  rc = VALID;
 		else if(isBlack(piece))
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       !isWhite(chess->board[col_to][row_to]))
+		       !isWhite(chess->m_board[col_to][row_to]))
 		      break;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			!isBlack(chess->board[col_to][row_to]))
+			!isBlack(chess->m_board[col_to][row_to]))
 		  break;
 
 		rc = VALID;
@@ -564,23 +561,23 @@ int qtchess_validate::isValidMove(const int row_from,
 		for(int i = col_from - 1; i > col_to; i--)
 		  if(i >= 0 && i < NSQUARES &&
 		     row_to >= 0 && row_to < NSQUARES &&
-		     !isEmpty(chess->board[i][row_to]))
+		     !isEmpty(chess->m_board[i][row_to]))
 		    goto done_label;
 
 		if(col_to >= 0 && col_to < NSQUARES &&
 		   row_to >= 0 && row_to < NSQUARES &&
-		   isEmpty(chess->board[col_to][row_to]))
+		   isEmpty(chess->m_board[col_to][row_to]))
 		  rc = VALID;
 		else if(isBlack(piece))
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       !isWhite(chess->board[col_to][row_to]))
+		       !isWhite(chess->m_board[col_to][row_to]))
 		      break;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			!isBlack(chess->board[col_to][row_to]))
+			!isBlack(chess->m_board[col_to][row_to]))
 		  break;
 
 		rc = VALID;
@@ -599,14 +596,14 @@ int qtchess_validate::isValidMove(const int row_from,
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       (isWhite(chess->board[col_to][row_to]) ||
-			isEmpty(chess->board[col_to][row_to])))
+		       (isWhite(chess->m_board[col_to][row_to]) ||
+			isEmpty(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			(isBlack(chess->board[col_to][row_to]) ||
-			 isEmpty(chess->board[col_to][row_to])))
+			(isBlack(chess->m_board[col_to][row_to]) ||
+			 isEmpty(chess->m_board[col_to][row_to])))
 		  rc = VALID;
 	      }
 	    else if(row_from - 1 == row_to)
@@ -615,14 +612,14 @@ int qtchess_validate::isValidMove(const int row_from,
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       (isWhite(chess->board[col_to][row_to]) ||
-			isEmpty(chess->board[col_to][row_to])))
+		       (isWhite(chess->m_board[col_to][row_to]) ||
+			isEmpty(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			(isBlack(chess->board[col_to][row_to]) ||
-			 isEmpty(chess->board[col_to][row_to])))
+			(isBlack(chess->m_board[col_to][row_to]) ||
+			 isEmpty(chess->m_board[col_to][row_to])))
 		  rc = VALID;
 	      }
 	    else if(row_from < row_to)
@@ -630,23 +627,23 @@ int qtchess_validate::isValidMove(const int row_from,
 		for(int i = row_from + 1; i < row_to; i++)
 		  if(i >= 0 && i < NSQUARES &&
 		     col_to >= 0 && col_to < NSQUARES &&
-		     !isEmpty(chess->board[col_to][i]))
+		     !isEmpty(chess->m_board[col_to][i]))
 		    goto done_label;
 
 		if(col_to >= 0 && col_to < NSQUARES &&
 		   row_to >= 0 && row_to < NSQUARES &&
-		   isEmpty(chess->board[col_to][row_to]))
+		   isEmpty(chess->m_board[col_to][row_to]))
 		  rc = VALID;
 		else if(isBlack(piece))
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       !isWhite(chess->board[col_to][row_to]))
+		       !isWhite(chess->m_board[col_to][row_to]))
 		      break;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			!isBlack(chess->board[col_to][row_to]))
+			!isBlack(chess->m_board[col_to][row_to]))
 		  break;
 
 		rc = VALID;
@@ -656,23 +653,23 @@ int qtchess_validate::isValidMove(const int row_from,
 		for(int i = row_from - 1; i > row_to; i--)
 		  if(i >= 0 && i < NSQUARES &&
 		     col_to >= 0 && col_to < NSQUARES &&
-		     !isEmpty(chess->board[col_to][i]))
+		     !isEmpty(chess->m_board[col_to][i]))
 		    goto done_label;
 
 		if(col_to >= 0 && col_to < NSQUARES &&
 		   row_to >= 0 && row_to < NSQUARES &&
-		   isEmpty(chess->board[col_to][row_to]))
+		   isEmpty(chess->m_board[col_to][row_to]))
 		  rc = VALID;
 		else if(isBlack(piece))
 		  {
 		    if(col_to >= 0 && col_to < NSQUARES &&
 		       row_to >= 0 && row_to < NSQUARES &&
-		       !isWhite(chess->board[col_to][row_to]))
+		       !isWhite(chess->m_board[col_to][row_to]))
 		      break;
 		  }
 		else if(col_to >= 0 && col_to < NSQUARES &&
 			row_to >= 0 && row_to < NSQUARES &&
-			!isBlack(chess->board[col_to][row_to]))
+			!isBlack(chess->m_board[col_to][row_to]))
 		  break;
 
 		rc = VALID;
@@ -686,15 +683,15 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
 	   abs(row_from - row_to) == 1 && abs(col_from - col_to) == 2 &&
-	   (isWhite(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isWhite(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	if(col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
 	   abs(row_from - row_to) == 2 && abs(col_from - col_to) == 1 &&
-	   (isWhite(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isWhite(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	break;
@@ -704,15 +701,15 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
 	   abs(row_from - row_to) == 1 && abs(col_from - col_to) == 2 &&
-	   (isBlack(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isBlack(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	if(col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
 	   abs(row_from - row_to) == 2 && abs(col_from - col_to) == 1 &&
-	   (isBlack(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isBlack(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	break;
@@ -725,14 +722,14 @@ int qtchess_validate::isValidMove(const int row_from,
 	      {
 		if(col_to >= 0 && col_to < NSQUARES &&
 		   row_to >= 0 && row_to < NSQUARES &&
-		   (isEmpty(chess->board[col_to][row_to]) ||
-		    isWhite(chess->board[col_to][row_to])))
+		   (isEmpty(chess->m_board[col_to][row_to]) ||
+		    isWhite(chess->m_board[col_to][row_to])))
 		  rc = VALID;
 	      }
 	    else if(col_to >= 0 && col_to < NSQUARES &&
 		    row_to >= 0 && row_to < NSQUARES &&
-		    (isEmpty(chess->board[col_to][row_to]) ||
-		     isBlack(chess->board[col_to][row_to])))
+		    (isEmpty(chess->m_board[col_to][row_to]) ||
+		     isBlack(chess->m_board[col_to][row_to])))
 	      rc = VALID;
 	  }
 	else if(abs(row_from - row_to) == 0 || abs(col_from - col_to) == 0)
@@ -747,21 +744,21 @@ int qtchess_validate::isValidMove(const int row_from,
 			i++, j++)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
-			 !isEmpty(chess->board[j][i]))
+			 !isEmpty(chess->m_board[j][i]))
 			goto done_label;
 
 		    if(isBlack(piece))
 		      {
 			if(col_to >= 0 && col_to < NSQUARES &&
 			   row_to >= 0 && row_to < NSQUARES &&
-			   (isEmpty(chess->board[col_to][row_to]) ||
-			    isWhite(chess->board[col_to][row_to])))
+			   (isEmpty(chess->m_board[col_to][row_to]) ||
+			    isWhite(chess->m_board[col_to][row_to])))
 			  rc = VALID;
 		      }
 		    else if(col_to >= 0 && col_to < NSQUARES &&
 			    row_to >= 0 && row_to < NSQUARES &&
-			    (isEmpty(chess->board[col_to][row_to]) ||
-			     isBlack(chess->board[col_to][row_to])))
+			    (isEmpty(chess->m_board[col_to][row_to]) ||
+			     isBlack(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 		else
@@ -770,21 +767,21 @@ int qtchess_validate::isValidMove(const int row_from,
 			  j++)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
-			 !isEmpty(chess->board[j][i]))
+			 !isEmpty(chess->m_board[j][i]))
 			goto done_label;
 
 		    if(isBlack(piece))
 		      {
 			if(col_to >= 0 && col_to < NSQUARES &&
 			   row_to >= 0 && row_to < NSQUARES &&
-			   (isEmpty(chess->board[col_to][row_to]) ||
-			    isWhite(chess->board[col_to][row_to])))
+			   (isEmpty(chess->m_board[col_to][row_to]) ||
+			    isWhite(chess->m_board[col_to][row_to])))
 			  rc = VALID;
 		      }
 		    else if(col_to >= 0 && col_to < NSQUARES &&
 			    row_to >= 0 && row_to < NSQUARES &&
-			    (isEmpty(chess->board[col_to][row_to]) ||
-			     isBlack(chess->board[col_to][row_to])))
+			    (isEmpty(chess->m_board[col_to][row_to]) ||
+			     isBlack(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 	      }
@@ -796,21 +793,21 @@ int qtchess_validate::isValidMove(const int row_from,
 			i++, j--)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
-			 !isEmpty(chess->board[j][i]))
+			 !isEmpty(chess->m_board[j][i]))
 			goto done_label;
 
 		    if(isBlack(piece))
 		      {
 			if(col_to >= 0 && col_to < NSQUARES &&
 			   row_to >= 0 && row_to < NSQUARES &&
-			   (isEmpty(chess->board[col_to][row_to]) ||
-			    isWhite(chess->board[col_to][row_to])))
+			   (isEmpty(chess->m_board[col_to][row_to]) ||
+			    isWhite(chess->m_board[col_to][row_to])))
 			  rc = VALID;
 		      }
 		    else if(col_to >= 0 && col_to < NSQUARES &&
 			    row_to >= 0 && row_to < NSQUARES &&
-			    (isEmpty(chess->board[col_to][row_to]) ||
-			     isBlack(chess->board[col_to][row_to])))
+			    (isEmpty(chess->m_board[col_to][row_to]) ||
+			     isBlack(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 		else
@@ -819,21 +816,21 @@ int qtchess_validate::isValidMove(const int row_from,
 			i--, j--)
 		      if(i >= 0 && i < NSQUARES &&
 			 j >= 0 && j < NSQUARES &&
-			 !isEmpty(chess->board[j][i]))
+			 !isEmpty(chess->m_board[j][i]))
 			goto done_label;
 
 		    if(isBlack(piece))
 		      {
 			if(col_to >= 0 && col_to < NSQUARES &&
 			   row_to >= 0 && row_to < NSQUARES &&
-			   (isEmpty(chess->board[col_to][row_to]) ||
-			    isWhite(chess->board[col_to][row_to])))
+			   (isEmpty(chess->m_board[col_to][row_to]) ||
+			    isWhite(chess->m_board[col_to][row_to])))
 			  rc = VALID;
 		      }
 		    else if(col_to >= 0 && col_to < NSQUARES &&
 			    row_to >= 0 && row_to < NSQUARES &&
-			    (isEmpty(chess->board[col_to][row_to]) ||
-			     isBlack(chess->board[col_to][row_to])))
+			    (isEmpty(chess->m_board[col_to][row_to]) ||
+			     isBlack(chess->m_board[col_to][row_to])))
 		      rc = VALID;
 		  }
 	      }
@@ -846,29 +843,29 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(abs(row_from - row_to) == 0 && abs(col_from - col_to) == 1 &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   (isWhite(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isWhite(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	if(abs(row_from - row_to) == 1 && abs(col_from - col_to) == 0 &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   (isWhite(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isWhite(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	if(abs(row_from - row_to) == 1 && abs(col_from - col_to) == 1 &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   (isWhite(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isWhite(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	/*
 	** Castling.
 	*/
 
-	bool kingHasMoved = chess->hasKingMoved();
+	bool kingHasMoved = chess->has_king_moved();
 
 	if(!kingHasMoved && (col_to == 2 || col_to == 6) && row_to == 7)
 	  {
@@ -878,16 +875,16 @@ int qtchess_validate::isValidMove(const int row_from,
 
 	    if(col_to < col_from) // Rook #1
 	      {
-		if(!chess->hasRook1Moved())
+		if(!chess->has_rook1_moved())
 		  {
 		    /*
 		    ** First two squares left of the king
 		    ** must not be threatened.
 		    */
 
-		    if(isEmpty(chess->board[1][7]) &&
-		       isEmpty(chess->board[2][7]) &&
-		       isEmpty(chess->board[3][7]))
+		    if(isEmpty(chess->m_board[1][7]) &&
+		       isEmpty(chess->m_board[2][7]) &&
+		       isEmpty(chess->m_board[3][7]))
 		      /*
 		      ** Now make sure these squares are
 		      ** not threatened.
@@ -900,15 +897,15 @@ int qtchess_validate::isValidMove(const int row_from,
 	      }
 	    else // Rook #2
 	      {
-		if(!chess->hasRook2Moved())
+		if(!chess->has_rook2_moved())
 		  {
 		    /*
 		    ** First two squares right of the king
 		    ** must not be threatened.
 		    */
 
-		    if(isEmpty(chess->board[5][7]) &&
-		       isEmpty(chess->board[6][7]))
+		    if(isEmpty(chess->m_board[5][7]) &&
+		       isEmpty(chess->m_board[6][7]))
 		      /*
 		      ** Now make sure these squares are
 		      ** not threatened.
@@ -931,29 +928,29 @@ int qtchess_validate::isValidMove(const int row_from,
 	if(abs(row_from - row_to) == 0 && abs(col_from - col_to) == 1 &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   (isBlack(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isBlack(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	if(abs(row_from - row_to) == 1 && abs(col_from - col_to) == 0 &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   (isBlack(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isBlack(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	if(abs(row_from - row_to) == 1 && abs(col_from - col_to) == 1 &&
 	   col_to >= 0 && col_to < NSQUARES &&
 	   row_to >= 0 && row_to < NSQUARES &&
-	   (isBlack(chess->board[col_to][row_to]) ||
-	    isEmpty(chess->board[col_to][row_to])))
+	   (isBlack(chess->m_board[col_to][row_to]) ||
+	    isEmpty(chess->m_board[col_to][row_to])))
 	  rc = VALID;
 
 	/*
 	** Castling.
 	*/
 
-	bool kingHasMoved = chess->hasKingMoved();
+	bool kingHasMoved = chess->has_king_moved();
 
 	if(!kingHasMoved && (col_to == 2 || col_to == 6) && row_to == 0)
 	  {
@@ -963,16 +960,16 @@ int qtchess_validate::isValidMove(const int row_from,
 
 	    if(col_to < col_from) // Rook #1
 	      {
-		if(!chess->hasRook1Moved())
+		if(!chess->has_rook1_moved())
 		  {
 		    /*
 		    ** First two squares left of the king
 		    ** must not be threatened.
 		    */
 
-		    if(isEmpty(chess->board[1][0]) &&
-		       isEmpty(chess->board[2][0]) &&
-		       isEmpty(chess->board[3][0]))
+		    if(isEmpty(chess->m_board[1][0]) &&
+		       isEmpty(chess->m_board[2][0]) &&
+		       isEmpty(chess->m_board[3][0]))
 		      /*
 		      ** Now make sure these squares are
 		      ** not threatened.
@@ -985,15 +982,15 @@ int qtchess_validate::isValidMove(const int row_from,
 	      }
 	    else // Rook #2
 	      {
-		if(!chess->hasRook2Moved())
+		if(!chess->has_rook2_moved())
 		  {
 		    /*
 		    ** First two squares right of the king
 		    ** must not be threatened.
 		    */
 
-		    if(isEmpty(chess->board[5][0]) &&
-		       isEmpty(chess->board[6][0]))
+		    if(isEmpty(chess->m_board[5][0]) &&
+		       isEmpty(chess->m_board[6][0]))
 		      /*
 		      ** Now make sure these squares are
 		      ** not threatened.

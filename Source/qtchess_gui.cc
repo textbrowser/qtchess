@@ -27,7 +27,7 @@
 
 #include "qtchess.h"
 #include "qtchess_comm.h"
-#include "qtchess_defs.h"
+#include "qtchess_definitions.h"
 #include "qtchess_gui.h"
 #include "qtchess_validate.h"
 
@@ -103,89 +103,89 @@ void qtchess_gui::addHistoryMove(const struct move_s &current_move,
   memset(hist, 0, sizeof(hist));
   memset(insertX, 0, sizeof(insertX));
   memset(to_let, 0, sizeof(to_let));
-  from_position[0] = (char) (97 + current_move.y1);
-  to_let[0] = (char) (97 + current_move.y2);
+  from_position[0] = (char) (97 + current_move.m_y1);
+  to_let[0] = (char) (97 + current_move.m_y2);
 
-  if(current_move.promoted)
+  if(current_move.m_promoted)
     {
-      if(chess && chess->wasPieceWon())
+      if(chess && chess->was_piece_won())
 	snprintf(insertX, sizeof(insertX), "%s%s", from_position, "x");
 
-      if(qtchess_validate::isBishop(current_move.piece))
+      if(qtchess_validate::isBishop(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%dB", insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isKnight(current_move.piece))
+		 to_let, current_move.m_x2 + 1);
+      else if(qtchess_validate::isKnight(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%dN", insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isQueen(current_move.piece))
+		 to_let, current_move.m_x2 + 1);
+      else if(qtchess_validate::isQueen(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%dQ", insertX,
-		 to_let, current_move.x2 + 1);
-      if(qtchess_validate::isRook(current_move.piece))
+		 to_let, current_move.m_x2 + 1);
+      if(qtchess_validate::isRook(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%dR", insertX,
-		 to_let, current_move.x2 + 1);
+		 to_let, current_move.m_x2 + 1);
     }
   else
     {
-      if(chess && chess->wasPieceWon())
+      if(chess && chess->was_piece_won())
 	snprintf(insertX, sizeof(insertX), "%s", "x");
 
-      if(qtchess_validate::isBishop(current_move.piece))
+      if(qtchess_validate::isBishop(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "B",
-		 current_move.departure, insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isKing(current_move.piece))
+		 current_move.m_departure, insertX,
+		 to_let, current_move.m_x2 + 1);
+      else if(qtchess_validate::isKing(current_move.m_piece))
 	{
-	  if(current_move.r_x1 != -1)
+	  if(current_move.m_rook_x1 != -1)
 	    {
-	      if(current_move.y2 == 6)
+	      if(current_move.m_y2 == 6)
 		snprintf(hist, sizeof(hist),
 			 "%s%s%s%d 0-0", "K", insertX,
-			 to_let, current_move.x2 + 1);
+			 to_let, current_move.m_x2 + 1);
 	      else
 		snprintf(hist, sizeof(hist),
 			 "%s%s%s%d 0-0-0", "K", insertX,
-			 to_let, current_move.x2 + 1);
+			 to_let, current_move.m_x2 + 1);
 	    }
 	  else
 	    snprintf(hist, sizeof(hist),
 		     "%s%s%s%d", "K", insertX,
-		     to_let, current_move.x2 + 1);
+		     to_let, current_move.m_x2 + 1);
 	}
-      else if(qtchess_validate::isKnight(current_move.piece))
+      else if(qtchess_validate::isKnight(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "N",
-		 current_move.departure, insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isPawn(current_move.piece))
+		 current_move.m_departure, insertX,
+		 to_let, current_move.m_x2 + 1);
+      else if(qtchess_validate::isPawn(current_move.m_piece))
 	{
-	  if(chess && chess->wasPieceWon())
+	  if(chess && chess->was_piece_won())
 	    snprintf(insertX, sizeof(insertX), "%s%s",
 		     from_position, "x");
 
-	  if(current_move.enpassant)
+	  if(current_move.m_enpassant)
 	    snprintf(hist, sizeof(hist),
 		     "%s%s%d e.p.", insertX,
-		     to_let, current_move.x2 + 1);
+		     to_let, current_move.m_x2 + 1);
 	  else
 	    snprintf(hist, sizeof(hist),
 		     "%s%s%d", insertX,
-		     to_let, current_move.x2 + 1);
+		     to_let, current_move.m_x2 + 1);
 	}
-      else if(qtchess_validate::isQueen(current_move.piece))
+      else if(qtchess_validate::isQueen(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "Q",
-		 current_move.departure, insertX,
-		 to_let, current_move.x2 + 1);
-      else if(qtchess_validate::isRook(current_move.piece))
+		 current_move.m_departure, insertX,
+		 to_let, current_move.m_x2 + 1);
+      else if(qtchess_validate::isRook(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "R",
-		 current_move.departure, insertX,
-		 to_let, current_move.x2 + 1);
+		 current_move.m_departure, insertX,
+		 to_let, current_move.m_x2 + 1);
       else
 	snprintf(hist, sizeof(hist), "%s", "-----");
     }
@@ -194,7 +194,7 @@ void qtchess_gui::addHistoryMove(const struct move_s &current_move,
   ** Is the king in check?
   */
 
-  if(current_move.isOppKingThreat)
+  if(current_move.m_is_opponent_king_threat)
     strncat(hist, "+", sizeof(hist) - strnlen(hist, sizeof(hist) - 1) - 1);
 
   if((item = new(std::nothrow) QTableWidgetItem(tr(hist))) != nullptr)
@@ -402,31 +402,31 @@ void qtchess_gui::newGame(void)
     chess->init();
 
   if(getGLBoard())
-    getGLBoard()->newGame();
+    getGLBoard()->new_game();
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       if(chess)
-	current_move.board[i][j] = chess->board[i][j];
+	current_move.m_board[i][j] = chess->m_board[i][j];
       else
-	current_move.board[i][j] = EMPTY_SQUARE;
+	current_move.m_board[i][j] = EMPTY_SQUARE;
 
-  current_move.enpassant =
-    current_move.pawn_2 =
-    current_move.promoted = 0;
-  current_move.isOppKingThreat = 0;
-  current_move.piece =
-    current_move.rook =
-    current_move.r_x1 =
-    current_move.r_x2 =
-    current_move.r_y1 =
-    current_move.r_y2 =
-    current_move.x1 =
-    current_move.x2 =
-    current_move.y1 =
-    current_move.y2 = -1;
-  memset(current_move.departure, 0, sizeof(current_move.departure));
-  current_move.departure[0] = '0';
+  current_move.m_enpassant =
+    current_move.m_pawn2 =
+    current_move.m_promoted = 0;
+  current_move.m_is_opponent_king_threat = 0;
+  current_move.m_piece =
+    current_move.m_rook =
+    current_move.m_rook_x1 =
+    current_move.m_rook_x2 =
+    current_move.m_rook_y1 =
+    current_move.m_rook_y2 =
+    current_move.m_x1 =
+    current_move.m_x2 =
+    current_move.m_y1 =
+    current_move.m_y2 = -1;
+  memset(current_move.m_departure, 0, sizeof(current_move.m_departure));
+  current_move.m_departure[0] = '0';
 
   if(comm)
     comm->sendMove(current_move);
@@ -439,7 +439,7 @@ void qtchess_gui::newGame(void)
   */
 
   if(chess)
-    chess->setTurn(MY_TURN);
+    chess->set_turn(MY_TURN);
 }
 
 void qtchess_gui::notifyConnection(const QString &address,
@@ -453,7 +453,7 @@ void qtchess_gui::quit(void)
 {
   if(chess)
     {
-      if(!chess->isGameOver() && comm && comm->isConnectedRemotely())
+      if(!chess->is_game_over() && comm && comm->isConnectedRemotely())
 	{
 	  QMessageBox mb(this);
 
@@ -536,12 +536,13 @@ void qtchess_gui::stopTimers(const int which)
 
 void qtchess_gui::updateOpponent(void)
 {
-  static QString stylesheet
-    (ui.opponentClock->styleSheet());
+  static QString stylesheet(ui.opponentClock->styleSheet());
 
-  if(comm && chess &&
-     comm->isReady() && chess->getTurn() == THEIR_TURN &&
-     !chess->isGameOver())
+  if(chess &&
+     chess->get_turn() == THEIR_TURN &&
+     !chess->is_game_over() &&
+     comm &&
+     comm->is_ready())
     {
       ui.opponentClock->setStyleSheet
 	("QWidget {background: rgb(240, 128, 128);}");
@@ -553,12 +554,13 @@ void qtchess_gui::updateOpponent(void)
 
 void qtchess_gui::updatePlayer(void)
 {
-  static QString stylesheet
-    (ui.playerClock->styleSheet());
+  static QString stylesheet(ui.playerClock->styleSheet());
 
-  if(comm && chess &&
-     comm->isReady() && chess->getTurn() == MY_TURN &&
-     !chess->isGameOver())
+  if(chess &&
+     chess->get_turn() == MY_TURN &&
+     !chess->is_game_over() &&
+     comm &&
+     comm->is_ready())
     {
       ui.playerClock->setStyleSheet
 	("QWidget {background: rgb(144, 238, 144);}");

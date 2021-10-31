@@ -32,18 +32,18 @@
 #include <QMouseEvent>
 #include <QPointer>
 
-#include "qtchess_defs.h"
+#include "qtchess_definitions.h"
 
 class point
 {
  public:
   point(void)
   {
-    x = y = -1;
+    m_x = m_y = -1;
   }
 
-  int x;
-  int y;
+  int m_x;
+  int m_y;
 };
 
 class qtchess_piece: public QLabel
@@ -83,7 +83,7 @@ class qtchess_piece: public QLabel
       return;
 
     if(event->button() == Qt::LeftButton)
-      emit doubleClicked(this);
+      emit double_clicked(this);
 
     QLabel::mouseDoubleClickEvent(event);
   }
@@ -100,7 +100,7 @@ class qtchess_piece: public QLabel
   }
 
  signals:
-  void doubleClicked(qtchess_piece *piece);
+  void double_clicked(qtchess_piece *piece);
   void pressed(qtchess_piece *piece);
 };
 
@@ -111,19 +111,19 @@ class openglWid: public QObject
  public:
   openglWid(QObject *);
   void add(QFrame *frame);
-  void newGame(void);
-  void reinit(void);
+  void new_game(void);
+  void initialize(void);
 
  private:
   QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];
   int m_mouse_pressed;
   point m_point_selected;
-  void highlightSquare(const int i, const int j);
+  void highlight_square(const int i, const int j);
   void paint(void);
 
  private slots:
-  void slotPieceDoubleClicked(qtchess_piece *piece);
-  void slotPiecePressed(qtchess_piece *piece);
+  void slot_piece_double_clicked(qtchess_piece *piece);
+  void slot_piece_pressed(qtchess_piece *piece);
 };
 
 #endif

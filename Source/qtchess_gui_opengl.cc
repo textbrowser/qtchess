@@ -42,13 +42,13 @@ openglWid::openglWid(QObject *parent):QObject(parent)
       {
 	m_labels[i][j] = new qtchess_piece(i, j, this);
 	connect(m_labels[i][j],
-		SIGNAL(doubleClicked(qtchess_piece *)),
+		SIGNAL(double_clicked(qtchess_piece *)),
 		this,
-		SLOT(slotPieceDoubleClicked(qtchess_piece *)));
+		SLOT(slot_piece_double_clicked(qtchess_piece *)));
 	connect(m_labels[i][j],
 		SIGNAL(pressed(qtchess_piece *)),
 		this,
-		SLOT(slotPiecePressed(qtchess_piece *)));
+		SLOT(slot_piece_pressed(qtchess_piece *)));
 
 	QColor color;
 	auto font(m_labels[i][j]->font());
@@ -72,7 +72,7 @@ openglWid::openglWid(QObject *parent):QObject(parent)
       }
 
   m_mouse_pressed = 0;
-  reinit();
+  initialize();
 }
 
 void openglWid::add(QFrame *frame)
@@ -94,17 +94,17 @@ void openglWid::add(QFrame *frame)
   paint();
 }
 
-void openglWid::highlightSquare(const int i, const int j)
+void openglWid::highlight_square(const int i, const int j)
 {
   if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES)
     m_labels[i][j]->setStyleSheet
       ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
 
-void openglWid::newGame(void)
+void openglWid::new_game(void)
 {
   m_mouse_pressed = 0;
-  m_point_selected.x = m_point_selected.y = -1;
+  m_point_selected.m_x = m_point_selected.m_y = -1;
   paint();
 }
 
@@ -123,25 +123,25 @@ void openglWid::paint(void)
 	int offset = 0;
 	int piece = 0;
 
-	if(!qtchess_validate::isEmpty(chess->board[i][j]))
+	if(!qtchess_validate::isEmpty(chess->m_board[i][j]))
 	  {
-	    if(qtchess_validate::isWhite(chess->board[i][j]))
+	    if(qtchess_validate::isWhite(chess->m_board[i][j]))
 	      offset = 0;
 	    else
 	      offset = 6;
 	  }
 
-	if(qtchess_validate::isBishop(chess->board[i][j]))
+	if(qtchess_validate::isBishop(chess->m_board[i][j]))
 	  piece = 9815 + offset;
-	else if(qtchess_validate::isKing(chess->board[i][j]))
+	else if(qtchess_validate::isKing(chess->m_board[i][j]))
 	  piece = 9812 + offset;
-	else if(qtchess_validate::isKnight(chess->board[i][j]))
+	else if(qtchess_validate::isKnight(chess->m_board[i][j]))
 	  piece = 9816 + offset;
-	else if(qtchess_validate::isPawn(chess->board[i][j]))
+	else if(qtchess_validate::isPawn(chess->m_board[i][j]))
 	  piece = 9817 + offset;
-	else if(qtchess_validate::isQueen(chess->board[i][j]))
+	else if(qtchess_validate::isQueen(chess->m_board[i][j]))
 	  piece = 9813 + offset;
-	else if(qtchess_validate::isRook(chess->board[i][j]))
+	else if(qtchess_validate::isRook(chess->m_board[i][j]))
 	  piece = 9814 + offset;
 
 	if(piece > 0)
@@ -149,7 +149,7 @@ void openglWid::paint(void)
       }
 }
 
-void openglWid::reinit(void)
+void openglWid::initialize(void)
 {
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -168,10 +168,10 @@ void openglWid::reinit(void)
       }
 
   m_mouse_pressed = 0;
-  m_point_selected.x = m_point_selected.y = -1;
+  m_point_selected.m_x = m_point_selected.m_y = -1;
 }
 
-void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
+void openglWid::slot_piece_double_clicked(qtchess_piece *piece)
 {
   if(!(QApplication::keyboardModifiers() & Qt::ControlModifier))
     return;
@@ -204,7 +204,7 @@ void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
 	*/
 
 	if(qtchess_validate::
-	   isValidMove(y, x, j, i, chess->board[x][y]) != INVALID)
+	   isValidMove(y, x, j, i, chess->m_board[x][y]) != INVALID)
 	  m_labels[i][j]->setStyleSheet
 	    ("QLabel {background-color: orange; border: 1px solid navy;}");
       }
@@ -213,16 +213,20 @@ void openglWid::slotPieceDoubleClicked(qtchess_piece *piece)
     ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
 
-void openglWid::slotPiecePressed(qtchess_piece *piece)
+void openglWid::slot_piece_pressed(qtchess_piece *piece)
 {
   if(QApplication::keyboardModifiers() & Qt::ControlModifier)
     return;
 
 #ifdef QTCHESS_DEBUG
-  if(!chess || !piece)
+  if(!chess || !gui || !piece)
     return;
 #else
-  if(!chess || chess->isGameOver() || chess->getTurn() != MY_TURN || !piece)
+  if(!chess ||
+     chess->get_turn() != MY_TURN ||
+     chess->is_game_over() ||
+     !gui ||
+     !piece)
     return;
 #endif
 
@@ -232,7 +236,7 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
   if(m_mouse_pressed == 1)
     goto move_label;
 
-  if(chess->board[x][y] == EMPTY_SQUARE)
+  if(chess->m_board[x][y] == EMPTY_SQUARE)
     {
       m_mouse_pressed = 0;
       return;
@@ -253,8 +257,8 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 	    m_labels[i][j]->setStyleSheet
 	      ("QLabel {background-color: orange; border: 1px solid navy;}");
 	    m_mouse_pressed = 1;
-	    m_point_selected.x = i;
-	    m_point_selected.y = j;
+	    m_point_selected.m_x = i;
+	    m_point_selected.m_y = j;
 	  }
 	else
 	  m_labels[i][j]->setStyleSheet
@@ -270,214 +274,216 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 
 #ifdef QTCHESS_DEBUG
 #else
-  if(chess->isReady())
+  if(chess->is_ready())
 #endif
     {
       int rc = 0;
 
-      if(chess->getMyColor() == BLACK &&
-	 !qtchess_validate::isBlack(chess->board[x][y]))
+      if(chess->get_my_color() == BLACK &&
+	 !qtchess_validate::isBlack(chess->m_board[x][y]))
 	{
-	  highlightSquare(x, y);
+	  highlight_square(x, y);
 	  m_mouse_pressed = 0;
-	  m_point_selected.x = -1;
-	  m_point_selected.y = -1;
+	  m_point_selected.m_x = -1;
+	  m_point_selected.m_y = -1;
 	}
-      else if(chess->getMyColor() == WHITE &&
-	      !qtchess_validate::isWhite(chess->board[x][y]))
+      else if(chess->get_my_color() == WHITE &&
+	      !qtchess_validate::isWhite(chess->m_board[x][y]))
 	{
-	  highlightSquare(x, y);
+	  highlight_square(x, y);
 	  m_mouse_pressed = 0;
-	  m_point_selected.x = -1;
-	  m_point_selected.y = -1;
+	  m_point_selected.m_x = -1;
+	  m_point_selected.m_y = -1;
 	}
-      else if(m_point_selected.x == x &&
-	      m_point_selected.y == y)
+      else if(m_point_selected.m_x == x &&
+	      m_point_selected.m_y == y)
 	m_mouse_pressed = 1;
       else if((rc = qtchess_validate::isValidMove
-	       (m_point_selected.y,
-		m_point_selected.x,
+	       (m_point_selected.m_y,
+		m_point_selected.m_x,
 		y, x,
-		chess->board[m_point_selected.x][m_point_selected.y])) !=
+		chess->m_board[m_point_selected.m_x][m_point_selected.m_y])) !=
 	      INVALID)
 	{
 	  if(qtchess_validate::
-	     isRook1(chess->board[m_point_selected.x][m_point_selected.y]))
-	    chess->setRook1HasMoved(true);
+	     isKing(chess->m_board[m_point_selected.m_x][m_point_selected.m_y]))
+	    chess->set_king_has_moved(true);
 	  else if(qtchess_validate::
-		  isRook2(chess->board[m_point_selected.x][m_point_selected.y]))
-	    chess->setRook2HasMoved(true);
+		  isRook1(chess->m_board[m_point_selected.m_x]
+			                [m_point_selected.m_y]))
+	    chess->set_rook1_has_moved(true);
 	  else if(qtchess_validate::
-		  isKing(chess->board[m_point_selected.x][m_point_selected.y]))
-	    chess->setKingHasMoved(true);
+		  isRook2(chess->m_board[m_point_selected.m_x]
+			                [m_point_selected.m_y]))
+	    chess->set_rook2_has_moved(true);
 
 	  auto game_over = false;
 
-	  if(qtchess_validate::isKing(chess->board[x][y]))
+	  if(qtchess_validate::isKing(chess->m_board[x][y]))
 	    game_over = true;
 
-	  current_move.enpassant = 0;
-	  current_move.isOppKingThreat = 0;
-	  current_move.pawn_2 = 0;
-	  current_move.piece =
-	    chess->board[m_point_selected.x][m_point_selected.y];
-	  current_move.promoted = 0;
-	  current_move.r_x1 =
-	    current_move.r_x2 =
-	    current_move.r_y1 =
-	    current_move.r_y2 = -1;
-	  current_move.rook = -1;
-	  current_move.x1 = m_point_selected.y;
-	  current_move.x2 = y;
-	  current_move.y1 = m_point_selected.x;
-	  current_move.y2 = x;
+	  current_move.m_enpassant = 0;
+	  current_move.m_is_opponent_king_threat = 0;
+	  current_move.m_pawn2 = 0;
+	  current_move.m_piece =
+	    chess->m_board[m_point_selected.m_x][m_point_selected.m_y];
+	  current_move.m_promoted = 0;
+	  current_move.m_rook_x1 =
+	    current_move.m_rook_x2 =
+	    current_move.m_rook_y1 =
+	    current_move.m_rook_y2 = -1;
+	  current_move.m_rook = -1;
+	  current_move.m_x1 = m_point_selected.m_y;
+	  current_move.m_x2 = y;
+	  current_move.m_y1 = m_point_selected.m_x;
+	  current_move.m_y2 = x;
 	  m_mouse_pressed = 0;
 
 	  int oldBoard[NSQUARES][NSQUARES];
 
 	  for(int i = 0; i < NSQUARES; i++)
 	    for(int j = 0; j < NSQUARES; j++)
-	      oldBoard[i][j] = chess->board[i][j];
+	      oldBoard[i][j] = chess->m_board[i][j];
 
 	  /*
 	  ** Piece promotion?
 	  */
 
 	  if(qtchess_validate::isPawn
-	     (chess->board[m_point_selected.x][m_point_selected.y]) &&
+	     (chess->m_board[m_point_selected.m_x][m_point_selected.m_y]) &&
 	     (y == 0 || y == 7) &&
-	     !qtchess_validate::isKing(chess->board[x][y]))
+	     !qtchess_validate::isKing(chess->m_board[x][y]))
 	    {
-	      current_move.promoted = 1;
+	      current_move.m_promoted = 1;
 
-	      if(gui && gui->getPromoteDialog())
+	      if(gui->getPromoteDialog())
 		gui->getPromoteDialog()->setup();
 
-	      if(gui && gui->getPromoteDialog() &&
+	      if(gui->getPromoteDialog() &&
 		 gui->getPromoteDialog()->getMenu() &&
 		 gui->getPromoteDialog()->getMenu()->currentIndex() == 0)
 		{
-		  if(qtchess_validate::isBlack
-		     (chess->
-		      board[m_point_selected.x][m_point_selected.y]))
-		    chess->board[x][y] = current_move.piece = BISHOP_BLACK;
+		  if(qtchess_validate::
+		     isBlack(chess->m_board[m_point_selected.m_x]
+			                   [m_point_selected.m_y]))
+		    chess->m_board[x][y] = current_move.m_piece = BISHOP_BLACK;
 		  else
-		    chess->board[x][y] = current_move.piece = BISHOP_WHITE;
+		    chess->m_board[x][y] = current_move.m_piece = BISHOP_WHITE;
 		}
-	      else if(gui && gui->getPromoteDialog() &&
+	      else if(gui->getPromoteDialog() &&
 		      gui->getPromoteDialog()->getMenu() &&
 		      gui->getPromoteDialog()->getMenu()->currentIndex() == 1)
 		{
-		  if(qtchess_validate::isBlack
-		     (chess->
-		      board[m_point_selected.x][m_point_selected.y]))
-		    chess->board[x][y] = current_move.piece = KNIGHT_BLACK;
+		  if(qtchess_validate::
+		     isBlack(chess->m_board[m_point_selected.m_x]
+			                   [m_point_selected.m_y]))
+		    chess->m_board[x][y] = current_move.m_piece = KNIGHT_BLACK;
 		  else
-		    chess->board[x][y] = current_move.piece = KNIGHT_WHITE;
+		    chess->m_board[x][y] = current_move.m_piece = KNIGHT_WHITE;
 		}
-	      else if(gui && gui->getPromoteDialog() &&
+	      else if(gui->getPromoteDialog() &&
 		      gui->getPromoteDialog()->getMenu() &&
 		      gui->getPromoteDialog()->getMenu()->currentIndex() == 2)
 		{
-		  if(qtchess_validate::isBlack
-		     (chess->
-		      board[m_point_selected.x][m_point_selected.y]))
-		    chess->board[x][y] = current_move.piece = QUEEN_BLACK;
+		  if(qtchess_validate::
+		     isBlack(chess->m_board[m_point_selected.m_x]
+			                   [m_point_selected.m_y]))
+		    chess->m_board[x][y] = current_move.m_piece = QUEEN_BLACK;
 		  else
-		    chess->board[x][y] = current_move.piece = QUEEN_WHITE;
+		    chess->m_board[x][y] = current_move.m_piece = QUEEN_WHITE;
 		}
 	      else
 		{
-		  if(qtchess_validate::isBlack
-		     (chess->
-		      board[m_point_selected.x][m_point_selected.y]))
-		    chess->board[x][y] = current_move.piece = ROOK_BLACK;
+		  if(qtchess_validate::
+		     isBlack(chess->m_board[m_point_selected.m_x]
+			                   [m_point_selected.m_y]))
+		    chess->m_board[x][y] = current_move.m_piece = ROOK_BLACK;
 		  else
-		    chess->board[x][y] = current_move.piece = ROOK_WHITE;
+		    chess->m_board[x][y] = current_move.m_piece = ROOK_WHITE;
 		}
 	    }
 	  else
-	    chess->board[x][y] = chess->
-	      board[m_point_selected.x][m_point_selected.y];
+	    chess->m_board[x][y] = chess->
+	      m_board[m_point_selected.m_x][m_point_selected.m_y];
 
 	  if(rc == VALID_CASTLE)
 	    {
 	      if(x == 2 && y == 7) // Rook #1 Black
 		{
-		  chess->board[3][7] = ROOK1_BLACK;
-		  chess->board[0][7] = EMPTY_SQUARE;
-		  current_move.r_x1 = 7;
-		  current_move.r_y1 = 3;
-		  current_move.r_x2 = 7;
-		  current_move.r_y2 = 0;
-		  current_move.rook = ROOK1_BLACK;
+		  chess->m_board[3][7] = ROOK1_BLACK;
+		  chess->m_board[0][7] = EMPTY_SQUARE;
+		  current_move.m_rook_x1 = 7;
+		  current_move.m_rook_y1 = 3;
+		  current_move.m_rook_x2 = 7;
+		  current_move.m_rook_y2 = 0;
+		  current_move.m_rook = ROOK1_BLACK;
 		}
 	      else if(x == 6 && y == 7) // Rook #2 Black
 		{
-		  chess->board[5][7] = ROOK2_BLACK;
-		  chess->board[7][7] = EMPTY_SQUARE;
-		  current_move.r_x1 = 7;
-		  current_move.r_y1 = 5;
-		  current_move.r_x2 = 7;
-		  current_move.r_y2 = 7;
-		  current_move.rook = ROOK2_BLACK;
+		  chess->m_board[5][7] = ROOK2_BLACK;
+		  chess->m_board[7][7] = EMPTY_SQUARE;
+		  current_move.m_rook_x1 = 7;
+		  current_move.m_rook_y1 = 5;
+		  current_move.m_rook_x2 = 7;
+		  current_move.m_rook_y2 = 7;
+		  current_move.m_rook = ROOK2_BLACK;
 		}
 	      else if(x == 2 && y == 0) // Rook #1 White
 		{
-		  chess->board[3][0] = ROOK1_WHITE;
-		  chess->board[0][0] = EMPTY_SQUARE;
-		  current_move.r_x1 = 0;
-		  current_move.r_y1 = 3;
-		  current_move.r_x2 = 0;
-		  current_move.r_y2 = 0;
-		  current_move.rook = ROOK1_WHITE;
+		  chess->m_board[3][0] = ROOK1_WHITE;
+		  chess->m_board[0][0] = EMPTY_SQUARE;
+		  current_move.m_rook_x1 = 0;
+		  current_move.m_rook_y1 = 3;
+		  current_move.m_rook_x2 = 0;
+		  current_move.m_rook_y2 = 0;
+		  current_move.m_rook = ROOK1_WHITE;
 		}
 	      else if(x == 6 && y == 0) // Rook #2 White
 		{
-		  chess->board[5][0] = ROOK2_WHITE;
-		  chess->board[7][0] = EMPTY_SQUARE;
-		  current_move.r_x1 = 0;
-		  current_move.r_y1 = 5;
-		  current_move.r_x2 = 0;
-		  current_move.r_y2 = 7;
-		  current_move.rook = ROOK2_WHITE;
+		  chess->m_board[5][0] = ROOK2_WHITE;
+		  chess->m_board[7][0] = EMPTY_SQUARE;
+		  current_move.m_rook_x1 = 0;
+		  current_move.m_rook_y1 = 5;
+		  current_move.m_rook_x2 = 0;
+		  current_move.m_rook_y2 = 7;
+		  current_move.m_rook = ROOK2_WHITE;
 		}
 	    }
 	  else if(rc == VALID_PAWN_2)
-	    current_move.pawn_2 = 1;
+	    current_move.m_pawn2 = 1;
 	  else if(rc == VALID_EN_PASSANT)
 	    {
-	      current_move.enpassant = 1;
+	      current_move.m_enpassant = 1;
 
-	      if(m_point_selected.y < y)
-		chess->board[x][y - 1] = EMPTY_SQUARE;
+	      if(m_point_selected.m_y < y)
+		chess->m_board[x][y - 1] = EMPTY_SQUARE;
 	      else
-		chess->board[x][y + 1] = EMPTY_SQUARE;
+		chess->m_board[x][y + 1] = EMPTY_SQUARE;
 	    }
 
-	  chess->board[m_point_selected.x][m_point_selected.y] =
+	  chess->m_board[m_point_selected.m_x][m_point_selected.m_y] =
 	    EMPTY_SQUARE;
 
-	  auto origPiece = chess->board[x][y];
+	  auto origPiece = chess->m_board[x][y];
 
-	  chess->board[x][y] = EMPTY_SQUARE;
+	  chess->m_board[x][y] = EMPTY_SQUARE;
 	  snprintf
-	    (current_move.departure, sizeof(current_move.departure), "%s",
+	    (current_move.m_departure, sizeof(current_move.m_departure), "%s",
 	     qtchess_validate::findDeparture
-	     (m_point_selected.x, m_point_selected.y,
+	     (m_point_selected.m_x, m_point_selected.m_y,
 	      x, y, origPiece).toLatin1().constData());
-	  chess->board[x][y] = origPiece;
+	  chess->m_board[x][y] = origPiece;
 
 	  for(int i = 0; i < NSQUARES; i++)
 	    for(int j = 0; j < NSQUARES; j++)
-	      current_move.board[i][j] = chess->board[i][j];
+	      current_move.m_board[i][j] = chess->m_board[i][j];
 
 	  int nonEmptyNow = 0, nonEmptyThen = 0;
 
 	  for(int i = 0; i < NSQUARES; i++)
 	    for(int j = 0; j < NSQUARES; j++)
 	      {
-		if(chess->board[i][j] != EMPTY_SQUARE)
+		if(chess->m_board[i][j] != EMPTY_SQUARE)
 		  nonEmptyThen += 1;
 
 		if(oldBoard[i][j] != EMPTY_SQUARE)
@@ -485,19 +491,18 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 	      }
 
 	  if(nonEmptyNow != nonEmptyThen)
-	    chess->setWonPiece(true);
+	    chess->set_won_piece(true);
 	  else
-	    chess->setWonPiece(false);
+	    chess->set_won_piece(false);
 
 	  if(qtchess_validate::isKingChecked(current_move))
-	    current_move.isOppKingThreat = 1;
+	    current_move.m_is_opponent_king_threat = 1;
 	  else
-	    current_move.isOppKingThreat = 0;
+	    current_move.m_is_opponent_king_threat = 0;
 
-	  if(gui)
-	    gui->addHistoryMove
-	      (current_move,
-	       qtchess_validate::isWhite(current_move.piece) ? WHITE : BLACK);
+	  gui->addHistoryMove
+	    (current_move,
+	     qtchess_validate::isWhite(current_move.m_piece) ? WHITE : BLACK);
 
 	  /*
 	  ** Send the move.
@@ -506,38 +511,37 @@ void openglWid::slotPiecePressed(qtchess_piece *piece)
 	  if(comm)
 	    comm->sendMove(current_move);
 
-	  chess->setGameOver(game_over);
+	  chess->set_game_over(game_over);
 
 	  if(game_over)
-	    if(gui)
-	      gui->showGameOver(chess->getTurn());
+	    gui->showGameOver(chess->get_turn());
 
+	  paint();
 	  return;
 	}
       else
 	{
-	  if((chess->getMyColor() == BLACK &&
-	      qtchess_validate::isBlack(chess->board[x][y])) ||
-	     (chess->getMyColor() == WHITE &&
-	      qtchess_validate::isWhite(chess->board[x][y])))
+	  if((chess->get_my_color() == BLACK &&
+	      qtchess_validate::isBlack(chess->m_board[x][y])) ||
+	     (chess->get_my_color() == WHITE &&
+	      qtchess_validate::isWhite(chess->m_board[x][y])))
 	    {
 	      /*
 	      ** Allow selection of another similar piece.
 	      */
 
 	      m_mouse_pressed = 1;
-	      m_point_selected.x = x;
-	      m_point_selected.y = y;
+	      m_point_selected.m_x = x;
+	      m_point_selected.m_y = y;
 	    }
 	  else
 	    {
 	      m_mouse_pressed = 0;
-	      m_point_selected.x = -1;
-	      m_point_selected.y = -1;
+	      m_point_selected.m_x = -1;
+	      m_point_selected.m_y = -1;
 	    }
 	}
     }
 
-  m_mouse_pressed = 0;
   paint();
 }

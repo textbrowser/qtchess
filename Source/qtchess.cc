@@ -35,55 +35,55 @@
 extern QPointer<qtchess_comm> comm;
 extern QPointer<qtchess_gui> gui;
 
-bool qtchess::isReady(void)
+bool qtchess::is_ready(void)
 {
-  return comm && comm->isReady() && (getTurn() == MY_TURN);
+  return comm && comm->is_ready() && (get_turn() == MY_TURN);
 }
 
 void qtchess::init(void)
 {
-  board[0][0] = ROOK1_WHITE;
-  board[0][7] = ROOK1_BLACK;
-  board[1][0] = board[6][0] = KNIGHT_WHITE;
-  board[1][7] = board[6][7] = KNIGHT_BLACK;
-  board[2][0] = board[5][0] = BISHOP_WHITE;
-  board[2][7] = board[5][7] = BISHOP_BLACK;
-  board[3][0] = QUEEN_WHITE;
-  board[3][7] = QUEEN_BLACK;
-  board[4][0] = KING_WHITE;
-  board[4][7] = KING_BLACK;
-  board[7][0] = ROOK2_WHITE;
-  board[7][7] = ROOK2_BLACK;
-  game_over = false;
-  king_has_moved = false;
-  rook1_has_moved = false;
-  rook2_has_moved = false;
-  wonPiece = false;
+  m_board[0][0] = ROOK1_WHITE;
+  m_board[0][7] = ROOK1_BLACK;
+  m_board[1][0] = m_board[6][0] = KNIGHT_WHITE;
+  m_board[1][7] = m_board[6][7] = KNIGHT_BLACK;
+  m_board[2][0] = m_board[5][0] = BISHOP_WHITE;
+  m_board[2][7] = m_board[5][7] = BISHOP_BLACK;
+  m_board[3][0] = QUEEN_WHITE;
+  m_board[3][7] = QUEEN_BLACK;
+  m_board[4][0] = KING_WHITE;
+  m_board[4][7] = KING_BLACK;
+  m_board[7][0] = ROOK2_WHITE;
+  m_board[7][7] = ROOK2_BLACK;
+  m_game_over = false;
+  m_king_has_moved = false;
+  m_rook1_has_moved = false;
+  m_rook2_has_moved = false;
+  m_won_piece = false;
 
   for(int i = 0; i < NSQUARES; i++)
     {
-      board[i][1] = PAWN_WHITE;
-      board[i][6] = PAWN_BLACK;
+      m_board[i][1] = PAWN_WHITE;
+      m_board[i][6] = PAWN_BLACK;
     }
 
   for(int i = 2; i < 6; i++)
     for(int j = 0; j < NSQUARES; j++)
-      board[j][i] = EMPTY_SQUARE;
+      m_board[j][i] = EMPTY_SQUARE;
 
-  last_opponent_move.x1 =
-    last_opponent_move.x2 =
-    last_opponent_move.y1 =
-    last_opponent_move.y2 =
-    last_opponent_move.r_x1 =
-    last_opponent_move.r_x2 =
-    last_opponent_move.r_y1 =
-    last_opponent_move.r_y2 =
-    last_opponent_move.piece =
-    last_opponent_move.rook = -1;
-  last_opponent_move.promoted = last_opponent_move.pawn_2 = 0;
-  memset(last_opponent_move.departure,
+  m_last_opponent_move.m_x1 =
+    m_last_opponent_move.m_x2 =
+    m_last_opponent_move.m_y1 =
+    m_last_opponent_move.m_y2 =
+    m_last_opponent_move.m_rook_x1 =
+    m_last_opponent_move.m_rook_x2 =
+    m_last_opponent_move.m_rook_y1 =
+    m_last_opponent_move.m_rook_y2 =
+    m_last_opponent_move.m_piece =
+    m_last_opponent_move.m_rook = -1;
+  m_last_opponent_move.m_pawn2 = m_last_opponent_move.m_promoted = 0;
+  memset(m_last_opponent_move.m_departure,
 	 0,
-	 sizeof(last_opponent_move.departure));
+	 sizeof(m_last_opponent_move.m_departure));
 }
 
 void qtchess::quit(const char *message_text, const int exit_code)
@@ -101,13 +101,13 @@ void qtchess::quit(const char *message_text, const int exit_code)
     exit(exit_code);
 }
 
-void qtchess::updateBoard(const QByteArray &buffer)
+void qtchess::update_board(const QByteArray &buffer)
 {
-  QList<QByteArray> list = buffer.simplified().split(' ');
+  auto list(buffer.simplified().split(' '));
 
   if(list.size() < 15 + NSQUARES * NSQUARES)
     {
-      qDebug() << "qtchess::updateBoard(): list.size() is too small.";
+      qDebug() << "qtchess::update_board(): list.size() is too small.";
       return;
     }
 
@@ -121,69 +121,70 @@ void qtchess::updateBoard(const QByteArray &buffer)
   ** Copy the information into current_move.
   */
 
-  current_move.piece = list.value(8).toInt();
-  current_move.r_x1 = qBound(-1, list.value(4).toInt(), NSQUARES - 1);
-  current_move.r_x2 = qBound(-1, list.value(5).toInt(), NSQUARES - 1);
-  current_move.r_y1 = qBound(-1, list.value(6).toInt(), NSQUARES - 1);
-  current_move.r_y2 = qBound(-1, list.value(7).toInt(), NSQUARES - 1);
-  current_move.rook = list.value(9).toInt();
-  current_move.x1 = qBound(-1, list.value(0).toInt(), NSQUARES - 1);
-  current_move.x2 = qBound(-1, list.value(1).toInt(), NSQUARES - 1);
-  current_move.y1 = qBound(-1, list.value(2).toInt(), NSQUARES - 1);
-  current_move.y2 = qBound(-1, list.value(3).toInt(), NSQUARES - 1);
+  current_move.m_piece = list.value(8).toInt();
+  current_move.m_rook_x1 = qBound(-1, list.value(4).toInt(), NSQUARES - 1);
+  current_move.m_rook_x2 = qBound(-1, list.value(5).toInt(), NSQUARES - 1);
+  current_move.m_rook_y1 = qBound(-1, list.value(6).toInt(), NSQUARES - 1);
+  current_move.m_rook_y2 = qBound(-1, list.value(7).toInt(), NSQUARES - 1);
+  current_move.m_rook = list.value(9).toInt();
+  current_move.m_x1 = qBound(-1, list.value(0).toInt(), NSQUARES - 1);
+  current_move.m_x2 = qBound(-1, list.value(1).toInt(), NSQUARES - 1);
+  current_move.m_y1 = qBound(-1, list.value(2).toInt(), NSQUARES - 1);
+  current_move.m_y2 = qBound(-1, list.value(3).toInt(), NSQUARES - 1);
 
-  if(getMyColor() == BLACK)
+  if(get_my_color() == BLACK)
     {
-      if(!(current_move.piece >= 200 && current_move.piece <= 207))
-	current_move.piece = EMPTY_SQUARE;
+      if(!(current_move.m_piece >= 200 && current_move.m_piece <= 207))
+	current_move.m_piece = EMPTY_SQUARE;
     }
   else
     {
-      if(!(current_move.piece >= 100 && current_move.piece <= 107))
-	current_move.piece = EMPTY_SQUARE;
+      if(!(current_move.m_piece >= 100 && current_move.m_piece <= 107))
+	current_move.m_piece = EMPTY_SQUARE;
     }
 
-  if(!(current_move.rook == -1 ||
-       current_move.rook == ROOK1_BLACK ||
-       current_move.rook == ROOK1_WHITE ||
-       current_move.rook == ROOK2_BLACK ||
-       current_move.rook == ROOK2_WHITE))
-    current_move.rook = -1;
+  if(!(current_move.m_rook == -1 ||
+       current_move.m_rook == ROOK1_BLACK ||
+       current_move.m_rook == ROOK1_WHITE ||
+       current_move.m_rook == ROOK2_BLACK ||
+       current_move.m_rook == ROOK2_WHITE))
+    current_move.m_rook = -1;
 
-  current_move.enpassant = QVariant(list.value(12).toInt()).toBool();
-  current_move.isOppKingThreat = QVariant(list.value(13).toInt()).toBool();
-  current_move.pawn_2 = QVariant(list.value(11).toInt()).toBool();
-  current_move.promoted = QVariant(list.value(10).toInt()).toBool();
-  snprintf(current_move.departure,
-	   sizeof(current_move.departure),
+  current_move.m_enpassant = QVariant(list.value(12).toInt()).toBool();
+  current_move.m_is_opponent_king_threat =
+    QVariant(list.value(13).toInt()).toBool();
+  current_move.m_pawn2 = QVariant(list.value(11).toInt()).toBool();
+  current_move.m_promoted = QVariant(list.value(10).toInt()).toBool();
+  snprintf(current_move.m_departure,
+	   sizeof(current_move.m_departure),
 	   "%s",
 	   list.value(14).constData());
 
   for(int i = 0, x = 15; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
-	current_move.board[i][j] = list.value(x).toInt();
+	current_move.m_board[i][j] = list.value(x).toInt();
 
-	if(!((current_move.board[i][j] >= 100 &&
-	      current_move.board[i][j] <= 107) ||
-	     (current_move.board[i][j] >= 200 &&
-	      current_move.board[i][j] <= 207)))
-	  current_move.board[i][j] = EMPTY_SQUARE;
+	if(!((current_move.m_board[i][j] >= 100 &&
+	      current_move.m_board[i][j] <= 107) ||
+	     (current_move.m_board[i][j] >= 200 &&
+	      current_move.m_board[i][j] <= 207)))
+	  current_move.m_board[i][j] = EMPTY_SQUARE;
 
 	x += 1;
       }
 
   list.clear();
 
-  if(current_move.x1 == -1)
+  if(current_move.m_x1 == -1)
     {
       /*
       ** New game?
       */
 
       init();
-      setGameOver(false);
-      setTurn(THEIR_TURN);
+      set_game_over(false);
+      set_turn(THEIR_TURN);
 
       if(gui)
 	{
@@ -202,43 +203,45 @@ void qtchess::updateBoard(const QByteArray &buffer)
 
       int color = BLACK;
 
-      if(getMyColor() == BLACK)
+      if(get_my_color() == BLACK)
 	color = WHITE;
       else
 	color = BLACK;
 
-      if(current_move.x2 >= 0 && current_move.x2 < NSQUARES &&
-	 current_move.y2 >= 0 && current_move.y2 < NSQUARES &&
-	 qtchess_validate::isKing(board[current_move.y2][current_move.x2]))
+      if(current_move.m_x2 >= 0 && current_move.m_x2 < NSQUARES &&
+	 current_move.m_y2 >= 0 && current_move.m_y2 < NSQUARES &&
+	 qtchess_validate::isKing(m_board[current_move.m_y2]
+				         [current_move.m_x2]))
 	{
-	  game_over = true;
-	  setGameOver(game_over);
+	  m_game_over = true;
+	  set_game_over(m_game_over);
 	}
       else
-	setTurn(MY_TURN);
+	set_turn(MY_TURN);
 
-      last_opponent_move = current_move;
+      m_last_opponent_move = current_move;
 
-      int nonEmptyNow = 0, nonEmptyThen = 0;
+      int non_empty_now = 0;
+      int non_empty_then = 0;
 
       for(int i = 0; i < NSQUARES; i++)
 	for(int j = 0; j < NSQUARES; j++)
 	  {
-	    if(board[i][j] != EMPTY_SQUARE)
-	      nonEmptyThen += 1;
+	    if(current_move.m_board[i][j] != EMPTY_SQUARE)
+	      non_empty_now += 1;
 
-	    if(current_move.board[i][j] != EMPTY_SQUARE)
-	      nonEmptyNow += 1;
+	    if(m_board[i][j] != EMPTY_SQUARE)
+	      non_empty_then += 1;
 	  }
 
-      if(nonEmptyNow != nonEmptyThen)
-	wonPiece = true;
+      if(non_empty_now != non_empty_then)
+	m_won_piece = true;
       else
-	wonPiece = false;
+	m_won_piece = false;
 
       for(int i = 0; i < NSQUARES; i++)
 	for(int j = 0; j < NSQUARES; j++)
-	  board[i][j] = current_move.board[i][j];
+	  m_board[i][j] = current_move.m_board[i][j];
 
       if(gui)
 	{
@@ -246,9 +249,9 @@ void qtchess::updateBoard(const QByteArray &buffer)
 	  gui->update();
 	}
 
-      if(gui && game_over)
+      if(gui && m_game_over)
 	{
-	  gui->showGameOver(getTurn());
+	  gui->showGameOver(get_turn());
 	  gui->stopTimers(PLAYER_TIMER);
 	  gui->stopTimers(OPPONENT_TIMER);
 	}
