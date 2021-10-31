@@ -79,7 +79,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -fwrapv \
                    -pedantic \
                    -pie \
-                   -std=c++11                   
+                   -std=c++11
 }
 
 QMAKE_DISTCLEAN += .qmake.cache .qmake.stash

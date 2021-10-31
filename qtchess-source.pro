@@ -16,7 +16,7 @@ LIBS            += -framework Cocoa
 OBJECTIVE_HEADERS += Source/Cocoainitializer.h
 OBJECTIVE_SOURCES += Source/Cocoainitializer.mm
 }
-                  
+
 RESOURCES       = Images/images.qrc
 
 SOURCES		= Source/qtchess.cc \
