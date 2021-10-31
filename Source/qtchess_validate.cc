@@ -484,9 +484,9 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** Castling.
 	*/
 
-	bool kingHasMoved = chess->has_king_moved();
+	auto king_has_moved = chess->has_king_moved();
 
-	if(!kingHasMoved && (col_to == 2 || col_to == 6) && row_to == 7)
+	if(!king_has_moved && (col_to == 2 || col_to == 6) && row_to == 7)
 	  {
 	    /*
 	    ** King moves two squares towards the rook.
@@ -569,9 +569,9 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** Castling.
 	*/
 
-	bool kingHasMoved = chess->has_king_moved();
+	auto king_has_moved = chess->has_king_moved();
 
-	if(!kingHasMoved && (col_to == 2 || col_to == 6) && row_to == 0)
+	if(!king_has_moved && (col_to == 2 || col_to == 6) && row_to == 0)
 	  {
 	    /*
 	    ** King moves two squares towards the rook.
@@ -739,7 +739,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** En passant.
 	*/
 
-	struct move_s move = chess->get_last_opponent_move();
+	auto move = chess->get_last_opponent_move();
 
 	if(move.m_pawn2)
 	  {
@@ -825,7 +825,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** En passant.
 	*/
 
-	struct move_s move = chess->get_last_opponent_move();
+	auto move = chess->get_last_opponent_move();
 
 	if(move.m_pawn2)
 	  {

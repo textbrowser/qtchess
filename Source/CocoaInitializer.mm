@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008 Remko Troncon
+ * Copyright (c) 2008 Remko Troncon.
  */
 
 #include "CocoaInitializer.h"
@@ -11,7 +11,7 @@
 class CocoaInitializer::Private
 {
 	public:
-		NSAutoreleasePool* autoReleasePool_;
+		NSAutoreleasePool *autoReleasePool_;
 };
 
 CocoaInitializer::CocoaInitializer()
