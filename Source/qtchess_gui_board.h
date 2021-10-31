@@ -25,8 +25,8 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _QTCHESS_GUI_OPENGL_
-#define _QTCHESS_GUI_OPENGL_
+#ifndef _QTCHESS_GUI_BOARD_
+#define _QTCHESS_GUI_BOARD_
 
 #include <QLabel>
 #include <QMouseEvent>
@@ -104,12 +104,12 @@ class qtchess_piece: public QLabel
   void pressed(qtchess_piece *piece);
 };
 
-class openglWid: public QObject
+class qtchess_gui_board: public QObject
 {
   Q_OBJECT
 
  public:
-  openglWid(QObject *parent);
+  qtchess_gui_board(QObject *parent);
   void add(QFrame *frame);
   void new_game(void);
   void initialize(void);

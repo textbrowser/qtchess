@@ -47,13 +47,13 @@ HEADERS		= Source/qtchess.h \
                   Source/qtchess_comm.h \
                   Source/qtchess_definitions.h \
                   Source/qtchess_gui.h \
-                  Source/qtchess_gui_opengl.h \
+                  Source/qtchess_gui_board.h \
                   Source/qtchess_validate.h
 
 SOURCES		= Source/qtchess.cc \
                   Source/qtchess_comm.cc \
                   Source/qtchess_gui.cc \
-                  Source/qtchess_gui_opengl.cc \
+                  Source/qtchess_gui_board.cc \
                   Source/qtchess_main.cc \
                   Source/qtchess_validate.cc
 

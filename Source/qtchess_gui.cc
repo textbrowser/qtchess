@@ -53,8 +53,8 @@ qtchess_gui::qtchess_gui(void):QMainWindow()
 
 qtchess_gui::~qtchess_gui()
 {
-  if(glboard)
-    glboard->deleteLater();
+  if(m_board)
+    m_board->deleteLater();
 }
 
 qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
@@ -288,7 +288,7 @@ void qtchess_gui::initialize(void)
 	  this,
 	  SLOT(help(void)));
 
-  if((glboard = new(std::nothrow) openglWid(nullptr)) == nullptr)
+  if((m_board = new(std::nothrow) qtchess_gui_board(nullptr)) == nullptr)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -354,8 +354,8 @@ void qtchess_gui::initialize(void)
   delete ui.boardFrame->layout();
   ui.boardFrame->setLayout(new QGridLayout());
 
-  if(glboard)
-    glboard->add(ui.boardFrame);
+  if(m_board)
+    m_board->add(ui.boardFrame);
 
 #ifndef Q_OS_ANDROID
   resize(800, 600);
@@ -401,8 +401,8 @@ void qtchess_gui::newGame(void)
   if(chess)
     chess->initialize();
 
-  if(getGLBoard())
-    getGLBoard()->new_game();
+  if(m_board)
+    m_board->new_game();
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)

@@ -28,14 +28,14 @@
 #include "qtchess.h"
 #include "qtchess_comm.h"
 #include "qtchess_gui.h"
-#include "qtchess_gui_opengl.h"
+#include "qtchess_gui_board.h"
 #include "qtchess_validate.h"
 
 extern QPointer<qtchess> chess;
 extern QPointer<qtchess_comm> comm;
 extern QPointer<qtchess_gui> gui;
 
-openglWid::openglWid(QObject *parent):QObject(parent)
+qtchess_gui_board::qtchess_gui_board(QObject *parent):QObject(parent)
 {
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -75,7 +75,7 @@ openglWid::openglWid(QObject *parent):QObject(parent)
   initialize();
 }
 
-void openglWid::add(QFrame *frame)
+void qtchess_gui_board::add(QFrame *frame)
 {
   if(!frame)
     return;
@@ -94,21 +94,21 @@ void openglWid::add(QFrame *frame)
   paint();
 }
 
-void openglWid::highlight_square(const int i, const int j)
+void qtchess_gui_board::highlight_square(const int i, const int j)
 {
   if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES)
     m_labels[i][j]->setStyleSheet
       ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
 
-void openglWid::new_game(void)
+void qtchess_gui_board::new_game(void)
 {
   m_mouse_pressed = 0;
   m_point_selected.m_x = m_point_selected.m_y = -1;
   paint();
 }
 
-void openglWid::paint(void)
+void qtchess_gui_board::paint(void)
 {
   if(!chess)
     return;
@@ -162,7 +162,7 @@ void openglWid::paint(void)
       }
 }
 
-void openglWid::initialize(void)
+void qtchess_gui_board::initialize(void)
 {
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -184,7 +184,7 @@ void openglWid::initialize(void)
   m_point_selected.m_x = m_point_selected.m_y = -1;
 }
 
-void openglWid::slot_piece_double_clicked(qtchess_piece *piece)
+void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 {
   if(!(QApplication::keyboardModifiers() & Qt::ControlModifier))
     return;
@@ -226,7 +226,7 @@ void openglWid::slot_piece_double_clicked(qtchess_piece *piece)
     ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
 
-void openglWid::slot_piece_pressed(qtchess_piece *piece)
+void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 {
   if(QApplication::keyboardModifiers() & Qt::ControlModifier)
     return;

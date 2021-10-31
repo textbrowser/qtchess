@@ -34,7 +34,7 @@
 #include <QPointer>
 #include <QTimer>
 
-#include "qtchess_gui_opengl.h"
+#include "qtchess_gui_board.h"
 #include "ui_qtchess_helpDialog.h"
 #include "ui_qtchess_mainwindow.h"
 #include "ui_qtchess_promotionDialog.h"
@@ -127,9 +127,9 @@ class qtchess_gui: public QMainWindow
       return "";
   }
 
-  openglWid *getGLBoard(void) const
+  qtchess_gui_board *board(void) const
   {
-    return glboard;
+    return m_board;
   }
 
   qtchess_promote_dialog *getPromoteDialog(void) const;
@@ -150,7 +150,7 @@ class qtchess_gui: public QMainWindow
   QPointer<QLabel> statusLabel;
   QPointer<QTimer> opponentt;
   QPointer<QTimer> playert;
-  QPointer<openglWid> glboard;
+  QPointer<qtchess_gui_board> m_board;
   QPointer<qtchess_help_dialog> help_dialog;
   QPointer<qtchess_promote_dialog> promote_dialog;
   QPointer<qtchess_setup_dialog> setup_dialog;
