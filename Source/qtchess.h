@@ -147,7 +147,7 @@ class qtchess: public QObject
   }
 
   bool is_ready(void);
-  void init(void);
+  void initialize(void);
   void quit(const char *message_text, const int exit_code);
   void update_board(const QByteArray &buffer);
   int m_board[NSQUARES][NSQUARES];

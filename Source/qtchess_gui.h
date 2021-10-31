@@ -136,7 +136,7 @@ class qtchess_gui: public QMainWindow
   qtchess_setup_dialog *getSetupDialog(void) const;
   void addHistoryMove(const struct move_s &, const int);
   void clearHistory(void);
-  void init(void);
+  void initialize(void);
   void initClocks(void);
   void notifyConnection(const QString &, const quint16);
   void setStatusText(const QString &);

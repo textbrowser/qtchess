@@ -66,7 +66,7 @@ class qtchess_comm: public QObject
   void disconnectRemotely(void);
   void init(void);
   void quit(void);
-  void sendMove(const struct move_s &);
+  void send_move(const struct move_s &current_move);
   void setCaissa(const QString &caissa);
   void setListen(void);
   void stopListening(void);

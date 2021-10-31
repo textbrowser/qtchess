@@ -144,8 +144,21 @@ void openglWid::paint(void)
 	else if(qtchess_validate::isRook(chess->m_board[i][j]))
 	  piece = 9814 + offset;
 
-	if(piece > 0)
+	if(piece == 0)
+	  m_labels[i][j]->clear();
+	else
 	  m_labels[i][j]->setText(QString("&#%1;").arg(piece));
+
+	QColor color;
+
+	if((i + j) % 2 == 0)
+	  color = QColor(255, 87, 51);
+	else
+	  color = QColor(255, 255, 237);
+
+	m_labels[i][j]->setStyleSheet
+	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
+	   arg(color.name()));
       }
 }
 
@@ -270,8 +283,6 @@ void openglWid::slot_piece_pressed(qtchess_piece *piece)
 
  move_label:
 
-  struct move_s current_move = {};
-
 #ifdef QTCHESS_DEBUG
 #else
   if(chess->is_ready())
@@ -322,6 +333,8 @@ void openglWid::slot_piece_pressed(qtchess_piece *piece)
 	  if(qtchess_validate::isKing(chess->m_board[x][y]))
 	    game_over = true;
 
+	  struct move_s current_move = {};
+
 	  current_move.m_enpassant = 0;
 	  current_move.m_is_opponent_king_threat = 0;
 	  current_move.m_pawn2 = 0;
@@ -339,11 +352,11 @@ void openglWid::slot_piece_pressed(qtchess_piece *piece)
 	  current_move.m_y2 = x;
 	  m_mouse_pressed = 0;
 
-	  int oldBoard[NSQUARES][NSQUARES];
+	  int old_board[NSQUARES][NSQUARES];
 
 	  for(int i = 0; i < NSQUARES; i++)
 	    for(int j = 0; j < NSQUARES; j++)
-	      oldBoard[i][j] = chess->m_board[i][j];
+	      old_board[i][j] = chess->m_board[i][j];
 
 	  /*
 	  ** Piece promotion?
@@ -464,33 +477,34 @@ void openglWid::slot_piece_pressed(qtchess_piece *piece)
 	  chess->m_board[m_point_selected.m_x][m_point_selected.m_y] =
 	    EMPTY_SQUARE;
 
-	  auto origPiece = chess->m_board[x][y];
+	  auto original_piece = chess->m_board[x][y];
 
 	  chess->m_board[x][y] = EMPTY_SQUARE;
 	  snprintf
 	    (current_move.m_departure, sizeof(current_move.m_departure), "%s",
 	     qtchess_validate::findDeparture
 	     (m_point_selected.m_x, m_point_selected.m_y,
-	      x, y, origPiece).toLatin1().constData());
-	  chess->m_board[x][y] = origPiece;
+	      x, y, original_piece).toLatin1().constData());
+	  chess->m_board[x][y] = original_piece;
 
 	  for(int i = 0; i < NSQUARES; i++)
 	    for(int j = 0; j < NSQUARES; j++)
 	      current_move.m_board[i][j] = chess->m_board[i][j];
 
-	  int nonEmptyNow = 0, nonEmptyThen = 0;
+	  int non_empty_now = 0;
+	  int non_empty_then = 0;
 
 	  for(int i = 0; i < NSQUARES; i++)
 	    for(int j = 0; j < NSQUARES; j++)
 	      {
 		if(chess->m_board[i][j] != EMPTY_SQUARE)
-		  nonEmptyThen += 1;
+		  non_empty_then += 1;
 
-		if(oldBoard[i][j] != EMPTY_SQUARE)
-		  nonEmptyNow += 1;
+		if(old_board[i][j] != EMPTY_SQUARE)
+		  non_empty_now += 1;
 	      }
 
-	  if(nonEmptyNow != nonEmptyThen)
+	  if(non_empty_now != non_empty_then)
 	    chess->set_won_piece(true);
 	  else
 	    chess->set_won_piece(false);
@@ -509,7 +523,7 @@ void openglWid::slot_piece_pressed(qtchess_piece *piece)
 	  */
 
 	  if(comm)
-	    comm->sendMove(current_move);
+	    comm->send_move(current_move);
 
 	  chess->set_game_over(game_over);
 

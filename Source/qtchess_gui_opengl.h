@@ -109,7 +109,7 @@ class openglWid: public QObject
   Q_OBJECT
 
  public:
-  openglWid(QObject *);
+  openglWid(QObject *parent);
   void add(QFrame *frame);
   void new_game(void);
   void initialize(void);

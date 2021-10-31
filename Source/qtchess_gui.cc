@@ -237,7 +237,7 @@ void qtchess_gui::help(void)
     help_dialog->setup();
 }
 
-void qtchess_gui::init(void)
+void qtchess_gui::initialize(void)
 {
   static bool s_initialized = false;
 
@@ -399,7 +399,7 @@ void qtchess_gui::newGame(void)
   struct move_s current_move = {};
 
   if(chess)
-    chess->init();
+    chess->initialize();
 
   if(getGLBoard())
     getGLBoard()->new_game();
@@ -429,7 +429,7 @@ void qtchess_gui::newGame(void)
   current_move.m_departure[0] = '0';
 
   if(comm)
-    comm->sendMove(current_move);
+    comm->send_move(current_move);
 
   clearHistory();
   initClocks();

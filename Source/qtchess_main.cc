@@ -26,6 +26,7 @@
 */
 
 #include <QtDebug>
+#include <QtGlobal>
 
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x050000
@@ -61,7 +62,7 @@ int main(int argc, char *argv[])
       return EXIT_FAILURE;
     }
   else
-    chess->init();
+    chess->initialize();
 
   if((comm = new(std::nothrow) qtchess_comm()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
   if((gui = new(std::nothrow) qtchess_gui()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
   else
-    gui->init();
+    gui->initialize();
 
   return application.exec();
 }

@@ -336,7 +336,7 @@ void qtchess_comm::quit(void)
   m_listening_sock.close();
 }
 
-void qtchess_comm::sendMove(const struct move_s &current_move)
+void qtchess_comm::send_move(const struct move_s &current_move)
 {
   if(!m_client_connection)
     return;

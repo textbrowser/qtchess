@@ -40,7 +40,7 @@ bool qtchess::is_ready(void)
   return comm && comm->is_ready() && (get_turn() == MY_TURN);
 }
 
-void qtchess::init(void)
+void qtchess::initialize(void)
 {
   m_board[0][0] = ROOK1_WHITE;
   m_board[0][7] = ROOK1_BLACK;
@@ -182,7 +182,7 @@ void qtchess::update_board(const QByteArray &buffer)
       ** New game?
       */
 
-      init();
+      initialize();
       set_game_over(false);
       set_turn(THEIR_TURN);
 
