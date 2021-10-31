@@ -30,23 +30,28 @@
 
 namespace qtchess_validate
 {
-  QString findDeparture(const int, const int, const int, const int, const int);
-  bool isBishop(const int);
-  bool isBlack(const int);
-  bool isColor(const int, const int);
-  bool isEmpty(const int);
-  bool isKing(const int);
-  bool isKingChecked(const struct move_s &);
-  bool isKnight(const int);
-  bool isPawn(const int);
-  bool isQueen(const int);
-  bool isRook(const int);
-  bool isRook1(const int);
-  bool isRook2(const int);
-  bool isThreatened(const int, const int, const int);
-  bool isWhite(const int);
+  QString find_departure
+    (const int X1, const int Y1, const int X2 , const int Y2, const int piece);
+  bool is_bishop(const int piece);
+  bool is_black(const int piece);
+  bool is_color(const int piece, const int color);
+  bool is_empty(const int piece);
+  bool is_king(const int piece);
+  bool is_king_checked(const struct move_s &current_move);
+  bool is_knight(const int piece);
+  bool is_pawn(const int piece);
+  bool is_queen(const int piece);
+  bool is_rook(const int piece);
+  bool is_rook1(const int piece);
+  bool is_rook2(const int piece);
+  bool is_threatened(const int x, const int y, const int color);
+  bool is_white(const int piece);
   int color(const int);
-  int isValidMove(const int, const int, const int, const int, const int);
+  int is_valid_move(const int row_from,
+		    const int col_from,
+		    const int row_to,
+		    const int col_to,
+		    const int piece);
 }
 
 #endif

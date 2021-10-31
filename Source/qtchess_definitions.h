@@ -48,7 +48,7 @@ enum
   VALID = 1,
   VALID_CASTLE = 2,
   VALID_EN_PASSANT = 4,
-  VALID_PAWN_2 = 3
+  VALID_PAWN2 = 3
 };
 
 enum BlackPieces

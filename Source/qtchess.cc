@@ -37,7 +37,7 @@ extern QPointer<qtchess_gui> gui;
 
 bool qtchess::is_ready(void)
 {
-  return comm && comm->is_ready() && (get_turn() == MY_TURN);
+  return comm && comm->is_ready() && get_turn() == MY_TURN;
 }
 
 void qtchess::initialize(void)
@@ -70,17 +70,17 @@ void qtchess::initialize(void)
     for(int j = 0; j < NSQUARES; j++)
       m_board[j][i] = EMPTY_SQUARE;
 
-  m_last_opponent_move.m_x1 =
-    m_last_opponent_move.m_x2 =
-    m_last_opponent_move.m_y1 =
-    m_last_opponent_move.m_y2 =
+  m_last_opponent_move.m_pawn2 = m_last_opponent_move.m_promoted = 0;
+  m_last_opponent_move.m_piece =
+    m_last_opponent_move.m_rook =
     m_last_opponent_move.m_rook_x1 =
     m_last_opponent_move.m_rook_x2 =
     m_last_opponent_move.m_rook_y1 =
     m_last_opponent_move.m_rook_y2 =
-    m_last_opponent_move.m_piece =
-    m_last_opponent_move.m_rook = -1;
-  m_last_opponent_move.m_pawn2 = m_last_opponent_move.m_promoted = 0;
+    m_last_opponent_move.m_x1 =
+    m_last_opponent_move.m_x2 =
+    m_last_opponent_move.m_y1 =
+    m_last_opponent_move.m_y2 = -1;
   memset(m_last_opponent_move.m_departure,
 	 0,
 	 sizeof(m_last_opponent_move.m_departure));
@@ -210,8 +210,8 @@ void qtchess::update_board(const QByteArray &buffer)
 
       if(current_move.m_x2 >= 0 && current_move.m_x2 < NSQUARES &&
 	 current_move.m_y2 >= 0 && current_move.m_y2 < NSQUARES &&
-	 qtchess_validate::isKing(m_board[current_move.m_y2]
-				         [current_move.m_x2]))
+	 qtchess_validate::is_king(m_board[current_move.m_y2]
+				          [current_move.m_x2]))
 	{
 	  m_game_over = true;
 	  set_game_over(m_game_over);
@@ -252,8 +252,8 @@ void qtchess::update_board(const QByteArray &buffer)
       if(gui && m_game_over)
 	{
 	  gui->showGameOver(get_turn());
-	  gui->stopTimers(PLAYER_TIMER);
 	  gui->stopTimers(OPPONENT_TIMER);
+	  gui->stopTimers(PLAYER_TIMER);
 	}
     }
 }
