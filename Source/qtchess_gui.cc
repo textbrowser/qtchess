@@ -233,8 +233,8 @@ void qtchess_gui::clearHistory(void)
 
 void qtchess_gui::help(void)
 {
-  if(help_dialog)
-    help_dialog->setup();
+  if(m_help)
+    m_help->setup();
 }
 
 void qtchess_gui::initialize(void)
@@ -326,7 +326,7 @@ void qtchess_gui::initialize(void)
 	exit(EXIT_FAILURE);
     }
 
-  if((help_dialog = new(std::nothrow) qtchess_help_dialog(this)) == nullptr)
+  if((m_help = new(std::nothrow) qtchess_help(this)) == nullptr)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -570,17 +570,17 @@ void qtchess_gui::updatePlayer(void)
     ui.playerClock->setStyleSheet(stylesheet);
 }
 
-qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):QDialog(parent)
+qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
 {
-  ui.setupUi(this);
-  connect(ui.ok,
+  m_ui.setupUi(this);
+  connect(m_ui.ok,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(ok_cb(void)));
+	  SLOT(slot_ok(void)));
   setMinimumWidth(600);
   setMinimumHeight(300);
   setWindowModality(Qt::NonModal);
-  ui.text->append
+  m_ui.text->append
     (tr("An empty Allowed IP Address value will allow any peer to connect.\n"
 	"Moves are prohibited until connections have been established.\n"
 	"To move a piece, first click it and then click "
@@ -592,17 +592,17 @@ qtchess_help_dialog::qtchess_help_dialog(QWidget *parent):QDialog(parent)
 	));
 }
 
-void qtchess_help_dialog::ok_cb(void)
+void qtchess_help::slot_ok(void)
 {
   hide();
 }
 
-void qtchess_help_dialog::setup(void)
+void qtchess_help::setup(void)
 {
   if(isVisible())
     hide();
 
-  ui.ok->setFocus();
+  m_ui.ok->setFocus();
   show();
 }
 

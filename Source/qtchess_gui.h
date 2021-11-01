@@ -35,24 +35,24 @@
 #include <QTimer>
 
 #include "qtchess_gui_board.h"
-#include "ui_qtchess_helpDialog.h"
+#include "ui_qtchess_help.h"
 #include "ui_qtchess_mainwindow.h"
 #include "ui_qtchess_promotionDialog.h"
 #include "ui_qtchess_setupDialog.h"
 
-class qtchess_help_dialog: public QDialog
+class qtchess_help: public QDialog
 {
   Q_OBJECT
 
  public:
-  qtchess_help_dialog(QWidget *);
+  qtchess_help(QWidget *);
   void setup(void);
 
  private:
-  Ui_helpDialog ui;
+  Ui_qtchess_help m_ui;
 
  private slots:
-  void ok_cb(void);
+  void slot_ok(void);
 };
 
 class qtchess_setup_dialog: public QDialog
@@ -151,7 +151,7 @@ class qtchess_gui: public QMainWindow
   QPointer<QTimer> opponentt;
   QPointer<QTimer> playert;
   QPointer<qtchess_gui_board> m_board;
-  QPointer<qtchess_help_dialog> help_dialog;
+  QPointer<qtchess_help> m_help;
   QPointer<qtchess_promote_dialog> promote_dialog;
   QPointer<qtchess_setup_dialog> setup_dialog;
   Ui_qtchess_mainWindow ui;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>helpDialog</class>
- <widget class="QDialog" name="helpDialog">
+ <class>qtchess_help</class>
+ <widget class="QDialog" name="qtchess_help">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -31,9 +31,9 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <layout class="QHBoxLayout" name="_2">
      <item>
-      <spacer>
+      <spacer name="spacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -64,7 +64,7 @@
       </widget>
      </item>
      <item>
-      <spacer>
+      <spacer name="spacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

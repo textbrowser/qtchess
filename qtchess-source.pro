@@ -1,4 +1,4 @@
-FORMS		= UI/qtchess_helpDialog.ui \
+FORMS		= UI/qtchess_help.ui \
                   UI/qtchess_mainwindow.ui \
                   UI/qtchess_promotionDialog.ui \
                   UI/qtchess_setupDialog.ui
