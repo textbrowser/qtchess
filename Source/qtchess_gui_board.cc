@@ -198,6 +198,9 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
   if(x < 0 || x > NSQUARES || y < 0 || y > NSQUARES)
     return;
 
+  if(chess->m_board[x][y] == EMPTY_SQUARE)
+    return;
+
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
@@ -223,6 +226,8 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
       }
 
   m_mouse_pressed = 1;
+  m_point_selected.m_x = x;
+  m_point_selected.m_y = y;
   piece->setStyleSheet
     ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
