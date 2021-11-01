@@ -28,11 +28,11 @@
 #include <QtDebug>
 
 #include "qtchess.h"
-#include "qtchess_comm.h"
+#include "qtchess_communications.h"
 #include "qtchess_gui.h"
 #include "qtchess_validate.h"
 
-extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
 
 bool qtchess::is_ready(void)

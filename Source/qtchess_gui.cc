@@ -26,7 +26,7 @@
 */
 
 #include "qtchess.h"
-#include "qtchess_comm.h"
+#include "qtchess_communications.h"
 #include "qtchess_definitions.h"
 #include "qtchess_gui.h"
 #include "qtchess_validate.h"
@@ -41,7 +41,7 @@
 #include <QStatusBar>
 
 extern QPointer<qtchess> chess;
-extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_communications> comm;
 
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
@@ -380,7 +380,7 @@ void qtchess_gui::initClocks(void)
 
 void qtchess_gui::newGame(void)
 {
-  if(comm && comm->isConnectedRemotely())
+  if(comm && comm->is_connected_remotely())
     {
       QMessageBox mb(this);
 
@@ -453,7 +453,7 @@ void qtchess_gui::quit(void)
 {
   if(chess)
     {
-      if(!chess->is_game_over() && comm && comm->isConnectedRemotely())
+      if(!chess->is_game_over() && comm && comm->is_connected_remotely())
 	{
 	  QMessageBox mb(this);
 
@@ -638,11 +638,11 @@ qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):QDialog(parent)
   if(comm)
     {
       connect(comm,
-	      SIGNAL(connectedToClient(void)),
+	      SIGNAL(connected_to_client(void)),
 	      this,
 	      SLOT(slotConnectedToClient(void)));
       connect(comm,
-	      SIGNAL(disconnectedFromClient(void)),
+	      SIGNAL(disconnected_from_client(void)),
 	      this,
 	      SLOT(slotDisconnectedFromClient(void)));
     }
@@ -748,10 +748,10 @@ void qtchess_setup_dialog::connect_cb(void)
 {
   if(comm)
     {
-      if(comm->isConnectedRemotely())
-	comm->disconnectRemotely();
+      if(comm->is_connected_remotely())
+	comm->disconnect_remotely();
       else
-	comm->connectRemotely();
+	comm->connect_remotely();
     }
 }
 
@@ -771,7 +771,7 @@ void qtchess_setup_dialog::slotConnectedToClient(void)
 void qtchess_setup_dialog::slotDisconnect(void)
 {
   if(comm)
-    comm->disconnectRemotely();
+    comm->disconnect_remotely();
 }
 
 void qtchess_setup_dialog::slotDisconnectedFromClient(void)
@@ -794,12 +794,12 @@ void qtchess_setup_dialog::slotListen(void)
   if(sender() == ui.listen)
     if(comm)
       {
-	if(comm->isListening())
-	  comm->stopListening();
+	if(comm->is_listening())
+	  comm->stop_listening();
 	else
-	  comm->setListen();
+	  comm->set_listen();
 
-	state = comm->isListening();
+	state = comm->is_listening();
       }
 
   ui.host->setReadOnly(state);
@@ -821,7 +821,7 @@ void qtchess_setup_dialog::slotLocal(bool state)
   if(state)
     {
       if(comm)
-	comm->disconnectRemotely();
+	comm->disconnect_remotely();
 
       slotDisconnectedFromClient();
       ui.local_gb->setEnabled(true);
@@ -877,8 +877,8 @@ void qtchess_setup_dialog::slotRemote(bool state)
     {
       if(comm)
 	{
-	  comm->disconnectRemotely();
-	  comm->stopListening();
+	  comm->disconnect_remotely();
+	  comm->stop_listening();
 	}
 
       slotDisconnectedFromClient();
@@ -903,7 +903,7 @@ void qtchess_setup_dialog::slotSetCaissa(void)
 {
   if(comm)
     {
-      comm->setCaissa(ui.caissa->text());
+      comm->set_caissa(ui.caissa->text());
       ui.caissa->selectAll();
     }
 }

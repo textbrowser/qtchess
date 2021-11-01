@@ -26,13 +26,13 @@
 */
 
 #include "qtchess.h"
-#include "qtchess_comm.h"
+#include "qtchess_communications.h"
 #include "qtchess_gui.h"
 #include "qtchess_gui_board.h"
 #include "qtchess_validate.h"
 
 extern QPointer<qtchess> chess;
-extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
 
 qtchess_gui_board::qtchess_gui_board(QObject *parent):QObject(parent)
@@ -222,6 +222,7 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 	    ("QLabel {background-color: orange; border: 1px solid navy;}");
       }
 
+  m_mouse_pressed = 1;
   piece->setStyleSheet
     ("QLabel {background-color: orange; border: 1px solid navy;}");
 }
@@ -424,43 +425,43 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 	    {
 	      if(x == 2 && y == 7) // Rook #1 Black
 		{
-		  chess->m_board[3][7] = ROOK1_BLACK;
 		  chess->m_board[0][7] = EMPTY_SQUARE;
-		  current_move.m_rook_x1 = 7;
-		  current_move.m_rook_y1 = 3;
-		  current_move.m_rook_x2 = 7;
-		  current_move.m_rook_y2 = 0;
+		  chess->m_board[3][7] = ROOK1_BLACK;
 		  current_move.m_rook = ROOK1_BLACK;
+		  current_move.m_rook_x1 = 7;
+		  current_move.m_rook_x2 = 7;
+		  current_move.m_rook_y1 = 3;
+		  current_move.m_rook_y2 = 0;
 		}
 	      else if(x == 6 && y == 7) // Rook #2 Black
 		{
 		  chess->m_board[5][7] = ROOK2_BLACK;
 		  chess->m_board[7][7] = EMPTY_SQUARE;
-		  current_move.m_rook_x1 = 7;
-		  current_move.m_rook_y1 = 5;
-		  current_move.m_rook_x2 = 7;
-		  current_move.m_rook_y2 = 7;
 		  current_move.m_rook = ROOK2_BLACK;
+		  current_move.m_rook_x1 = 7;
+		  current_move.m_rook_x2 = 7;
+		  current_move.m_rook_y1 = 5;
+		  current_move.m_rook_y2 = 7;
 		}
 	      else if(x == 2 && y == 0) // Rook #1 White
 		{
-		  chess->m_board[3][0] = ROOK1_WHITE;
 		  chess->m_board[0][0] = EMPTY_SQUARE;
-		  current_move.m_rook_x1 = 0;
-		  current_move.m_rook_y1 = 3;
-		  current_move.m_rook_x2 = 0;
-		  current_move.m_rook_y2 = 0;
+		  chess->m_board[3][0] = ROOK1_WHITE;
 		  current_move.m_rook = ROOK1_WHITE;
+		  current_move.m_rook_x1 = 0;
+		  current_move.m_rook_x2 = 0;
+		  current_move.m_rook_y1 = 3;
+		  current_move.m_rook_y2 = 0;
 		}
 	      else if(x == 6 && y == 0) // Rook #2 White
 		{
 		  chess->m_board[5][0] = ROOK2_WHITE;
 		  chess->m_board[7][0] = EMPTY_SQUARE;
-		  current_move.m_rook_x1 = 0;
-		  current_move.m_rook_y1 = 5;
-		  current_move.m_rook_x2 = 0;
-		  current_move.m_rook_y2 = 7;
 		  current_move.m_rook = ROOK2_WHITE;
+		  current_move.m_rook_x1 = 0;
+		  current_move.m_rook_x2 = 0;
+		  current_move.m_rook_y1 = 5;
+		  current_move.m_rook_y2 = 7;
 		}
 	    }
 	  else if(rc == VALID_PAWN2)
@@ -517,7 +518,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 
 	  gui->addHistoryMove
 	    (current_move,
-	     qtchess_validate::is_white(current_move.m_piece) ? WHITE : BLACK);
+	     qtchess_validate::is_black(current_move.m_piece) ? BLACK : WHITE);
 
 	  /*
 	  ** Send the move.

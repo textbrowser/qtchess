@@ -26,10 +26,33 @@ TEMPLATE        = app
 
 QMAKE_CLEAN	+= QtChess
 
-linux {
+freebsd-* {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
                    -Wcast-qual \
+                   -Wdouble-promotion \
+                   -Werror \
+                   -Werror=format-security \
+                   -Wextra \
+                   -Wfloat-equal \
+                   -Wformat=2 \
+                   -Wno-deprecated-copy \
+                   -Woverloaded-virtual \
+                   -Wpointer-arith \
+                   -Wstack-protector \
+                   -Wstrict-overflow=5 \
+                   -Wundef \
+                   -Wzero-as-null-pointer-constant \
+                   -fPIE \
+                   -fstack-protector-all \
+                   -fwrapv \
+                   -pedantic \
+                   -std=c++11
+} else:linux {
+QMAKE_CXXFLAGS  += -Wall \
+                   -Wcast-align \
+                   -Wcast-qual \
+                   -Wconversion \
                    -Wdouble-promotion \
                    -Werror \
                    -Werror=format-security \
@@ -40,6 +63,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wno-deprecated-copy \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
+                   -Wsign-conversion \
                    -Wstack-protector \
                    -Wstrict-overflow=5 \
                    -Wundef \

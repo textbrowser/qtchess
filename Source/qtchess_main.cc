@@ -34,11 +34,11 @@
 #endif
 #endif
 #include "qtchess.h"
-#include "qtchess_comm.h"
+#include "qtchess_communications.h"
 #include "qtchess_gui.h"
 
 QPointer<qtchess> chess;
-QPointer<qtchess_comm> comm;
+QPointer<qtchess_communications> comm;
 QPointer<qtchess_gui> gui;
 
 int main(int argc, char *argv[])
@@ -64,10 +64,10 @@ int main(int argc, char *argv[])
   else
     chess->initialize();
 
-  if((comm = new(std::nothrow) qtchess_comm()) == nullptr)
+  if((comm = new(std::nothrow) qtchess_communications()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);
   else
-    comm->init();
+    comm->initialize();
 
   if((gui = new(std::nothrow) qtchess_gui()) == nullptr)
     chess->quit("Memory allocation failure.", EXIT_FAILURE);

@@ -25,21 +25,21 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _QTCHESS_COMM_
-#define _QTCHESS_COMM_
+#ifndef _QTCHESS_COMMUNICATIONS_
+#define _QTCHESS_COMMUNICATIONS_
 
 #include <QPointer>
 #include <QTcpServer>
 #include <QTcpSocket>
 
-class qtchess_comm: public QObject
+class qtchess_communications: public QObject
 {
   Q_OBJECT
 
  public:
-  qtchess_comm(void);
+  qtchess_communications(void);
 
-  ~qtchess_comm()
+  ~qtchess_communications()
   {
   }
 
@@ -59,17 +59,17 @@ class qtchess_comm: public QObject
       return 0;
   }
 
-  bool isConnectedRemotely(void) const;
-  bool isListening(void) const;
+  bool is_connected_remotely(void) const;
+  bool is_listening(void) const;
   bool is_ready(void) const;
-  void connectRemotely(void);
-  void disconnectRemotely(void);
-  void init(void);
+  void connect_remotely(void);
+  void disconnect_remotely(void);
+  void initialize(void);
   void quit(void);
   void send_move(const struct move_s &current_move);
-  void setCaissa(const QString &caissa);
-  void setListen(void);
-  void stopListening(void);
+  void set_caissa(const QString &caissa);
+  void set_listen(void);
+  void stop_listening(void);
 
  private:
   QPointer<QTcpSocket> m_client_connection;
@@ -79,18 +79,18 @@ class qtchess_comm: public QObject
   QByteArray digest(const QByteArray &data) const;
   QByteArray hmac(const QByteArray &data, const QByteArray &k) const;
   QByteArray sha1(const QByteArray &data) const;
-  QByteArray xorArrays(const QByteArray &a, const QByteArray &b) const;
+  QByteArray xor_arrays(const QByteArray &a, const QByteArray &b) const;
   bool memcmp(const QByteArray &a, const QByteArray &b) const;
 
  private slots:
-  void acceptConnection(void);
-  void clientDisconnected(void);
-  void slotClientConnected(void);
-  void updateBoard(void);
+  void slot_accept_connection(void);
+  void slot_client_connected(void);
+  void slot_client_disconnected(void);
+  void slot_update_board(void);
 
  signals:
-  void connectedToClient(void);
-  void disconnectedFromClient(void);
+  void connected_to_client(void);
+  void disconnected_from_client(void);
 };
 
 #endif

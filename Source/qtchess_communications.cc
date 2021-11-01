@@ -28,32 +28,32 @@
 #include <QCryptographicHash>
 
 #include "qtchess.h"
-#include "qtchess_comm.h"
+#include "qtchess_communications.h"
 #include "qtchess_gui.h"
 
 extern QPointer<qtchess> chess;
-extern QPointer<qtchess_comm> comm;
+extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
 static QByteArray s_eof = "\n";
 
-qtchess_comm::qtchess_comm(void):QObject()
+qtchess_communications::qtchess_communications(void):QObject()
 {
   connect(&m_listening_sock,
 	  SIGNAL(newConnection(void)),
 	  this,
-	  SLOT(acceptConnection(void)));
+	  SLOT(slot_accept_connection(void)));
 }
 
-QByteArray qtchess_comm::digest(const QByteArray &data) const
+QByteArray qtchess_communications::digest(const QByteArray &data) const
 {
   QByteArray key;
 
   if(m_client_connection)
     {
-      QHostAddress a(m_client_connection->localAddress());
-      QHostAddress b(m_client_connection->peerAddress());
+      auto a(m_client_connection->localAddress());
+      auto b(m_client_connection->peerAddress());
 
-      key = xorArrays
+      key = xor_arrays
 	(a.toString().toUtf8().toHex(), b.toString().toUtf8().toHex());
       key.append(QByteArray::number(m_client_connection->localPort() ^
 				    m_client_connection->peerPort()).toHex());
@@ -63,9 +63,10 @@ QByteArray qtchess_comm::digest(const QByteArray &data) const
   return hmac(data, hmac(key, QByteArray("QtChess").append(0x01)));
 }
 
-QByteArray qtchess_comm::hmac(const QByteArray &data, const QByteArray &k) const
+QByteArray qtchess_communications::
+hmac(const QByteArray &data, const QByteArray &k) const
 {
-  QByteArray key(k);
+  auto key(k);
   static const int s_block_length = 512 / CHAR_BIT;
 
   if(s_block_length < key.length())
@@ -89,7 +90,7 @@ QByteArray qtchess_comm::hmac(const QByteArray &data, const QByteArray &k) const
   return sha1(left.append(sha1(right.append(data))));
 }
 
-QByteArray qtchess_comm::sha1(const QByteArray &data) const
+QByteArray qtchess_communications::sha1(const QByteArray &data) const
 {
   QCryptographicHash sha1(QCryptographicHash::Sha1);
 
@@ -97,7 +98,7 @@ QByteArray qtchess_comm::sha1(const QByteArray &data) const
   return sha1.result();
 }
 
-QByteArray qtchess_comm::xorArrays
+QByteArray qtchess_communications::xor_arrays
 (const QByteArray &a, const QByteArray &b) const
 {
   QByteArray bytes(qMin(a.length(), b.length()), 0);
@@ -108,25 +109,26 @@ QByteArray qtchess_comm::xorArrays
   return bytes;
 }
 
-bool qtchess_comm::isConnectedRemotely(void) const
+bool qtchess_communications::is_connected_remotely(void) const
 {
   return m_client_connection &&
     m_client_connection->state() == QAbstractSocket::ConnectedState;
 }
 
-bool qtchess_comm::isListening(void) const
+bool qtchess_communications::is_listening(void) const
 {
   return m_listening_sock.isListening();
 }
 
-bool qtchess_comm::is_ready(void) const
+bool qtchess_communications::is_ready(void) const
 {
-  return isConnectedRemotely();
+  return is_connected_remotely();
 }
 
-bool qtchess_comm::memcmp(const QByteArray &a, const QByteArray &b) const
+bool qtchess_communications::
+memcmp(const QByteArray &a, const QByteArray &b) const
 {
-  int length = qMax(a.length(), b.length());
+  auto length = qMax(a.length(), b.length());
   quint64 rc = 0;
 
   for(int i = 0; i < length; i++)
@@ -136,9 +138,9 @@ bool qtchess_comm::memcmp(const QByteArray &a, const QByteArray &b) const
   return rc == 0;
 }
 
-void qtchess_comm::acceptConnection(void)
+void qtchess_communications::slot_accept_connection(void)
 {
-  QTcpSocket *socket = m_listening_sock.nextPendingConnection();
+  auto socket = m_listening_sock.nextPendingConnection();
 
   if(!socket)
     return;
@@ -162,8 +164,7 @@ void qtchess_comm::acceptConnection(void)
      !gui->getSetupDialog()->getAllowedHostField()->text().
      trimmed().isEmpty())
     {
-      QString str
-	(gui->getSetupDialog()->getAllowedHostField()->text().trimmed());
+      auto str(gui->getSetupDialog()->getAllowedHostField()->text().trimmed());
 
       if(QHostAddress(str) != m_client_connection->peerAddress())
 	{
@@ -173,11 +174,11 @@ void qtchess_comm::acceptConnection(void)
 	}
     }
 
-  emit connectedToClient();
+  emit connected_to_client();
   connect(m_client_connection,
 	  SIGNAL(disconnected(void)),
 	  this,
-	  SLOT(clientDisconnected(void)));
+	  SLOT(slot_client_disconnected(void)));
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
   connect(m_client_connection,
 	  SIGNAL(error(QAbstractSocket::SocketError)),
@@ -192,7 +193,7 @@ void qtchess_comm::acceptConnection(void)
   connect(m_client_connection,
 	  SIGNAL(readyRead(void)),
 	  this,
-	  SLOT(updateBoard(void)));
+	  SLOT(slot_update_board(void)));
 
   if(gui)
     gui->notifyConnection(m_client_connection->peerAddress().toString(),
@@ -206,32 +207,12 @@ void qtchess_comm::acceptConnection(void)
     }
 }
 
-void qtchess_comm::clientDisconnected(void)
+void qtchess_communications::connect_remotely(void)
 {
-  QTcpSocket *socket = qobject_cast<QTcpSocket *> (sender());
-
-  if(m_client_connection && m_client_connection == socket)
-    m_client_connection->deleteLater();
-  else if(socket)
-    socket->deleteLater();
-
-  if(chess)
-    {
-      chess->set_first(-1);
-      chess->set_my_color(-1);
-      chess->set_turn(-1);
-    }
-
-  if(gui)
-    gui->setStatusText(tr("Status: Peer Disconnected"));
-
-  emit disconnectedFromClient();
-}
-
-void qtchess_comm::connectRemotely(void)
-{
-  QString scopeId = "", str1 = "", str2 = "";
-  quint16 remotePort = 0;
+  QString scope_id("");
+  QString str1("");
+  QString str2("");
+  quint16 remote_port = 0;
 
   if(gui)
     {
@@ -242,15 +223,15 @@ void qtchess_comm::connectRemotely(void)
 	str2 = gui->getSetupDialog()->getRPortField()->text().trimmed();
 
       if(gui->getSetupDialog() && gui->getSetupDialog()->getRScopeIdField())
-	scopeId = gui->getSetupDialog()->getRScopeIdField()->text().trimmed();
+	scope_id = gui->getSetupDialog()->getRScopeIdField()->text().trimmed();
     }
 
-  remotePort = (quint16) str2.toInt();
+  remote_port = (quint16) str2.toInt();
 
   QHostAddress address(str1);
 
-  if(!scopeId.isEmpty())
-    address.setScopeId(scopeId);
+  if(!scope_id.isEmpty())
+    address.setScopeId(scope_id);
 
   if(m_client_connection)
     {
@@ -262,19 +243,19 @@ void qtchess_comm::connectRemotely(void)
   connect(m_client_connection,
 	  SIGNAL(connected(void)),
 	  this,
-	  SIGNAL(connectedToClient(void)));
+	  SIGNAL(connected_to_client(void)));
   connect(m_client_connection,
 	  SIGNAL(connected(void)),
 	  this,
-	  SLOT(slotClientConnected(void)));
+	  SLOT(slot_client_connected(void)));
   connect(m_client_connection,
 	  SIGNAL(disconnected(void)),
 	  this,
-	  SLOT(clientDisconnected(void)));
+	  SLOT(slot_client_disconnected(void)));
   connect(m_client_connection,
 	  SIGNAL(disconnected(void)),
 	  this,
-	  SIGNAL(disconnectedFromClient(void)));
+	  SIGNAL(disconnected_from_client(void)));
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
   connect(m_client_connection,
 	  SIGNAL(error(QAbstractSocket::SocketError)),
@@ -289,11 +270,11 @@ void qtchess_comm::connectRemotely(void)
   connect(m_client_connection,
 	  SIGNAL(readyRead(void)),
 	  this,
-	  SLOT(updateBoard(void)));
-  m_client_connection->connectToHost(address, remotePort);
+	  SLOT(slot_update_board(void)));
+  m_client_connection->connectToHost(address, remote_port);
 }
 
-void qtchess_comm::disconnectRemotely(void)
+void qtchess_communications::disconnect_remotely(void)
 {
   if(m_client_connection)
     m_client_connection->deleteLater();
@@ -309,7 +290,7 @@ void qtchess_comm::disconnectRemotely(void)
     gui->showDisconnect();
 }
 
-void qtchess_comm::init(void)
+void qtchess_communications::initialize(void)
 {
   if(m_listening_sock.isListening())
     m_listening_sock.close();
@@ -324,7 +305,7 @@ void qtchess_comm::init(void)
       (QHostAddress(QHostAddress::LocalHost).toString());
 }
 
-void qtchess_comm::quit(void)
+void qtchess_communications::quit(void)
 {
   /*
   ** Terminate all communications.
@@ -336,7 +317,7 @@ void qtchess_comm::quit(void)
   m_listening_sock.close();
 }
 
-void qtchess_comm::send_move(const struct move_s &current_move)
+void qtchess_communications::send_move(const struct move_s &current_move)
 {
   if(!m_client_connection)
     return;
@@ -409,12 +390,12 @@ void qtchess_comm::send_move(const struct move_s &current_move)
     }
 }
 
-void qtchess_comm::setCaissa(const QString &caissa)
+void qtchess_communications::set_caissa(const QString &caissa)
 {
   m_caissa = caissa;
 }
 
-void qtchess_comm::setListen(void)
+void qtchess_communications::set_listen(void)
 {
   if(m_listening_sock.isListening())
     return;
@@ -448,11 +429,11 @@ void qtchess_comm::setListen(void)
     }
 }
 
-void qtchess_comm::slotClientConnected(void)
+void qtchess_communications::slot_client_connected(void)
 {
   if(!gui)
     {
-      clientDisconnected();
+      slot_client_disconnected();
       return;
     }
 
@@ -467,7 +448,7 @@ void qtchess_comm::slotClientConnected(void)
 	chess->set_my_color(BLACK);
       else
 	{
-	  clientDisconnected();
+	  slot_client_disconnected();
 	  return;
 	}
     }
@@ -477,12 +458,29 @@ void qtchess_comm::slotClientConnected(void)
 			  m_client_connection->peerPort());
 }
 
-void qtchess_comm::stopListening(void)
+void qtchess_communications::slot_client_disconnected(void)
 {
-  m_listening_sock.close();
+  auto socket = qobject_cast<QTcpSocket *> (sender());
+
+  if(m_client_connection && m_client_connection == socket)
+    m_client_connection->deleteLater();
+  else if(socket)
+    socket->deleteLater();
+
+  if(chess)
+    {
+      chess->set_first(-1);
+      chess->set_my_color(-1);
+      chess->set_turn(-1);
+    }
+
+  if(gui)
+    gui->setStatusText(tr("Status: Peer Disconnected"));
+
+  emit disconnected_from_client();
 }
 
-void qtchess_comm::updateBoard(void)
+void qtchess_communications::slot_update_board(void)
 {
   int ntries = 1;
   static const int s_sha1_output_size = 40;
@@ -503,7 +501,7 @@ void qtchess_comm::updateBoard(void)
 	    {
 	      buffer = buffer.mid(0, buffer.indexOf(s_eof));
 
-	      QByteArray d
+	      auto d
 		(QByteArray::fromHex(buffer.mid(buffer.length() -
 						s_sha1_output_size)));
 
@@ -523,4 +521,9 @@ void qtchess_comm::updateBoard(void)
 
   if(m_client_connection)
     m_client_connection->readAll();
+}
+
+void qtchess_communications::stop_listening(void)
+{
+  m_listening_sock.close();
 }
