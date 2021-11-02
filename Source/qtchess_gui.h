@@ -134,10 +134,10 @@ class qtchess_gui: public QMainWindow
 
   qtchess_promotion *get_promote_dialog(void) const;
   qtchess_setup_dialog *getSetupDialog(void) const;
-  void addHistoryMove(const struct move_s &, const int);
-  void clearHistory(void);
+  void add_history_move(const struct move_s &current_move, const int color);
+  void clear_history(void);
   void initialize(void);
-  void initClocks(void);
+  void initialize_clocks(void);
   void notifyConnection(const QString &, const quint16);
   void setStatusText(const QString &);
   void showDisconnect(void);
@@ -147,9 +147,9 @@ class qtchess_gui: public QMainWindow
   void stopTimers(const int);
 
  private:
-  QPointer<QLabel> statusLabel;
-  QPointer<QTimer> opponentt;
-  QPointer<QTimer> playert;
+  QPointer<QLabel> m_status_label;
+  QPointer<QTimer> m_opponent_timer;
+  QPointer<QTimer> m_player_timer;
   QPointer<qtchess_gui_board> m_board;
   QPointer<qtchess_help> m_help;
   QPointer<qtchess_promotion> m_promotion;
@@ -170,8 +170,8 @@ class qtchess_gui: public QMainWindow
   void newGame(void);
   void quit(void);
   void setup(void);
-  void updateOpponent(void);
-  void updatePlayer(void);
+  void slot_update_opponent(void);
+  void slot_update_player(void);
 };
 
 #endif

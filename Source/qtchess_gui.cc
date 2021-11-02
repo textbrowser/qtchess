@@ -74,8 +74,9 @@ void qtchess_gui::about(void)
   QMessageBox mb(this);
   QPixmap pixmap(":/chess.png");
 
-  mb.setWindowTitle(tr("QtChess: About"));
-  mb.setTextFormat(Qt::RichText);
+  mb.setIconPixmap
+    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+  mb.setStandardButtons(QMessageBox::Ok);
   mb.setText
     (tr("<html>QtChess Version %1.<br>"
 	"Copyright (c) 2003 - 2021 X.<br>"
@@ -86,59 +87,58 @@ void qtchess_gui::about(void)
 	"project information.").
      arg(QTCHESS_VERSION).
      arg(QT_VERSION_STR));
-  mb.setStandardButtons(QMessageBox::Ok);
-  mb.setIconPixmap
-    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+  mb.setTextFormat(Qt::RichText);
+  mb.setWindowTitle(tr("QtChess: About"));
   mb.exec();
 }
 
-void qtchess_gui::addHistoryMove(const struct move_s &current_move,
-				 const int color)
+void qtchess_gui::add_history_move(const struct move_s &current_move,
+				   const int color)
 {
   QTableWidgetItem *item = nullptr;
   char from_position[2];
   char hist[512];
-  char insertX[3];
+  char insert_x[3];
   char to_let[2];
 
+  from_position[0] = (char) (97 + current_move.m_y1);
   memset(from_position, 0, sizeof(from_position));
   memset(hist, 0, sizeof(hist));
-  memset(insertX, 0, sizeof(insertX));
+  memset(insert_x, 0, sizeof(insert_x));
   memset(to_let, 0, sizeof(to_let));
-  from_position[0] = (char) (97 + current_move.m_y1);
   to_let[0] = (char) (97 + current_move.m_y2);
 
   if(current_move.m_promoted)
     {
       if(chess && chess->was_piece_won())
-	snprintf(insertX, sizeof(insertX), "%s%s", from_position, "x");
+	snprintf(insert_x, sizeof(insert_x), "%s%s", from_position, "x");
 
       if(qtchess_validate::is_bishop(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
-		 "%s%s%dB", insertX,
+		 "%s%s%dB", insert_x,
 		 to_let, current_move.m_x2 + 1);
       else if(qtchess_validate::is_knight(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
-		 "%s%s%dN", insertX,
+		 "%s%s%dN", insert_x,
 		 to_let, current_move.m_x2 + 1);
       else if(qtchess_validate::is_queen(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
-		 "%s%s%dQ", insertX,
+		 "%s%s%dQ", insert_x,
 		 to_let, current_move.m_x2 + 1);
       if(qtchess_validate::is_rook(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
-		 "%s%s%dR", insertX,
+		 "%s%s%dR", insert_x,
 		 to_let, current_move.m_x2 + 1);
     }
   else
     {
       if(chess && chess->was_piece_won())
-	snprintf(insertX, sizeof(insertX), "%s", "x");
+	snprintf(insert_x, sizeof(insert_x), "%s", "x");
 
       if(qtchess_validate::is_bishop(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "B",
-		 current_move.m_departure, insertX,
+		 current_move.m_departure, insert_x,
 		 to_let, current_move.m_x2 + 1);
       else if(qtchess_validate::is_king(current_move.m_piece))
 	{
@@ -146,47 +146,47 @@ void qtchess_gui::addHistoryMove(const struct move_s &current_move,
 	    {
 	      if(current_move.m_y2 == 6)
 		snprintf(hist, sizeof(hist),
-			 "%s%s%s%d 0-0", "K", insertX,
+			 "%s%s%s%d 0-0", "K", insert_x,
 			 to_let, current_move.m_x2 + 1);
 	      else
 		snprintf(hist, sizeof(hist),
-			 "%s%s%s%d 0-0-0", "K", insertX,
+			 "%s%s%s%d 0-0-0", "K", insert_x,
 			 to_let, current_move.m_x2 + 1);
 	    }
 	  else
 	    snprintf(hist, sizeof(hist),
-		     "%s%s%s%d", "K", insertX,
+		     "%s%s%s%d", "K", insert_x,
 		     to_let, current_move.m_x2 + 1);
 	}
       else if(qtchess_validate::is_knight(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "N",
-		 current_move.m_departure, insertX,
+		 current_move.m_departure, insert_x,
 		 to_let, current_move.m_x2 + 1);
       else if(qtchess_validate::is_pawn(current_move.m_piece))
 	{
 	  if(chess && chess->was_piece_won())
-	    snprintf(insertX, sizeof(insertX), "%s%s",
+	    snprintf(insert_x, sizeof(insert_x), "%s%s",
 		     from_position, "x");
 
 	  if(current_move.m_enpassant)
 	    snprintf(hist, sizeof(hist),
-		     "%s%s%d e.p.", insertX,
+		     "%s%s%d e.p.", insert_x,
 		     to_let, current_move.m_x2 + 1);
 	  else
 	    snprintf(hist, sizeof(hist),
-		     "%s%s%d", insertX,
+		     "%s%s%d", insert_x,
 		     to_let, current_move.m_x2 + 1);
 	}
       else if(qtchess_validate::is_queen(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "Q",
-		 current_move.m_departure, insertX,
+		 current_move.m_departure, insert_x,
 		 to_let, current_move.m_x2 + 1);
       else if(qtchess_validate::is_rook(current_move.m_piece))
 	snprintf(hist, sizeof(hist),
 		 "%s%s%s%s%d", "R",
-		 current_move.m_departure, insertX,
+		 current_move.m_departure, insert_x,
 		 to_let, current_move.m_x2 + 1);
       else
 	snprintf(hist, sizeof(hist), "%s", "-----");
@@ -226,7 +226,7 @@ void qtchess_gui::addHistoryMove(const struct move_s &current_move,
     }
 }
 
-void qtchess_gui::clearHistory(void)
+void qtchess_gui::clear_history(void)
 {
   m_ui.history->setRowCount(0);
   m_ui.history->scrollToTop();
@@ -250,7 +250,7 @@ void qtchess_gui::initialize(void)
 
   if(statusBar())
     {
-      if((statusLabel = new(std::nothrow)
+      if((m_status_label = new(std::nothrow)
 	  QLabel(tr("Status: Peer Disconnected"))) == nullptr)
 	{
 	  if(chess)
@@ -259,16 +259,28 @@ void qtchess_gui::initialize(void)
 	    exit(EXIT_FAILURE);
 	}
 
-      statusLabel->setMargin(5);
-      statusLabel->setFrameShadow(QFrame::Raised);
-      statusLabel->setFrameShape(QFrame::NoFrame);
+      m_status_label->setFrameShadow(QFrame::Raised);
+      m_status_label->setFrameShape(QFrame::NoFrame);
+      m_status_label->setMargin(5);
+      statusBar()->addWidget(m_status_label, 100);
       statusBar()->setSizeGripEnabled(false);
       statusBar()->setStyleSheet("QStatusBar::item {"
 				 "border: none; "
 				 "}");
-      statusBar()->addWidget(statusLabel, 100);
     }
 
+  connect(m_ui.action_About,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(about(void)));
+  connect(m_ui.action_Connection_Configuration,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(setup(void)));
+  connect(m_ui.action_Help,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(help(void)));
   connect(m_ui.action_New_Game,
 	  SIGNAL(triggered(void)),
 	  this,
@@ -277,18 +289,6 @@ void qtchess_gui::initialize(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(quit(void)));
-  connect(m_ui.action_Connection_Configuration,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(setup(void)));
-  connect(m_ui.action_About,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(about(void)));
-  connect(m_ui.action_Help,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(help(void)));
 
   if((m_board = new(std::nothrow) qtchess_gui_board(nullptr)) == nullptr)
     {
@@ -298,37 +298,37 @@ void qtchess_gui::initialize(void)
 	exit(EXIT_FAILURE);
     }
 
-  if((playert = new(std::nothrow) QTimer(this)) != nullptr)
-    {
-      connect(playert,
-	      SIGNAL(timeout(void)),
-	      SLOT(updatePlayer(void)));
-      playert->start(1000);
-    }
-  else
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
-
-  if((opponentt = new(std::nothrow) QTimer(this)) != nullptr)
-    {
-      connect(opponentt,
-	      SIGNAL(timeout(void)),
-	      SLOT(updateOpponent(void)));
-      opponentt->start(1000);
-    }
-  else
-    {
-      if(chess)
-	chess->quit("Memory allocation failure.", EXIT_FAILURE);
-      else
-	exit(EXIT_FAILURE);
-    }
-
   if((m_help = new(std::nothrow) qtchess_help(this)) == nullptr)
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	exit(EXIT_FAILURE);
+    }
+
+  if((m_opponent_timer = new(std::nothrow) QTimer(this)) != nullptr)
+    {
+      connect(m_opponent_timer,
+	      SIGNAL(timeout(void)),
+	      SLOT(slot_update_opponent(void)));
+      m_opponent_timer->start(1000);
+    }
+  else
+    {
+      if(chess)
+	chess->quit("Memory allocation failure.", EXIT_FAILURE);
+      else
+	exit(EXIT_FAILURE);
+    }
+
+  if((m_player_timer = new(std::nothrow) QTimer(this)) != nullptr)
+    {
+      connect(m_player_timer,
+	      SIGNAL(timeout(void)),
+	      SLOT(slot_update_player(void)));
+      m_player_timer->start(1000);
+    }
+  else
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -374,10 +374,10 @@ void qtchess_gui::initialize(void)
   show();
 }
 
-void qtchess_gui::initClocks(void)
+void qtchess_gui::initialize_clocks(void)
 {
-  m_ui.player_clock->setTime(QTime(0, 0, 0));
   m_ui.opponent_clock->setTime(QTime(0, 0, 0));
+  m_ui.player_clock->setTime(QTime(0, 0, 0));
 }
 
 void qtchess_gui::newGame(void)
@@ -433,8 +433,8 @@ void qtchess_gui::newGame(void)
   if(comm)
     comm->send_move(current_move);
 
-  clearHistory();
-  initClocks();
+  clear_history();
+  initialize_clocks();
 
   /*
   ** Careful here. Set this after calling sendMove().
@@ -478,7 +478,7 @@ void qtchess_gui::quit(void)
 
 void qtchess_gui::setStatusText(const QString &str)
 {
-  statusLabel->setText(tr(str.toLatin1()));
+  m_status_label->setText(tr(str.toLatin1()));
 }
 
 void qtchess_gui::setup(void)
@@ -491,7 +491,9 @@ void qtchess_gui::setup(void)
 #ifdef Q_OS_ANDROID
       setup_dialog->showMaximized();
 #else
-      setup_dialog->resize(setup_dialog->sizeHint());
+      setup_dialog->resize
+	(qMax(setup_dialog->sizeHint().width(), size().width()) - 100,
+	 setup_dialog->sizeHint().height());
 #endif
       setup_dialog->exec();
     }
@@ -536,7 +538,7 @@ void qtchess_gui::stopTimers(const int which)
   Q_UNUSED(which);
 }
 
-void qtchess_gui::updateOpponent(void)
+void qtchess_gui::slot_update_opponent(void)
 {
   static QString stylesheet(m_ui.opponent_clock->styleSheet());
 
@@ -554,7 +556,7 @@ void qtchess_gui::updateOpponent(void)
     m_ui.opponent_clock->setStyleSheet(stylesheet);
 }
 
-void qtchess_gui::updatePlayer(void)
+void qtchess_gui::slot_update_player(void)
 {
   static QString stylesheet(m_ui.player_clock->styleSheet());
 

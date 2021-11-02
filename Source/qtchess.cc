@@ -188,8 +188,8 @@ void qtchess::update_board(const QByteArray &buffer)
 
       if(gui)
 	{
-	  gui->clearHistory();
-	  gui->initClocks();
+	  gui->clear_history();
+	  gui->initialize_clocks();
 	  gui->update();
 	}
     }
@@ -245,7 +245,7 @@ void qtchess::update_board(const QByteArray &buffer)
 
       if(gui)
 	{
-	  gui->addHistoryMove(current_move, color);
+	  gui->add_history_move(current_move, color);
 	  gui->update();
 	}
 

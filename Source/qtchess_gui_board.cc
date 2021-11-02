@@ -520,7 +520,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
       else
 	current_move.m_is_opponent_king_threat = 0;
 
-      gui->addHistoryMove
+      gui->add_history_move
 	(current_move,
 	 qtchess_validate::is_black(current_move.m_piece) ? BLACK : WHITE);
 
