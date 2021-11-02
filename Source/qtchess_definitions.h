@@ -28,29 +28,6 @@
 #ifndef _QTCHESS_DEFINITIONS_
 #define _QTCHESS_DEFINITIONS_
 
-enum
-{
-  BLACK = 1,
-  I_AM_FIRST = 4,
-  MY_TURN = 3,
-  OPPONENT_TIMER = 8,
-  PLAYER_TIMER = 7,
-  THEIR_TURN = 5,
-  THEY_ARE_FIRST = 6,
-  WHITE = 2
-};
-
-enum
-{
-  EMPTY_SQUARE = 0,
-  INVALID = 0,
-  NSQUARES = 8,
-  VALID = 1,
-  VALID_CASTLE = 2,
-  VALID_EN_PASSANT = 4,
-  VALID_PAWN2 = 3
-};
-
 enum BlackPieces
 {
   BISHOP_BLACK = 100,
@@ -61,6 +38,29 @@ enum BlackPieces
   ROOK_BLACK,
   ROOK1_BLACK,
   ROOK2_BLACK
+};
+
+enum BoardInformation
+{
+  EMPTY_SQUARE = 0,
+  INVALID = 0,
+  NSQUARES = 8,
+  VALID = 1,
+  VALID_CASTLE = 2,
+  VALID_EN_PASSANT = 4,
+  VALID_PAWN2 = 3
+};
+
+enum StateInformation
+{
+  BLACK = 1,
+  I_AM_FIRST = 4,
+  MY_TURN = 3,
+  OPPONENT_TIMER = 8,
+  PLAYER_TIMER = 7,
+  THEIR_TURN = 5,
+  THEY_ARE_FIRST = 6,
+  WHITE = 2
 };
 
 enum WhitePieces

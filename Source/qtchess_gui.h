@@ -37,7 +37,7 @@
 #include "qtchess_gui_board.h"
 #include "ui_qtchess_help.h"
 #include "ui_qtchess_mainwindow.h"
-#include "ui_qtchess_promotionDialog.h"
+#include "ui_qtchess_promotion.h"
 #include "ui_qtchess_setupDialog.h"
 
 class qtchess_help: public QDialog
@@ -45,7 +45,7 @@ class qtchess_help: public QDialog
   Q_OBJECT
 
  public:
-  qtchess_help(QWidget *);
+  qtchess_help(QWidget *parent);
   void setup(void);
 
  private:
@@ -90,25 +90,25 @@ class qtchess_setup_dialog: public QDialog
   void slotSetCaissa(void);
 };
 
-class qtchess_promote_dialog: public QDialog
+class qtchess_promotion: public QDialog
 {
   Q_OBJECT
 
  public:
-  qtchess_promote_dialog(QWidget *);
+  qtchess_promotion(QWidget *parent);
 
-  QComboBox *getMenu(void) const
+  QComboBox *get_menu(void) const
   {
-    return ui.menu;
+    return m_ui.menu;
   }
 
   void setup(void);
 
  private:
-  Ui_promotionDialog ui;
+  Ui_qtchess_promotion m_ui;
 
  private slots:
-  void ok_cb(void);
+  void slot_ok(void);
 };
 
 class qtchess_gui: public QMainWindow
@@ -132,7 +132,7 @@ class qtchess_gui: public QMainWindow
     return m_board;
   }
 
-  qtchess_promote_dialog *getPromoteDialog(void) const;
+  qtchess_promotion *get_promote_dialog(void) const;
   qtchess_setup_dialog *getSetupDialog(void) const;
   void addHistoryMove(const struct move_s &, const int);
   void clearHistory(void);
@@ -152,9 +152,9 @@ class qtchess_gui: public QMainWindow
   QPointer<QTimer> playert;
   QPointer<qtchess_gui_board> m_board;
   QPointer<qtchess_help> m_help;
-  QPointer<qtchess_promote_dialog> promote_dialog;
+  QPointer<qtchess_promotion> m_promotion;
   QPointer<qtchess_setup_dialog> setup_dialog;
-  Ui_qtchess_mainWindow ui;
+  Ui_qtchess_mainWindow m_ui;
 
   void closeEvent(QCloseEvent *event)
   {

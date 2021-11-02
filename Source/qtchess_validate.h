@@ -46,7 +46,7 @@ namespace qtchess_validate
   bool is_rook2(const int piece);
   bool is_threatened(const int x, const int y, const int color);
   bool is_white(const int piece);
-  int color(const int);
+  int color(const int piece);
   int is_valid_move(const int row_from,
 		    const int col_from,
 		    const int row_to,

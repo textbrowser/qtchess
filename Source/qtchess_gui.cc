@@ -45,7 +45,9 @@ extern QPointer<qtchess_communications> comm;
 
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
-  ui.setupUi(this);
+  m_ui.setupUi(this);
+  m_ui.splitter->setStretchFactor(0, 1);
+  m_ui.splitter->setStretchFactor(1, 0);
 
   if(menuBar())
     menuBar()->setNativeMenuBar(true);
@@ -57,9 +59,9 @@ qtchess_gui::~qtchess_gui()
     m_board->deleteLater();
 }
 
-qtchess_promote_dialog *qtchess_gui::getPromoteDialog(void) const
+qtchess_promotion *qtchess_gui::get_promote_dialog(void) const
 {
-  return promote_dialog;
+  return m_promotion;
 }
 
 qtchess_setup_dialog *qtchess_gui::getSetupDialog(void) const
@@ -201,34 +203,34 @@ void qtchess_gui::addHistoryMove(const struct move_s &current_move,
     {
       item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
-      if(ui.history->rowCount() == 0)
-	ui.history->setRowCount(1);
+      if(m_ui.history->rowCount() == 0)
+	m_ui.history->setRowCount(1);
 
-      if(ui.history->item(ui.history->rowCount() - 1, 0) != nullptr &&
-	 ui.history->item(ui.history->rowCount() - 1, 1) != nullptr)
-	ui.history->setRowCount(ui.history->rowCount() + 1);
+      if(m_ui.history->item(m_ui.history->rowCount() - 1, 0) != nullptr &&
+	 m_ui.history->item(m_ui.history->rowCount() - 1, 1) != nullptr)
+	m_ui.history->setRowCount(m_ui.history->rowCount() + 1);
 
       if(color == WHITE)
-	ui.history->setItem(ui.history->rowCount() - 1, 0, item);
+	m_ui.history->setItem(m_ui.history->rowCount() - 1, 0, item);
       else if(color == BLACK)
-	ui.history->setItem(ui.history->rowCount() - 1, 1, item);
+	m_ui.history->setItem(m_ui.history->rowCount() - 1, 1, item);
       else
 	{
 	  delete item;
 
-	  if(ui.history->rowCount() > 0)
-	    ui.history->setRowCount(ui.history->rowCount() - 1);
+	  if(m_ui.history->rowCount() > 0)
+	    m_ui.history->setRowCount(m_ui.history->rowCount() - 1);
 	}
 
-      ui.history->scrollToBottom();
+      m_ui.history->scrollToBottom();
     }
 }
 
 void qtchess_gui::clearHistory(void)
 {
-  ui.history->setRowCount(0);
-  ui.history->scrollToTop();
-  ui.history->horizontalScrollBar()->setValue(0);
+  m_ui.history->setRowCount(0);
+  m_ui.history->scrollToTop();
+  m_ui.history->horizontalScrollBar()->setValue(0);
 }
 
 void qtchess_gui::help(void)
@@ -267,23 +269,23 @@ void qtchess_gui::initialize(void)
       statusBar()->addWidget(statusLabel, 100);
     }
 
-  connect(ui.action_New_Game,
+  connect(m_ui.action_New_Game,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(newGame(void)));
-  connect(ui.action_Quit,
+  connect(m_ui.action_Quit,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(quit(void)));
-  connect(ui.action_Connection_Configuration,
+  connect(m_ui.action_Connection_Configuration,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(setup(void)));
-  connect(ui.action_About,
+  connect(m_ui.action_About,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(about(void)));
-  connect(ui.action_Help,
+  connect(m_ui.action_Help,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(help(void)));
@@ -342,7 +344,7 @@ void qtchess_gui::initialize(void)
 	exit(EXIT_FAILURE);
     }
 
-  if((promote_dialog = new(std::nothrow) qtchess_promote_dialog(this)) ==
+  if((m_promotion = new(std::nothrow) qtchess_promotion(this)) ==
      nullptr)
     {
       if(chess)
@@ -351,21 +353,21 @@ void qtchess_gui::initialize(void)
 	exit(EXIT_FAILURE);
     }
 
-  delete ui.boardFrame->layout();
-  ui.boardFrame->setLayout(new QGridLayout());
+  delete m_ui.boardFrame->layout();
+  m_ui.boardFrame->setLayout(new QGridLayout());
 
   if(m_board)
-    m_board->add(ui.boardFrame);
+    m_board->add(m_ui.boardFrame);
 
 #ifndef Q_OS_ANDROID
   resize(800, 600);
 #endif
 #if QT_VERSION < 0x050000
-  ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  ui.history->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  m_ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  m_ui.history->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 #else
-  ui.history->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-  ui.history->verticalHeader()->setSectionResizeMode
+  m_ui.history->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+  m_ui.history->verticalHeader()->setSectionResizeMode
     (QHeaderView::ResizeToContents);
 #endif
   s_initialized = true;
@@ -374,8 +376,8 @@ void qtchess_gui::initialize(void)
 
 void qtchess_gui::initClocks(void)
 {
-  ui.playerClock->setTime(QTime(0, 0, 0));
-  ui.opponentClock->setTime(QTime(0, 0, 0));
+  m_ui.playerClock->setTime(QTime(0, 0, 0));
+  m_ui.opponentClock->setTime(QTime(0, 0, 0));
 }
 
 void qtchess_gui::newGame(void)
@@ -536,7 +538,7 @@ void qtchess_gui::stopTimers(const int which)
 
 void qtchess_gui::updateOpponent(void)
 {
-  static QString stylesheet(ui.opponentClock->styleSheet());
+  static QString stylesheet(m_ui.opponentClock->styleSheet());
 
   if(chess &&
      chess->get_turn() == THEIR_TURN &&
@@ -544,17 +546,17 @@ void qtchess_gui::updateOpponent(void)
      comm &&
      comm->is_ready())
     {
-      ui.opponentClock->setStyleSheet
+      m_ui.opponentClock->setStyleSheet
 	("QWidget {background: rgb(240, 128, 128);}");
-      ui.opponentClock->setTime(ui.opponentClock->time().addSecs(1));
+      m_ui.opponentClock->setTime(m_ui.opponentClock->time().addSecs(1));
     }
   else
-    ui.opponentClock->setStyleSheet(stylesheet);
+    m_ui.opponentClock->setStyleSheet(stylesheet);
 }
 
 void qtchess_gui::updatePlayer(void)
 {
-  static QString stylesheet(ui.playerClock->styleSheet());
+  static QString stylesheet(m_ui.playerClock->styleSheet());
 
   if(chess &&
      chess->get_turn() == MY_TURN &&
@@ -562,12 +564,12 @@ void qtchess_gui::updatePlayer(void)
      comm &&
      comm->is_ready())
     {
-      ui.playerClock->setStyleSheet
+      m_ui.playerClock->setStyleSheet
 	("QWidget {background: rgb(144, 238, 144);}");
-      ui.playerClock->setTime(ui.playerClock->time().addSecs(1));
+      m_ui.playerClock->setTime(m_ui.playerClock->time().addSecs(1));
     }
   else
-    ui.playerClock->setStyleSheet(stylesheet);
+    m_ui.playerClock->setStyleSheet(stylesheet);
 }
 
 qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
@@ -606,24 +608,24 @@ void qtchess_help::setup(void)
   show();
 }
 
-qtchess_promote_dialog::qtchess_promote_dialog(QWidget *parent):QDialog(parent)
+qtchess_promotion::qtchess_promotion(QWidget *parent):QDialog(parent)
 {
-  ui.setupUi(this);
-  connect(ui.ok,
+  m_ui.setupUi(this);
+  connect(m_ui.ok,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(ok_cb(void)));
+	  SLOT(slot_ok(void)));
 }
 
-void qtchess_promote_dialog::ok_cb(void)
+void qtchess_promotion::slot_ok(void)
 {
   hide();
 }
 
-void qtchess_promote_dialog::setup(void)
+void qtchess_promotion::setup(void)
 {
-  ui.menu->setCurrentIndex(0);
-  ui.menu->setFocus();
+  m_ui.menu->setCurrentIndex(0);
+  m_ui.menu->setFocus();
   exec();
 }
 

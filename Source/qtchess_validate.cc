@@ -481,7 +481,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	  rc = VALID;
 
 	/*
-	** Castling.
+	** Castling
 	*/
 
 	auto king_has_moved = chess->has_king_moved();
@@ -566,7 +566,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	  rc = VALID;
 
 	/*
-	** Castling.
+	** Castling
 	*/
 
 	auto king_has_moved = chess->has_king_moved();
@@ -736,7 +736,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	  }
 
 	/*
-	** En passant.
+	** En Passant
 	*/
 
 	auto move = chess->get_last_opponent_move();
@@ -822,7 +822,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	  }
 
 	/*
-	** En passant.
+	** En Passant
 	*/
 
 	auto move = chess->get_last_opponent_move();
@@ -863,7 +863,7 @@ int qtchess_validate::is_valid_move(const int row_from,
     case ROOK_WHITE:
       {
 	/*
-	** Horizontal moves.
+	** Horizontal Moves
 	*/
 
 	if(row_from == row_to)
@@ -955,7 +955,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	  }
 
 	/*
-	** Vertical Moves.
+	** Vertical Moves
 	*/
 
 	if(col_from == col_to)

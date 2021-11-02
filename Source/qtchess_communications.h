@@ -43,22 +43,6 @@ class qtchess_communications: public QObject
   {
   }
 
-  QHostAddress peer_address(void) const
-  {
-    if(m_client_connection)
-      return m_client_connection->peerAddress();
-    else
-      return QHostAddress();
-  }
-
-  quint16 peer_port(void) const
-  {
-    if(m_client_connection)
-      return m_client_connection->peerPort();
-    else
-      return 0;
-  }
-
   bool is_connected_remotely(void) const;
   bool is_listening(void) const;
   bool is_ready(void) const;
