@@ -376,8 +376,8 @@ void qtchess_gui::initialize(void)
 
 void qtchess_gui::initClocks(void)
 {
-  m_ui.playerClock->setTime(QTime(0, 0, 0));
-  m_ui.opponentClock->setTime(QTime(0, 0, 0));
+  m_ui.player_clock->setTime(QTime(0, 0, 0));
+  m_ui.opponent_clock->setTime(QTime(0, 0, 0));
 }
 
 void qtchess_gui::newGame(void)
@@ -538,7 +538,7 @@ void qtchess_gui::stopTimers(const int which)
 
 void qtchess_gui::updateOpponent(void)
 {
-  static QString stylesheet(m_ui.opponentClock->styleSheet());
+  static QString stylesheet(m_ui.opponent_clock->styleSheet());
 
   if(chess &&
      chess->get_turn() == THEIR_TURN &&
@@ -546,17 +546,17 @@ void qtchess_gui::updateOpponent(void)
      comm &&
      comm->is_ready())
     {
-      m_ui.opponentClock->setStyleSheet
+      m_ui.opponent_clock->setStyleSheet
 	("QWidget {background: rgb(240, 128, 128);}");
-      m_ui.opponentClock->setTime(m_ui.opponentClock->time().addSecs(1));
+      m_ui.opponent_clock->setTime(m_ui.opponent_clock->time().addSecs(1));
     }
   else
-    m_ui.opponentClock->setStyleSheet(stylesheet);
+    m_ui.opponent_clock->setStyleSheet(stylesheet);
 }
 
 void qtchess_gui::updatePlayer(void)
 {
-  static QString stylesheet(m_ui.playerClock->styleSheet());
+  static QString stylesheet(m_ui.player_clock->styleSheet());
 
   if(chess &&
      chess->get_turn() == MY_TURN &&
@@ -564,12 +564,12 @@ void qtchess_gui::updatePlayer(void)
      comm &&
      comm->is_ready())
     {
-      m_ui.playerClock->setStyleSheet
+      m_ui.player_clock->setStyleSheet
 	("QWidget {background: rgb(144, 238, 144);}");
-      m_ui.playerClock->setTime(m_ui.playerClock->time().addSecs(1));
+      m_ui.player_clock->setTime(m_ui.player_clock->time().addSecs(1));
     }
   else
-    m_ui.playerClock->setStyleSheet(stylesheet);
+    m_ui.player_clock->setStyleSheet(stylesheet);
 }
 
 qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)

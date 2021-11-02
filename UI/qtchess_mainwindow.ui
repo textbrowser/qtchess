@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>qtchess_mainWindow</class>
- <widget class="QMainWindow" name="qtchess_mainWindow">
+ <class>qtchess_mainwindow</class>
+ <widget class="QMainWindow" name="qtchess_mainwindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -33,7 +33,7 @@
        </property>
        <layout class="QVBoxLayout" name="_3"/>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="_2">
         <item>
          <widget class="QGroupBox" name="groupBox">
@@ -49,7 +49,7 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QTimeEdit" name="playerClock">
+            <widget class="QTimeEdit" name="player_clock">
              <property name="alignment">
               <set>Qt::AlignCenter</set>
              </property>
@@ -72,7 +72,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QTimeEdit" name="opponentClock">
+            <widget class="QTimeEdit" name="opponent_clock">
              <property name="alignment">
               <set>Qt::AlignCenter</set>
              </property>
@@ -220,8 +220,8 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>playerClock</tabstop>
-  <tabstop>opponentClock</tabstop>
+  <tabstop>player_clock</tabstop>
+  <tabstop>opponent_clock</tabstop>
  </tabstops>
  <resources>
   <include location="../Images/images.qrc"/>

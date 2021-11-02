@@ -154,7 +154,7 @@ class qtchess_gui: public QMainWindow
   QPointer<qtchess_help> m_help;
   QPointer<qtchess_promotion> m_promotion;
   QPointer<qtchess_setup_dialog> setup_dialog;
-  Ui_qtchess_mainWindow m_ui;
+  Ui_qtchess_mainwindow m_ui;
 
   void closeEvent(QCloseEvent *event)
   {
