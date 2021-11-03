@@ -98,13 +98,17 @@ QString qtchess_validate::find_departure(const int X1,
 	}
 
   if(fcount > 0 && rcount > 0)
-    snprintf(departure, sizeof(departure), "%c%d", (char) (97 + X1), Y1 + 1);
+    snprintf(departure,
+	     sizeof(departure),
+	     "%c%d",
+	     static_cast<char> (97 + X1),
+	     Y1 + 1);
   else if(fcount > 0)
-    departure[0] = (char) (97 + X1);
+    departure[0] = static_cast<char> (97 + X1);
   else if(rcount > 0)
     snprintf(departure, sizeof(departure), "%d", Y1 + 1);
   else
-    departure[0] = (char) (97 + X1);
+    departure[0] = static_cast<char> (97 + X1);
 
   return departure;
 }

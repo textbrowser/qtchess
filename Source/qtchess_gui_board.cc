@@ -77,9 +77,37 @@ void qtchess_gui_board::add(QFrame *frame)
 
   layout->setSpacing(0);
 
+  for(int i = 0; i < 2; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      {
+	char c[2];
+
+	if(i == 0)
+	  c[0] = static_cast<char> (97 + j);
+	else
+	  c[0] = static_cast<char> (49 + j);
+
+	c[1] = 0;
+
+	auto font(this->font());
+	auto label = new QLabel(QString("     %1     ").arg(c), this);
+
+	font.setBold(true);
+	label->setAlignment(Qt::AlignCenter);
+	label->setContentsMargins(0, 0, 0, 0);
+	label->setFont(font);
+	label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+	label->setTextFormat(Qt::RichText);
+
+	if(i == 0)
+	  layout->addWidget(label, j + 1, 0);
+	else
+	  layout->addWidget(label, 0, j + 1);
+    }
+
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
-      layout->addWidget(m_labels[i][j], i, j);
+      layout->addWidget(m_labels[i][j], i + 1, j + 1);
 
   paint();
 }
