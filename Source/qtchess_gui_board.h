@@ -113,13 +113,13 @@ class qtchess_gui_board: public QObject
   void add(QFrame *frame);
   void new_game(void);
   void initialize(void);
+  void paint(void);
 
  private:
   QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];
   int m_mouse_pressed;
   point m_point_selected;
   void highlight_square(const int i, const int j);
-  void paint(void);
 
  private slots:
   void slot_piece_double_clicked(qtchess_piece *piece);

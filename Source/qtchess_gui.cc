@@ -416,7 +416,7 @@ void qtchess_gui::slot_new_game(void)
   initialize_clocks();
 
   /*
-  ** Careful here. Set this after calling sendMove().
+  ** Careful here. Set this after calling send_move().
   */
 
   if(chess)

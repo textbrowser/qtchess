@@ -146,6 +146,14 @@ class qtchess_gui: public QMainWindow
   void start_timers(const int which);
   void stop_timers(const int which);
 
+  void update(void)
+  {
+    QMainWindow::update();
+
+    if(m_board)
+      m_board->paint();
+  }
+
  private:
   QPointer<QLabel> m_status_label;
   QPointer<QTimer> m_opponent_timer;

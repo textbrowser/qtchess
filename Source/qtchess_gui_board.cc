@@ -202,12 +202,16 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
     return;
 
 #ifndef QTCHESS_DEBUG
-  if(chess->get_my_color() == BLACK &&
-     !qtchess_validate::is_black(chess->m_board[x][y]))
-    return;
-  else if(chess->get_my_color() == WHITE &&
-	  !qtchess_validate::is_white(chess->m_board[x][y]))
-    return;
+  if((chess->get_my_color() == BLACK &&
+      !qtchess_validate::is_black(chess->m_board[x][y])) ||
+     (chess->get_my_color() == WHITE &&
+      !qtchess_validate::is_white(chess->m_board[x][y])) ||
+     chess->get_turn() != MY_TURN)
+    {
+      m_mouse_pressed = 0;
+      m_point_selected.m_x = m_point_selected.m_y = -1;
+      return;
+    }
 #endif
   
   for(int i = 0; i < NSQUARES; i++)
@@ -277,58 +281,49 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
       return;
     }
 
-  for(int i = 0; i < NSQUARES; i++)
-    for(int j = 0; j < NSQUARES; j++)
-      {
-	QColor color;
-
-	if((i + j) % 2 == 0)
-	  color = QColor(255, 87, 51);
-	else
-	  color = QColor(255, 255, 237);
-
-	if(m_labels[i][j] == piece)
-	  {
-	    m_labels[i][j]->setStyleSheet
-	      ("QLabel {background-color: orange; border: 1px solid navy;}");
-	    m_mouse_pressed = 1;
-	    m_point_selected.m_x = i;
-	    m_point_selected.m_y = j;
-	  }
-	else
-	  m_labels[i][j]->setStyleSheet
-	    (QString("QLabel {background-color: %1; border: 1px solid navy;}").
-	     arg(color.name()));
-      }
+#ifdef QTCHESS_DEBUG
+  highlight_square(x, y);
+  m_mouse_pressed = 1;
+  m_point_selected.m_x = x;
+  m_point_selected.m_y = y;
+#else
+  if(chess->get_my_color() == BLACK &&
+     qtchess_validate::is_black(chess->m_board[x][y]))
+    {
+      highlight_square(x, y);
+      m_mouse_pressed = 1;
+      m_point_selected.m_x = x;
+      m_point_selected.m_y = y;
+    }
+  else if(chess->get_my_color() == WHITE &&
+	  qtchess_validate::is_white(chess->m_board[x][y]))
+    {
+      highlight_square(x, y);
+      m_mouse_pressed = 1;
+      m_point_selected.m_x = x;
+      m_point_selected.m_y = y;
+    }
+  else
+    {
+      m_mouse_pressed = 0;
+      m_point_selected.m_x = m_point_selected.m_y = -1;
+    }
+#endif
 
   return;
 
  move_label:
 
+  paint();
+
   int rc = 0;
 
-  if(chess->get_my_color() == BLACK &&
-     !qtchess_validate::is_black(chess->m_board[x][y]))
-    {
-      highlight_square(x, y);
-      m_mouse_pressed = 0;
-      m_point_selected.m_x = -1;
-      m_point_selected.m_y = -1;
-    }
-  else if(chess->get_my_color() == WHITE &&
-	  !qtchess_validate::is_white(chess->m_board[x][y]))
-    {
-      highlight_square(x, y);
-      m_mouse_pressed = 0;
-      m_point_selected.m_x = -1;
-      m_point_selected.m_y = -1;
-    }
-  else if((rc = qtchess_validate::is_valid_move
-	   (m_point_selected.m_y,
-	    m_point_selected.m_x,
-	    y, x,
-	    chess->m_board[m_point_selected.m_x][m_point_selected.m_y])) !=
-	  INVALID)
+  if((rc = qtchess_validate::
+      is_valid_move(m_point_selected.m_y,
+		    m_point_selected.m_x,
+		    y, x,
+		    chess->m_board[m_point_selected.m_x]
+		                  [m_point_selected.m_y])) != INVALID)
     {
       if(qtchess_validate::
 	 is_king(chess->m_board[m_point_selected.m_x]
@@ -559,6 +554,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 	  ** Allow selection of another similar piece.
 	  */
 
+	  highlight_square(x, y);
 	  m_mouse_pressed = 1;
 	  m_point_selected.m_x = x;
 	  m_point_selected.m_y = y;
@@ -570,6 +566,4 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 	  m_point_selected.m_y = -1;
 	}
     }
-
-  paint();
 }
