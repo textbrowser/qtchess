@@ -201,6 +201,15 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
   if(chess->m_board[x][y] == EMPTY_SQUARE)
     return;
 
+#ifndef QTCHESS_DEBUG
+  if(chess->get_my_color() == BLACK &&
+     !qtchess_validate::is_black(chess->m_board[x][y]))
+    return;
+  else if(chess->get_my_color() == WHITE &&
+	  !qtchess_validate::is_white(chess->m_board[x][y]))
+    return;
+#endif
+  
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {

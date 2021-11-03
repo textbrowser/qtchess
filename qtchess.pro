@@ -7,7 +7,7 @@ purge.commands = rm -f *~ && rm -f */*~
 }
 
 CONFIG		+= qt release warn_on
-DEFINES		+= QTCHESS_DEBUG QT_DEPRECATED_WARNINGS
+DEFINES		+= QT_DEPRECATED_WARNINGS
 
 mac {
 ICON            = Images/chess.icns

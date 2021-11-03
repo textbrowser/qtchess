@@ -325,6 +325,7 @@ void qtchess_gui::initialize(void)
     }
 
   delete m_ui.boardFrame->layout();
+  m_ui.boardFrame->setFocus();
   m_ui.boardFrame->setLayout(new QGridLayout());
 
   if(m_board)
