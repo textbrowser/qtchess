@@ -227,7 +227,10 @@ void qtchess_gui::initialize(void)
 	  if(chess)
 	    chess->quit("Memory allocation failure.", EXIT_FAILURE);
 	  else
-	    exit(EXIT_FAILURE);
+	    {
+	      QApplication::exit(EXIT_FAILURE);
+	      return;
+	    }
 	}
 
       m_status_label->setFrameShadow(QFrame::Raised);
@@ -266,7 +269,10 @@ void qtchess_gui::initialize(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	exit(EXIT_FAILURE);
+	{
+	  QApplication::exit(EXIT_FAILURE);
+	  return;
+	}
     }
 
   if((m_help = new(std::nothrow) qtchess_help(this)) == nullptr)
@@ -274,7 +280,10 @@ void qtchess_gui::initialize(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	exit(EXIT_FAILURE);
+	{
+	  QApplication::exit(EXIT_FAILURE);
+	  return;
+	}
     }
 
   if((m_opponent_timer = new(std::nothrow) QTimer(this)) != nullptr)
@@ -289,7 +298,10 @@ void qtchess_gui::initialize(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	exit(EXIT_FAILURE);
+	{
+	  QApplication::exit(EXIT_FAILURE);
+	  return;
+	}
     }
 
   if((m_player_timer = new(std::nothrow) QTimer(this)) != nullptr)
@@ -304,7 +316,10 @@ void qtchess_gui::initialize(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	exit(EXIT_FAILURE);
+	{
+	  QApplication::exit(EXIT_FAILURE);
+	  return;
+	}
     }
 
   if((m_promotion = new(std::nothrow) qtchess_promotion(this)) ==
@@ -313,7 +328,10 @@ void qtchess_gui::initialize(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	exit(EXIT_FAILURE);
+	{
+	  QApplication::exit(EXIT_FAILURE);
+	  return;
+	}
     }
 
   if((m_setup = new(std::nothrow) qtchess_setup(this)) == nullptr)
@@ -321,7 +339,10 @@ void qtchess_gui::initialize(void)
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
       else
-	exit(EXIT_FAILURE);
+	{
+	  QApplication::exit(EXIT_FAILURE);
+	  return;
+	}
     }
 
   delete m_ui.boardFrame->layout();
@@ -445,7 +466,7 @@ void qtchess_gui::slot_quit(void)
       chess->quit(nullptr, EXIT_SUCCESS);
     }
   else
-    exit(EXIT_FAILURE);
+    QApplication::exit(EXIT_FAILURE);
 }
 
 void qtchess_gui::set_status_text(const QString &str)

@@ -95,10 +95,7 @@ void qtchess::quit(const char *message_text, const int exit_code)
   if(message_text != nullptr)
     qDebug() << message_text;
 
-  if(QApplication::instance())
-    QApplication::instance()->exit(exit_code);
-  else
-    exit(exit_code);
+  QApplication::exit(exit_code);
 }
 
 void qtchess::update_board(const QByteArray &buffer)

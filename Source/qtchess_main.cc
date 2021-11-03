@@ -64,6 +64,14 @@ int main(int argc, char *argv[])
   if((chess = new(std::nothrow) qtchess()) == nullptr)
     {
       qDebug() << "Memory allocation failure.";
+#ifdef Q_OS_ANDROID
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))
+      auto activity = QJniObject
+	(QNativeInterface::QAndroidApplication::context());
+
+      activity.callMethod<void> ("finishAndRemoveTask");
+#endif
+#endif
       return EXIT_FAILURE;
     }
   else
