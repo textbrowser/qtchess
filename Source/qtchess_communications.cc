@@ -251,11 +251,11 @@ void qtchess_communications::connect_remotely(void)
   connect(m_client_connection,
 	  SIGNAL(disconnected(void)),
 	  this,
-	  SLOT(slot_client_disconnected(void)));
+	  SIGNAL(disconnected_from_client(void)));
   connect(m_client_connection,
 	  SIGNAL(disconnected(void)),
 	  this,
-	  SIGNAL(disconnected_from_client(void)));
+	  SLOT(slot_client_disconnected(void)));
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
   connect(m_client_connection,
 	  SIGNAL(error(QAbstractSocket::SocketError)),
