@@ -34,24 +34,12 @@
 
 #include "qtchess_definitions.h"
 
-class point
-{
- public:
-  point(void)
-  {
-    m_x = m_y = -1;
-  }
-
-  int m_x;
-  int m_y;
-};
-
 class qtchess_piece: public QLabel
 {
   Q_OBJECT
 
  public:
-  qtchess_piece(const int i, const int j, QObject *parent):QLabel(nullptr)
+  qtchess_piece(const int i, const int j, QWidget *parent):QLabel(parent)
   {
     Q_UNUSED(parent);
     m_i = i;
@@ -104,12 +92,24 @@ class qtchess_piece: public QLabel
   void pressed(qtchess_piece *piece);
 };
 
-class qtchess_gui_board: public QObject
+class qtchess_point
+{
+ public:
+  qtchess_point(void)
+  {
+    m_x = m_y = -1;
+  }
+
+  int m_x;
+  int m_y;
+};
+
+class qtchess_gui_board: public QWidget
 {
   Q_OBJECT
 
  public:
-  qtchess_gui_board(QObject *parent);
+  qtchess_gui_board(QWidget *parent);
   void add(QFrame *frame);
   void new_game(void);
   void initialize(void);
@@ -118,7 +118,7 @@ class qtchess_gui_board: public QObject
  private:
   QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];
   int m_mouse_pressed;
-  point m_point_selected;
+  qtchess_point m_point_selected;
   void highlight_square(const int i, const int j);
 
  private slots:

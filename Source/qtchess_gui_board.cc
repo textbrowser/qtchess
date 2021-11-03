@@ -35,7 +35,7 @@ extern QPointer<qtchess> chess;
 extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
 
-qtchess_gui_board::qtchess_gui_board(QObject *parent):QObject(parent)
+qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 {
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
@@ -50,7 +50,6 @@ qtchess_gui_board::qtchess_gui_board(QObject *parent):QObject(parent)
 		this,
 		SLOT(slot_piece_pressed(qtchess_piece *)));
 
-	QColor color;
 	auto font(m_labels[i][j]->font());
 
 	font.setPointSize(30);
@@ -59,20 +58,11 @@ qtchess_gui_board::qtchess_gui_board(QObject *parent):QObject(parent)
 	m_labels[i][j]->setFont(font);
 	m_labels[i][j]->setSizePolicy
 	  (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-
-	if((i + j) % 2 == 0)
-	  color = QColor(255, 87, 51);
-	else
-	  color = QColor(255, 255, 237);
-
-	m_labels[i][j]->setStyleSheet
-	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
-	   arg(color.name()));
 	m_labels[i][j]->setTextFormat(Qt::RichText);
       }
 
   m_mouse_pressed = 0;
-  initialize();
+  m_point_selected.m_x = m_point_selected.m_y = -1;
 }
 
 void qtchess_gui_board::add(QFrame *frame)
@@ -99,6 +89,28 @@ void qtchess_gui_board::highlight_square(const int i, const int j)
   if(i >= 0 && i < NSQUARES && j >= 0 && j < NSQUARES)
     m_labels[i][j]->setStyleSheet
       ("QLabel {background-color: orange; border: 1px solid navy;}");
+}
+
+void qtchess_gui_board::initialize(void)
+{
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      {
+	QColor color;
+
+	if((i + j) % 2 == 0)
+	  color = QColor(255, 87, 51);
+	else
+	  color = QColor(255, 255, 237);
+
+	m_labels[i][j]->clear();
+  	m_labels[i][j]->setStyleSheet
+	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
+	   arg(color.name()));
+      }
+
+  m_mouse_pressed = 0;
+  m_point_selected.m_x = m_point_selected.m_y = -1;
 }
 
 void qtchess_gui_board::new_game(void)
@@ -149,39 +161,18 @@ void qtchess_gui_board::paint(void)
 	else
 	  m_labels[i][j]->setText(QString("&#%1;").arg(piece));
 
-	QColor color;
+	QColor background_color;
 
 	if((i + j) % 2 == 0)
-	  color = QColor(255, 87, 51);
+	  background_color = QColor(255, 87, 51);
 	else
-	  color = QColor(255, 255, 237);
+	  background_color = QColor(255, 255, 237);
 
 	m_labels[i][j]->setStyleSheet
-	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
-	   arg(color.name()));
+	  (QString("QLabel {background-color: %1; "
+		   "border: 1px solid navy;}").
+	   arg(background_color.name()));
       }
-}
-
-void qtchess_gui_board::initialize(void)
-{
-  for(int i = 0; i < NSQUARES; i++)
-    for(int j = 0; j < NSQUARES; j++)
-      {
-	QColor color;
-
-	if((i + j) % 2 == 0)
-	  color = QColor(255, 87, 51);
-	else
-	  color = QColor(255, 255, 237);
-
-	m_labels[i][j]->clear();
-  	m_labels[i][j]->setStyleSheet
-	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
-	   arg(color.name()));
-      }
-
-  m_mouse_pressed = 0;
-  m_point_selected.m_x = m_point_selected.m_y = -1;
 }
 
 void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
