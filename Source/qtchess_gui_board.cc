@@ -552,8 +552,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
       else
 	{
 	  m_mouse_pressed = 0;
-	  m_point_selected.m_x = -1;
-	  m_point_selected.m_y = -1;
+	  m_point_selected.m_x = m_point_selected.m_y = -1;
 	}
     }
 }

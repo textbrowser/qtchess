@@ -58,6 +58,9 @@
            <property name="placeholderText">
             <string>Optional Secret</string>
            </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -166,6 +169,9 @@
               <property name="placeholderText">
                <string>Allowed IP Address</string>
               </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -174,6 +180,9 @@
                <widget class="QLineEdit" name="local_host">
                 <property name="placeholderText">
                  <string>IP Address</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -188,6 +197,9 @@
                <widget class="QLineEdit" name="local_scope_id">
                 <property name="placeholderText">
                  <string>Scope ID</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -367,6 +379,9 @@
                 <property name="placeholderText">
                  <string>IP Address</string>
                 </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item>
@@ -380,6 +395,9 @@
                <widget class="QLineEdit" name="remote_scope_id">
                 <property name="placeholderText">
                  <string>Scope ID</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
