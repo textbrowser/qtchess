@@ -56,11 +56,6 @@ class qtchess_piece: public QLabel
     return m_j;
   }
 
-  void resizeEvent(QResizeEvent *event)
-  {
-    QLabel::resizeEvent(event);
-  }
-
  private:
   int m_i;
   int m_j;
@@ -85,6 +80,11 @@ class qtchess_piece: public QLabel
       emit pressed(this);
 
     QLabel::mousePressEvent(event);
+  }
+
+  void resizeEvent(QResizeEvent *event)
+  {
+    QLabel::resizeEvent(event);
   }
 
  signals:
@@ -112,7 +112,6 @@ class qtchess_gui_board: public QWidget
   qtchess_gui_board(QWidget *parent);
   void add(QFrame *frame);
   void new_game(void);
-  void initialize(void);
   void paint(void);
 
  private:
@@ -120,6 +119,7 @@ class qtchess_gui_board: public QWidget
   int m_mouse_pressed;
   qtchess_point m_point_selected;
   void highlight_square(const int i, const int j);
+  void initialize(void);
 
  private slots:
   void slot_piece_double_clicked(qtchess_piece *piece);
