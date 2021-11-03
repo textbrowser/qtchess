@@ -534,7 +534,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
       chess->set_game_over(game_over);
 
       if(game_over)
-	gui->showGameOver(chess->get_turn());
+	gui->show_game_over(chess->get_turn());
 
       paint();
       return;

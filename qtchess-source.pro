@@ -1,7 +1,7 @@
 FORMS		= UI/qtchess_help.ui \
                   UI/qtchess_mainwindow.ui \
                   UI/qtchess_promotion.ui \
-                  UI/qtchess_setupDialog.ui
+                  UI/qtchess_setup.ui
 
 HEADERS		= Source/qtchess.h \
                   Source/qtchess_communications.h \

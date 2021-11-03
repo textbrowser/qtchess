@@ -197,8 +197,8 @@ void qtchess::update_board(const QByteArray &buffer)
     {
       if(gui)
 	{
-	  gui->stopTimers(OPPONENT_TIMER);
-	  gui->startTimers(PLAYER_TIMER);
+	  gui->stop_timers(OPPONENT_TIMER);
+	  gui->start_timers(PLAYER_TIMER);
 	}
 
       int color = BLACK;
@@ -251,9 +251,9 @@ void qtchess::update_board(const QByteArray &buffer)
 
       if(gui && m_game_over)
 	{
-	  gui->showGameOver(get_turn());
-	  gui->stopTimers(OPPONENT_TIMER);
-	  gui->stopTimers(PLAYER_TIMER);
+	  gui->show_game_over(get_turn());
+	  gui->stop_timers(OPPONENT_TIMER);
+	  gui->stop_timers(PLAYER_TIMER);
 	}
     }
 }

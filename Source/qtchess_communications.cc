@@ -138,75 +138,6 @@ memcmp(const QByteArray &a, const QByteArray &b) const
   return rc == 0;
 }
 
-void qtchess_communications::slot_accept_connection(void)
-{
-  auto socket = m_listening_sock.nextPendingConnection();
-
-  if(!socket)
-    return;
-  else if(m_client_connection)
-    {
-      socket->abort();
-      socket->deleteLater();
-      return;
-    }
-  else
-    m_client_connection = socket;
-
-  m_client_connection->setParent(this);
-
-  /*
-  ** Acceptable peer?
-  */
-
-  if(gui && gui->getSetupDialog() &&
-     gui->getSetupDialog()->getAllowedHostField() &&
-     !gui->getSetupDialog()->getAllowedHostField()->text().
-     trimmed().isEmpty())
-    {
-      auto str(gui->getSetupDialog()->getAllowedHostField()->text().trimmed());
-
-      if(QHostAddress(str) != m_client_connection->peerAddress())
-	{
-	  m_client_connection->abort();
-	  m_client_connection->deleteLater();
-	  return;
-	}
-    }
-
-  emit connected_to_client();
-  connect(m_client_connection,
-	  SIGNAL(disconnected(void)),
-	  this,
-	  SLOT(slot_client_disconnected(void)));
-#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-  connect(m_client_connection,
-	  SIGNAL(error(QAbstractSocket::SocketError)),
-	  m_client_connection,
-	  SIGNAL(disconnected(void)));
-#else
-  connect(m_client_connection,
-	  SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
-	  m_client_connection,
-	  SIGNAL(disconnected(void)));
-#endif
-  connect(m_client_connection,
-	  SIGNAL(readyRead(void)),
-	  this,
-	  SLOT(slot_update_board(void)));
-
-  if(gui)
-    gui->notifyConnection(m_client_connection->peerAddress().toString(),
-			  m_client_connection->peerPort());
-
-  if(chess && chess->get_first() == -1)
-    {
-      chess->set_first(THEY_ARE_FIRST);
-      chess->set_my_color(BLACK);
-      chess->set_turn(THEIR_TURN);
-    }
-}
-
 void qtchess_communications::connect_remotely(void)
 {
   QString scope_id("");
@@ -216,14 +147,20 @@ void qtchess_communications::connect_remotely(void)
 
   if(gui)
     {
-      if(gui->getSetupDialog() && gui->getSetupDialog()->getRHostField())
-	str1 = gui->getSetupDialog()->getRHostField()->text().trimmed();
+      if(gui->get_setup_dialog() &&
+	 gui->get_setup_dialog()->get_remote_host_field())
+	str1 = gui->get_setup_dialog()->get_remote_host_field()->
+	  text().trimmed();
 
-      if(gui->getSetupDialog() && gui->getSetupDialog()->getRPortField())
-	str2 = gui->getSetupDialog()->getRPortField()->text().trimmed();
+      if(gui->get_setup_dialog() &&
+	 gui->get_setup_dialog()->get_remote_port_field())
+	str2 = gui->get_setup_dialog()->get_remote_port_field()->
+	  text().trimmed();
 
-      if(gui->getSetupDialog() && gui->getSetupDialog()->getRScopeIdField())
-	scope_id = gui->getSetupDialog()->getRScopeIdField()->text().trimmed();
+      if(gui->get_setup_dialog() &&
+	 gui->get_setup_dialog()->get_remote_scope_id_field())
+	scope_id = gui->get_setup_dialog()->get_remote_scope_id_field()->
+	  text().trimmed();
     }
 
   remote_port = (quint16) str2.toInt();
@@ -287,7 +224,7 @@ void qtchess_communications::disconnect_remotely(void)
     }
 
   if(gui)
-    gui->showDisconnect();
+    gui->show_disconnect();
 }
 
 void qtchess_communications::initialize(void)
@@ -295,13 +232,14 @@ void qtchess_communications::initialize(void)
   if(m_listening_sock.isListening())
     m_listening_sock.close();
 
-  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getHostField())
-    gui->getSetupDialog()->getHostField()->setText
+  if(gui && gui->get_setup_dialog() &&
+     gui->get_setup_dialog()->get_local_host_field())
+    gui->get_setup_dialog()->get_local_host_field()->setText
       (QHostAddress(QHostAddress::LocalHost).toString());
 
-  if(gui && gui->getSetupDialog() &&
-     gui->getSetupDialog()->getAllowedHostField())
-    gui->getSetupDialog()->getAllowedHostField()->setText
+  if(gui && gui->get_setup_dialog() &&
+     gui->get_setup_dialog()->get_allowed_host_field())
+    gui->get_setup_dialog()->get_allowed_host_field()->setText
       (QHostAddress(QHostAddress::LocalHost).toString());
 }
 
@@ -373,13 +311,13 @@ void qtchess_communications::send_move(const struct move_s &current_move)
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  if(m_client_connection->write(buffer.constData(),
-			       buffer.length()) != (qint64) buffer.length())
+  if(m_client_connection->
+     write(buffer.constData(), buffer.length()) != (qint64) buffer.length())
     {
       QApplication::restoreOverrideCursor();
 
       if(gui)
-	gui->showErrorMsg("Move could not be delivered.");
+	gui->show_error_message("Move could not be delivered.");
     }
   else
     {
@@ -409,10 +347,11 @@ void qtchess_communications::set_listen(void)
   QHostAddress address(QHostAddress::Any);
   quint16 port = 0;
 
-  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
+  if(gui && gui->get_setup_dialog() &&
+     gui->get_setup_dialog()->get_local_port_field())
     {
-      address = gui->getSetupDialog()->getListeningAddress();
-      port = gui->getSetupDialog()->getPortField()->text().toUShort();
+      address = gui->get_setup_dialog()->get_listening_address();
+      port = gui->get_setup_dialog()->get_local_port_field()->text().toUShort();
     }
 
   m_listening_sock.listen(address, port);
@@ -421,11 +360,80 @@ void qtchess_communications::set_listen(void)
   ** Save the port number.
   */
 
-  if(gui && gui->getSetupDialog() && gui->getSetupDialog()->getPortField())
+  if(gui && gui->get_setup_dialog() &&
+     gui->get_setup_dialog()->get_local_port_field() &&
+     m_listening_sock.isListening())
+    gui->get_setup_dialog()->get_local_port_field()->setValue
+      (static_cast<int> (m_listening_sock.serverPort()));
+}
+
+void qtchess_communications::slot_accept_connection(void)
+{
+  auto socket = m_listening_sock.nextPendingConnection();
+
+  if(!socket)
+    return;
+  else if(m_client_connection)
     {
-      if(m_listening_sock.isListening())
-	gui->getSetupDialog()->getPortField()->setValue
-	  (static_cast<int> (m_listening_sock.serverPort()));
+      socket->abort();
+      socket->deleteLater();
+      return;
+    }
+  else
+    m_client_connection = socket;
+
+  m_client_connection->setParent(this);
+
+  /*
+  ** Acceptable peer?
+  */
+
+  if(gui && gui->get_setup_dialog() &&
+     gui->get_setup_dialog()->get_allowed_host_field() &&
+     !gui->get_setup_dialog()->get_allowed_host_field()->text().
+     trimmed().isEmpty())
+    {
+      auto str
+	(gui->get_setup_dialog()->get_allowed_host_field()->text().trimmed());
+
+      if(QHostAddress(str) != m_client_connection->peerAddress())
+	{
+	  m_client_connection->abort();
+	  m_client_connection->deleteLater();
+	  return;
+	}
+    }
+
+  emit connected_to_client();
+  connect(m_client_connection,
+	  SIGNAL(disconnected(void)),
+	  this,
+	  SLOT(slot_client_disconnected(void)));
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+  connect(m_client_connection,
+	  SIGNAL(error(QAbstractSocket::SocketError)),
+	  m_client_connection,
+	  SIGNAL(disconnected(void)));
+#else
+  connect(m_client_connection,
+	  SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
+	  m_client_connection,
+	  SIGNAL(disconnected(void)));
+#endif
+  connect(m_client_connection,
+	  SIGNAL(readyRead(void)),
+	  this,
+	  SLOT(slot_update_board(void)));
+
+  if(gui)
+    gui->notify_connection(m_client_connection->peerAddress().toString(),
+			   m_client_connection->peerPort());
+
+  if(chess && chess->get_first() == -1)
+    {
+      chess->set_first(THEY_ARE_FIRST);
+      chess->set_my_color(BLACK);
+      chess->set_turn(THEIR_TURN);
     }
 }
 
@@ -454,8 +462,8 @@ void qtchess_communications::slot_client_connected(void)
     }
 
   if(m_client_connection)
-    gui->notifyConnection(m_client_connection->peerAddress().toString(),
-			  m_client_connection->peerPort());
+    gui->notify_connection(m_client_connection->peerAddress().toString(),
+			   m_client_connection->peerPort());
 }
 
 void qtchess_communications::slot_client_disconnected(void)
@@ -475,7 +483,7 @@ void qtchess_communications::slot_client_disconnected(void)
     }
 
   if(gui)
-    gui->setStatusText(tr("Status: Peer Disconnected"));
+    gui->set_status_text(tr("Status: Peer Disconnected"));
 
   emit disconnected_from_client();
 }

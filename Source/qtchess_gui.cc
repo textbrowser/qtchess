@@ -64,32 +64,9 @@ qtchess_promotion *qtchess_gui::get_promote_dialog(void) const
   return m_promotion;
 }
 
-qtchess_setup_dialog *qtchess_gui::getSetupDialog(void) const
+qtchess_setup *qtchess_gui::get_setup_dialog(void) const
 {
-  return setup_dialog;
-}
-
-void qtchess_gui::about(void)
-{
-  QMessageBox mb(this);
-  QPixmap pixmap(":/chess.png");
-
-  mb.setIconPixmap
-    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-  mb.setStandardButtons(QMessageBox::Ok);
-  mb.setText
-    (tr("<html>QtChess Version %1.<br>"
-	"Copyright (c) 2003 - 2021 X.<br>"
-	"Qt version %2."
-	"<hr>"
-	"Please visit <a href=\"https://textbrowser.github.io/qtchess\">"
-	"https://textbrowser.github.io/qtchess</a> for "
-	"project information.").
-     arg(QTCHESS_VERSION).
-     arg(QT_VERSION_STR));
-  mb.setTextFormat(Qt::RichText);
-  mb.setWindowTitle(tr("QtChess: About"));
-  mb.exec();
+  return m_setup;;
 }
 
 void qtchess_gui::add_history_move(const struct move_s &current_move,
@@ -233,12 +210,6 @@ void qtchess_gui::clear_history(void)
   m_ui.history->horizontalScrollBar()->setValue(0);
 }
 
-void qtchess_gui::help(void)
-{
-  if(m_help)
-    m_help->setup();
-}
-
 void qtchess_gui::initialize(void)
 {
   static bool s_initialized = false;
@@ -272,23 +243,23 @@ void qtchess_gui::initialize(void)
   connect(m_ui.action_About,
 	  SIGNAL(triggered(void)),
 	  this,
-	  SLOT(about(void)));
+	  SLOT(slot_about(void)));
   connect(m_ui.action_Connection_Configuration,
 	  SIGNAL(triggered(void)),
 	  this,
-	  SLOT(setup(void)));
+	  SLOT(slot_setup(void)));
   connect(m_ui.action_Help,
 	  SIGNAL(triggered(void)),
 	  this,
-	  SLOT(help(void)));
+	  SLOT(slot_help(void)));
   connect(m_ui.action_New_Game,
 	  SIGNAL(triggered(void)),
 	  this,
-	  SLOT(newGame(void)));
+	  SLOT(slot_new_game(void)));
   connect(m_ui.action_Quit,
 	  SIGNAL(triggered(void)),
 	  this,
-	  SLOT(quit(void)));
+	  SLOT(slot_quit(void)));
 
   if((m_board = new(std::nothrow) qtchess_gui_board(nullptr)) == nullptr)
     {
@@ -336,7 +307,8 @@ void qtchess_gui::initialize(void)
 	exit(EXIT_FAILURE);
     }
 
-  if((setup_dialog = new(std::nothrow) qtchess_setup_dialog(this)) == nullptr)
+  if((m_promotion = new(std::nothrow) qtchess_promotion(this)) ==
+     nullptr)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -344,8 +316,7 @@ void qtchess_gui::initialize(void)
 	exit(EXIT_FAILURE);
     }
 
-  if((m_promotion = new(std::nothrow) qtchess_promotion(this)) ==
-     nullptr)
+  if((m_setup = new(std::nothrow) qtchess_setup(this)) == nullptr)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
@@ -380,7 +351,14 @@ void qtchess_gui::initialize_clocks(void)
   m_ui.player_clock->setTime(QTime(0, 0, 0));
 }
 
-void qtchess_gui::newGame(void)
+void qtchess_gui::notify_connection(const QString &address,
+				    const quint16 port)
+{
+  set_status_text
+    (tr("Status: Peer %1:%2 Connected").arg(address).arg(port));
+}
+
+void qtchess_gui::slot_new_game(void)
 {
   if(comm && comm->is_connected_remotely())
     {
@@ -444,14 +422,7 @@ void qtchess_gui::newGame(void)
     chess->set_turn(MY_TURN);
 }
 
-void qtchess_gui::notifyConnection(const QString &address,
-				   const quint16 port)
-{
-  setStatusText
-    (tr("Status: Peer %1:%2 Connected").arg(address).arg(port));
-}
-
-void qtchess_gui::quit(void)
+void qtchess_gui::slot_quit(void)
 {
   if(chess)
     {
@@ -476,49 +447,34 @@ void qtchess_gui::quit(void)
     exit(EXIT_FAILURE);
 }
 
-void qtchess_gui::setStatusText(const QString &str)
+void qtchess_gui::set_status_text(const QString &str)
 {
   m_status_label->setText(tr(str.toLatin1()));
 }
 
-void qtchess_gui::setup(void)
+void qtchess_gui::show_disconnect(void)
 {
-  if(setup_dialog)
-    {
-      if(setup_dialog->getHostField())
-	setup_dialog->getHostField()->setFocus();
-
-#ifdef Q_OS_ANDROID
-      setup_dialog->showMaximized();
-#else
-      setup_dialog->resize
-	(qMax(setup_dialog->sizeHint().width(), size().width()) - 100,
-	 setup_dialog->sizeHint().height());
-#endif
-      setup_dialog->exec();
-    }
+  stop_timers(OPPONENT_TIMER);
+  stop_timers(PLAYER_TIMER);
 }
 
-void qtchess_gui::showDisconnect(void)
-{
-  stopTimers(PLAYER_TIMER);
-  stopTimers(OPPONENT_TIMER);
-}
-
-void qtchess_gui::showErrorMsg(const char *message)
+void qtchess_gui::show_error_message(const char *message)
 {
   if(message)
-    QMessageBox::critical(this, tr("QtChess: Error"), tr(message),
+    QMessageBox::critical(this,
+			  tr("QtChess: Error"),
+			  tr(message),
 			  QMessageBox::Ok,
 			  QMessageBox::Default);
   else
-    QMessageBox::critical(this, tr("QtChess: Error"),
+    QMessageBox::critical(this,
+			  tr("QtChess: Error"),
 			  tr("An unknown error occurred."),
 			  QMessageBox::Ok,
 			  QMessageBox::Default);
 }
 
-void qtchess_gui::showGameOver(const int turn)
+void qtchess_gui::show_game_over(const int turn)
 {
   Q_UNUSED(turn);
   QMessageBox::information
@@ -528,14 +484,51 @@ void qtchess_gui::showGameOver(const int turn)
      QMessageBox::Ok | QMessageBox::Default);
 }
 
-void qtchess_gui::startTimers(const int which)
+void qtchess_gui::slot_about(void)
 {
-  Q_UNUSED(which);
+  QMessageBox mb(this);
+  QPixmap pixmap(":/chess.png");
+
+  mb.setIconPixmap
+    (pixmap.scaled(256, 256, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+  mb.setStandardButtons(QMessageBox::Ok);
+  mb.setText
+    (tr("<html>QtChess Version %1.<br>"
+	"Copyright (c) 2003 - 2021 X.<br>"
+	"Qt version %2."
+	"<hr>"
+	"Please visit <a href=\"https://textbrowser.github.io/qtchess\">"
+	"https://textbrowser.github.io/qtchess</a> for "
+	"project information.").
+     arg(QTCHESS_VERSION).
+     arg(QT_VERSION_STR));
+  mb.setTextFormat(Qt::RichText);
+  mb.setWindowTitle(tr("QtChess: About"));
+  mb.exec();
 }
 
-void qtchess_gui::stopTimers(const int which)
+void qtchess_gui::slot_help(void)
 {
-  Q_UNUSED(which);
+  if(m_help)
+    m_help->setup();
+}
+
+void qtchess_gui::slot_setup(void)
+{
+  if(m_setup)
+    {
+      if(m_setup->get_local_host_field())
+	m_setup->get_local_host_field()->setFocus();
+
+#ifdef Q_OS_ANDROID
+      m_setup->showMaximized();
+#else
+      m_setup->resize
+	(qMax(m_setup->sizeHint().width(), size().width()) - 100,
+	 m_setup->sizeHint().height());
+#endif
+      m_setup->exec();
+    }
 }
 
 void qtchess_gui::slot_update_opponent(void)
@@ -572,6 +565,16 @@ void qtchess_gui::slot_update_player(void)
     }
   else
     m_ui.player_clock->setStyleSheet(stylesheet);
+}
+
+void qtchess_gui::start_timers(const int which)
+{
+  Q_UNUSED(which);
+}
+
+void qtchess_gui::stop_timers(const int which)
+{
+  Q_UNUSED(which);
 }
 
 qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
@@ -631,124 +634,124 @@ void qtchess_promotion::setup(void)
   exec();
 }
 
-qtchess_setup_dialog::qtchess_setup_dialog(QWidget *parent):QDialog(parent)
+qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 {
-  ui.setupUi(this);
-  ui.host->setText(QHostAddress(QHostAddress::LocalHost).toString());
-  ui.lScopeId->setEnabled(false);
-  ui.rScopeId->setEnabled(false);
-  ui.rhost->setText(QHostAddress(QHostAddress::LocalHost).toString());
+  m_ui.setupUi(this);
+  m_ui.local_host->setText(QHostAddress(QHostAddress::LocalHost).toString());
+  m_ui.local_scope_id->setEnabled(false);
+  m_ui.remote_host->setText(QHostAddress(QHostAddress::LocalHost).toString());
+  m_ui.remote_scope_id->setEnabled(false);
 
   if(comm)
     {
       connect(comm,
 	      SIGNAL(connected_to_client(void)),
 	      this,
-	      SLOT(slotConnectedToClient(void)));
+	      SLOT(slot_connected_to_client(void)));
       connect(comm,
 	      SIGNAL(disconnected_from_client(void)),
 	      this,
-	      SLOT(slotDisconnectedFromClient(void)));
+	      SLOT(slot_disconnected_from_client(void)));
     }
 
-  connect(ui.cancel,
+  connect(m_ui.cancel,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(close_cb(void)));
-  connect(ui.connect,
+	  SLOT(slot_close(void)));
+  connect(m_ui.connect,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(connect_cb(void)));
-  connect(ui.disconnect,
+	  SLOT(slot_connect(void)));
+  connect(m_ui.disconnect,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(slotDisconnect(void)));
-  connect(ui.listen,
+	  SLOT(slot_disconnect(void)));
+  connect(m_ui.listen,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(slotListen(void)));
-  connect(ui.lipv4,
-	  SIGNAL(clicked(void)),
-	  this,
-	  SLOT(slotProtocolChanged(void)));
-  connect(ui.lipv6,
-	  SIGNAL(clicked(void)),
-	  this,
-	  SLOT(slotProtocolChanged(void)));
-  connect(ui.local,
+	  SLOT(slot_listen(void)));
+  connect(m_ui.local,
 	  SIGNAL(toggled(bool)),
 	  this,
-	  SLOT(slotLocal(bool)));
-  connect(ui.remote,
+	  SLOT(slot_local(bool)));
+  connect(m_ui.local_ipv4,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(slot_protocol_changed(void)));
+  connect(m_ui.local_ipv6,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(slot_protocol_changed(void)));
+  connect(m_ui.remote,
 	  SIGNAL(toggled(bool)),
 	  this,
-	  SLOT(slotRemote(bool)));
-  connect(ui.ripv4,
+	  SLOT(slot_remote(bool)));
+  connect(m_ui.remote_ipv4,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(slotProtocolChanged(void)));
-  connect(ui.ripv6,
+	  SLOT(slot_protocol_changed(void)));
+  connect(m_ui.remote_ipv6,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(slotProtocolChanged(void)));
-  connect(ui.set_caissa,
+	  SLOT(slot_protocol_changed(void)));
+  connect(m_ui.set_caissa,
 	  SIGNAL(clicked(void)),
 	  this,
-	  SLOT(slotSetCaissa(void)));
-  ui.remote_gb->setEnabled(false);
+	  SLOT(slot_set_caissa(void)));
+  m_ui.remote_gb->setEnabled(false);
 }
 
-QHostAddress qtchess_setup_dialog::getListeningAddress(void) const
+QHostAddress qtchess_setup::get_listening_address(void) const
 {
   QHostAddress address;
 
-  if(ui.lipv4->isChecked())
-    address.setAddress(ui.host->text().trimmed());
+  if(m_ui.local_ipv4->isChecked())
+    address.setAddress(m_ui.local_host->text().trimmed());
   else
     {
-      address.setAddress(ui.host->text().trimmed());
-      address.setScopeId(ui.lScopeId->text().trimmed());
+      address.setAddress(m_ui.local_host->text().trimmed());
+      address.setScopeId(m_ui.local_scope_id->text().trimmed());
     }
 
   return address;
 }
 
-QLineEdit *qtchess_setup_dialog::getAllowedHostField(void) const
+QLineEdit *qtchess_setup::get_allowed_host_field(void) const
 {
-  return ui.allowedHost;
+  return m_ui.allowed_host;
 }
 
-QLineEdit *qtchess_setup_dialog::getHostField(void) const
+QLineEdit *qtchess_setup::get_local_host_field(void) const
 {
-  return ui.host;
+  return m_ui.local_host;
 }
 
-QLineEdit *qtchess_setup_dialog::getRHostField(void) const
+QLineEdit *qtchess_setup::get_remote_host_field(void) const
 {
-  return ui.rhost;
+  return m_ui.remote_host;
 }
 
-QLineEdit *qtchess_setup_dialog::getRScopeIdField(void) const
+QLineEdit *qtchess_setup::get_remote_scope_id_field(void) const
 {
-  return ui.rScopeId;
+  return m_ui.remote_scope_id;
 }
 
-QSpinBox *qtchess_setup_dialog::getPortField(void) const
+QSpinBox *qtchess_setup::get_local_port_field(void) const
 {
-  return ui.port;
+  return m_ui.local_port;
 }
 
-QSpinBox *qtchess_setup_dialog::getRPortField(void) const
+QSpinBox *qtchess_setup::get_remote_port_field(void) const
 {
-  return ui.rport;
+  return m_ui.remote_port;
 }
 
-void qtchess_setup_dialog::close_cb(void)
+void qtchess_setup::slot_close(void)
 {
   hide();
 }
 
-void qtchess_setup_dialog::connect_cb(void)
+void qtchess_setup::slot_connect(void)
 {
   if(comm)
     {
@@ -759,43 +762,43 @@ void qtchess_setup_dialog::connect_cb(void)
     }
 }
 
-void qtchess_setup_dialog::slotConnectedToClient(void)
+void qtchess_setup::slot_connected_to_client(void)
 {
-  if(ui.local->isChecked())
+  if(m_ui.local->isChecked())
     return;
 
-  ui.connect->setText(tr("&Disconnect"));
-  ui.rScopeId->setReadOnly(true);
-  ui.ripv4->setEnabled(false);
-  ui.ripv6->setEnabled(false);
-  ui.rhost->setReadOnly(true);
-  ui.rport->setReadOnly(true);
+  m_ui.connect->setText(tr("&Disconnect"));
+  m_ui.remote_host->setReadOnly(true);
+  m_ui.remote_ipv4->setEnabled(false);
+  m_ui.remote_ipv6->setEnabled(false);
+  m_ui.remote_port->setReadOnly(true);
+  m_ui.remote_scope_id->setReadOnly(true);
 }
 
-void qtchess_setup_dialog::slotDisconnect(void)
+void qtchess_setup::slot_disconnect(void)
 {
   if(comm)
     comm->disconnect_remotely();
 }
 
-void qtchess_setup_dialog::slotDisconnectedFromClient(void)
+void qtchess_setup::slot_disconnected_from_client(void)
 {
-  if(ui.local->isChecked())
+  if(m_ui.local->isChecked())
     return;
 
-  ui.connect->setText(tr("&Connect"));
-  ui.rScopeId->setReadOnly(false);
-  ui.rhost->setReadOnly(false);
-  ui.ripv4->setEnabled(true);
-  ui.ripv6->setEnabled(true);
-  ui.rport->setReadOnly(false);
+  m_ui.connect->setText(tr("&Connect"));
+  m_ui.remote_host->setReadOnly(false);
+  m_ui.remote_ipv4->setEnabled(true);
+  m_ui.remote_ipv6->setEnabled(true);
+  m_ui.remote_port->setReadOnly(false);
+  m_ui.remote_scope_id->setReadOnly(false);
 }
 
-void qtchess_setup_dialog::slotListen(void)
+void qtchess_setup::slot_listen(void)
 {
-  bool state = false;
+  auto state = false;
 
-  if(sender() == ui.listen)
+  if(sender() == m_ui.listen)
     if(comm)
       {
 	if(comm->is_listening())
@@ -806,76 +809,80 @@ void qtchess_setup_dialog::slotListen(void)
 	state = comm->is_listening();
       }
 
-  ui.host->setReadOnly(state);
-  ui.lipv4->setEnabled(!state);
-  ui.lipv6->setEnabled(!state);
-  ui.port->setReadOnly(state);
+  m_ui.local_host->setReadOnly(state);
+  m_ui.local_ipv4->setEnabled(!state);
+  m_ui.local_ipv6->setEnabled(!state);
+  m_ui.local_port->setReadOnly(state);
 
-  if(ui.lipv6->isChecked())
-    ui.lScopeId->setReadOnly(state);
+  if(m_ui.local_ipv6->isChecked())
+    m_ui.local_scope_id->setReadOnly(state);
 
   if(state)
-    ui.listen->setText(tr("&Stop Listening"));
+    m_ui.listen->setText(tr("&Stop Listening"));
   else
-    ui.listen->setText(tr("&Listen"));
+    m_ui.listen->setText(tr("&Listen"));
 }
 
-void qtchess_setup_dialog::slotLocal(bool state)
+void qtchess_setup::slot_local(bool state)
 {
   if(state)
     {
       if(comm)
 	comm->disconnect_remotely();
 
-      slotDisconnectedFromClient();
-      ui.local_gb->setEnabled(true);
-      ui.remote->blockSignals(true);
-      ui.remote->setChecked(false);
-      ui.remote->blockSignals(false);
-      ui.remote_gb->setEnabled(false);
-      ui.scrollArea->verticalScrollBar()->setValue(0);
+      slot_disconnected_from_client();
+      m_ui.local_gb->setEnabled(true);
+      m_ui.remote->blockSignals(true);
+      m_ui.remote->setChecked(false);
+      m_ui.remote->blockSignals(false);
+      m_ui.remote_gb->setEnabled(false);
+      m_ui.scroll_area->verticalScrollBar()->setValue(0);
     }
   else
     {
-      ui.local->blockSignals(true);
-      ui.local->setChecked(true);
-      ui.local->blockSignals(false);
+      m_ui.local->blockSignals(true);
+      m_ui.local->setChecked(true);
+      m_ui.local->blockSignals(false);
     }
 }
 
-void qtchess_setup_dialog::slotProtocolChanged(void)
+void qtchess_setup::slot_protocol_changed(void)
 {
-  if(sender() == ui.lipv4)
+  if(sender() == m_ui.local_ipv4)
     {
-      ui.host->setText(QHostAddress(QHostAddress::LocalHost).toString());
-      ui.allowedHost->setText(ui.host->text());
-      ui.lScopeId->clear();
-      ui.lScopeId->setEnabled(false);
+      m_ui.local_host->setText
+	(QHostAddress(QHostAddress::LocalHost).toString());
+      m_ui.allowed_host->setText(m_ui.local_host->text());
+      m_ui.local_scope_id->clear();
+      m_ui.local_scope_id->setEnabled(false);
     }
-  else if(sender() == ui.lipv6)
+  else if(sender() == m_ui.local_ipv6)
     {
-      ui.host->setText(QHostAddress(QHostAddress::LocalHostIPv6).toString());
-      ui.allowedHost->setText(ui.host->text());
-      ui.lScopeId->setText(QHostAddress(QHostAddress::LocalHostIPv6).
-			   scopeId());
-      ui.lScopeId->setEnabled(true);
+      m_ui.local_host->setText
+	(QHostAddress(QHostAddress::LocalHostIPv6).toString());
+      m_ui.allowed_host->setText(m_ui.local_host->text());
+      m_ui.local_scope_id->setText
+	(QHostAddress(QHostAddress::LocalHostIPv6).scopeId());
+      m_ui.local_scope_id->setEnabled(true);
     }
-  else if(sender() == ui.ripv4)
+  else if(sender() == m_ui.remote_ipv4)
     {
-      ui.rhost->setText(QHostAddress(QHostAddress::LocalHost).toString());
-      ui.rScopeId->clear();
-      ui.rScopeId->setEnabled(false);
+      m_ui.remote_host->setText
+	(QHostAddress(QHostAddress::LocalHost).toString());
+      m_ui.remote_scope_id->clear();
+      m_ui.remote_scope_id->setEnabled(false);
     }
-  else if(sender() == ui.ripv6)
+  else if(sender() == m_ui.remote_ipv6)
     {
-      ui.rhost->setText(QHostAddress(QHostAddress::LocalHostIPv6).toString());
-      ui.rScopeId->setText(QHostAddress(QHostAddress::LocalHostIPv6).
-			   scopeId());
-      ui.rScopeId->setEnabled(true);
+      m_ui.remote_host->setText
+	(QHostAddress(QHostAddress::LocalHostIPv6).toString());
+      m_ui.remote_scope_id->setText
+	(QHostAddress(QHostAddress::LocalHostIPv6).scopeId());
+      m_ui.remote_scope_id->setEnabled(true);
     }
 }
 
-void qtchess_setup_dialog::slotRemote(bool state)
+void qtchess_setup::slot_remote(bool state)
 {
   if(state)
     {
@@ -885,29 +892,29 @@ void qtchess_setup_dialog::slotRemote(bool state)
 	  comm->stop_listening();
 	}
 
-      slotDisconnectedFromClient();
-      slotListen();
-      ui.local->blockSignals(true);
-      ui.local->setChecked(false);
-      ui.local->blockSignals(false);
-      ui.local_gb->setEnabled(false);
-      ui.remote_gb->setEnabled(true);
-      ui.scrollArea->verticalScrollBar()->setValue
-	(ui.scrollArea->verticalScrollBar()->maximum());
+      slot_disconnected_from_client();
+      slot_listen();
+      m_ui.local->blockSignals(true);
+      m_ui.local->setChecked(false);
+      m_ui.local->blockSignals(false);
+      m_ui.local_gb->setEnabled(false);
+      m_ui.remote_gb->setEnabled(true);
+      m_ui.scroll_area->verticalScrollBar()->setValue
+	(m_ui.scroll_area->verticalScrollBar()->maximum());
     }
   else
     {
-      ui.remote->blockSignals(true);
-      ui.remote->setChecked(true);
-      ui.remote->blockSignals(false);
+      m_ui.remote->blockSignals(true);
+      m_ui.remote->setChecked(true);
+      m_ui.remote->blockSignals(false);
     }
 }
 
-void qtchess_setup_dialog::slotSetCaissa(void)
+void qtchess_setup::slot_set_caissa(void)
 {
   if(comm)
     {
-      comm->set_caissa(ui.caissa->text());
-      ui.caissa->selectAll();
+      comm->set_caissa(m_ui.caissa->text());
+      m_ui.caissa->selectAll();
     }
 }

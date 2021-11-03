@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>setupDialog</class>
- <widget class="QDialog" name="setupDialog">
+ <class>qtchess_setup</class>
+ <widget class="QDialog" name="qtchess_setup">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -24,7 +24,7 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QScrollArea" name="scrollArea">
+    <widget class="QScrollArea" name="scroll_area">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -101,7 +101,7 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QRadioButton" name="lipv4">
+              <widget class="QRadioButton" name="local_ipv4">
                <property name="text">
                 <string>IPv4</string>
                </property>
@@ -111,7 +111,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="lipv6">
+              <widget class="QRadioButton" name="local_ipv6">
                <property name="text">
                 <string>IPv6</string>
                </property>
@@ -159,7 +159,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLineEdit" name="allowedHost">
+             <widget class="QLineEdit" name="allowed_host">
               <property name="toolTip">
                <string>An empty value will disable the software firewall.</string>
               </property>
@@ -171,7 +171,7 @@
             <item row="0" column="1">
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QLineEdit" name="host">
+               <widget class="QLineEdit" name="local_host">
                 <property name="placeholderText">
                  <string>IP Address</string>
                 </property>
@@ -185,7 +185,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="lScopeId">
+               <widget class="QLineEdit" name="local_scope_id">
                 <property name="placeholderText">
                  <string>Scope ID</string>
                 </property>
@@ -194,7 +194,7 @@
              </layout>
             </item>
             <item row="1" column="1">
-             <widget class="QSpinBox" name="port">
+             <widget class="QSpinBox" name="local_port">
               <property name="maximum">
                <number>65535</number>
               </property>
@@ -315,7 +315,7 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <item>
-              <widget class="QRadioButton" name="ripv4">
+              <widget class="QRadioButton" name="remote_ipv4">
                <property name="text">
                 <string>IPv4</string>
                </property>
@@ -325,7 +325,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="ripv6">
+              <widget class="QRadioButton" name="remote_ipv6">
                <property name="text">
                 <string>IPv6</string>
                </property>
@@ -363,7 +363,7 @@
             <item row="0" column="1">
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
-               <widget class="QLineEdit" name="rhost">
+               <widget class="QLineEdit" name="remote_host">
                 <property name="placeholderText">
                  <string>IP Address</string>
                 </property>
@@ -377,7 +377,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="rScopeId">
+               <widget class="QLineEdit" name="remote_scope_id">
                 <property name="placeholderText">
                  <string>Scope ID</string>
                 </property>
@@ -386,7 +386,7 @@
              </layout>
             </item>
             <item row="1" column="1">
-             <widget class="QSpinBox" name="rport">
+             <widget class="QSpinBox" name="remote_port">
               <property name="maximum">
                <number>65535</number>
               </property>
@@ -453,9 +453,9 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <layout class="QHBoxLayout" name="_4">
      <item>
-      <spacer>
+      <spacer name="spacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -490,25 +490,25 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>scrollArea</tabstop>
+  <tabstop>scroll_area</tabstop>
   <tabstop>caissa</tabstop>
   <tabstop>set_caissa</tabstop>
   <tabstop>local</tabstop>
-  <tabstop>lipv4</tabstop>
-  <tabstop>lipv6</tabstop>
-  <tabstop>host</tabstop>
-  <tabstop>lScopeId</tabstop>
-  <tabstop>port</tabstop>
-  <tabstop>allowedHost</tabstop>
+  <tabstop>local_ipv4</tabstop>
+  <tabstop>local_ipv6</tabstop>
+  <tabstop>local_host</tabstop>
+  <tabstop>local_scope_id</tabstop>
+  <tabstop>local_port</tabstop>
+  <tabstop>allowed_host</tabstop>
   <tabstop>listen</tabstop>
   <tabstop>disconnect</tabstop>
   <tabstop>remote</tabstop>
   <tabstop>color</tabstop>
-  <tabstop>ripv4</tabstop>
-  <tabstop>ripv6</tabstop>
-  <tabstop>rhost</tabstop>
-  <tabstop>rScopeId</tabstop>
-  <tabstop>rport</tabstop>
+  <tabstop>remote_ipv4</tabstop>
+  <tabstop>remote_ipv6</tabstop>
+  <tabstop>remote_host</tabstop>
+  <tabstop>remote_scope_id</tabstop>
+  <tabstop>remote_port</tabstop>
   <tabstop>connect</tabstop>
   <tabstop>cancel</tabstop>
  </tabstops>

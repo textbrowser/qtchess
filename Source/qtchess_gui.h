@@ -38,7 +38,7 @@
 #include "ui_qtchess_help.h"
 #include "ui_qtchess_mainwindow.h"
 #include "ui_qtchess_promotion.h"
-#include "ui_qtchess_setupDialog.h"
+#include "ui_qtchess_setup.h"
 
 class qtchess_help: public QDialog
 {
@@ -53,41 +53,6 @@ class qtchess_help: public QDialog
 
  private slots:
   void slot_ok(void);
-};
-
-class qtchess_setup_dialog: public QDialog
-{
-  Q_OBJECT
-
- public:
-  qtchess_setup_dialog(QWidget *);
-  QHostAddress getListeningAddress(void) const;
-  QLineEdit *getAllowedHostField(void) const;
-  QLineEdit *getHostField(void) const;
-  QLineEdit *getRHostField(void) const;
-  QLineEdit *getRScopeIdField(void) const;
-  QSpinBox *getPortField(void) const;
-  QSpinBox *getRPortField(void) const;
-
-  QString color(void) const
-  {
-    return ui.color->currentText();
-  }
-
- private:
-  Ui_setupDialog ui;
-
- private slots:
-  void close_cb(void);
-  void connect_cb(void);
-  void slotConnectedToClient(void);
-  void slotDisconnect(void);
-  void slotDisconnectedFromClient(void);
-  void slotListen(void);
-  void slotLocal(bool state);
-  void slotProtocolChanged(void);
-  void slotRemote(bool state);
-  void slotSetCaissa(void);
 };
 
 class qtchess_promotion: public QDialog
@@ -111,6 +76,41 @@ class qtchess_promotion: public QDialog
   void slot_ok(void);
 };
 
+class qtchess_setup: public QDialog
+{
+  Q_OBJECT
+
+ public:
+  qtchess_setup(QWidget *parent);
+  QHostAddress get_listening_address(void) const;
+  QLineEdit *get_allowed_host_field(void) const;
+  QLineEdit *get_local_host_field(void) const;
+  QLineEdit *get_remote_host_field(void) const;
+  QLineEdit *get_remote_scope_id_field(void) const;
+  QSpinBox *get_local_port_field(void) const;
+  QSpinBox *get_remote_port_field(void) const;
+
+  QString color(void) const
+  {
+    return m_ui.color->currentText();
+  }
+
+ private:
+  Ui_qtchess_setup m_ui;
+
+ private slots:
+  void slot_close(void);
+  void slot_connect(void);
+  void slot_connected_to_client(void);
+  void slot_disconnect(void);
+  void slot_disconnected_from_client(void);
+  void slot_listen(void);
+  void slot_local(bool state);
+  void slot_protocol_changed(void);
+  void slot_remote(bool state);
+  void slot_set_caissa(void);
+};
+
 class qtchess_gui: public QMainWindow
 {
   Q_OBJECT
@@ -121,8 +121,8 @@ class qtchess_gui: public QMainWindow
 
   QString color(void) const
   {
-    if(setup_dialog)
-      return setup_dialog->color();
+    if(m_setup)
+      return m_setup->color();
     else
       return "";
   }
@@ -133,18 +133,18 @@ class qtchess_gui: public QMainWindow
   }
 
   qtchess_promotion *get_promote_dialog(void) const;
-  qtchess_setup_dialog *getSetupDialog(void) const;
+  qtchess_setup *get_setup_dialog(void) const;
   void add_history_move(const struct move_s &current_move, const int color);
   void clear_history(void);
   void initialize(void);
   void initialize_clocks(void);
-  void notifyConnection(const QString &, const quint16);
-  void setStatusText(const QString &);
-  void showDisconnect(void);
-  void showErrorMsg(const char *);
-  void showGameOver(const int);
-  void startTimers(const int);
-  void stopTimers(const int);
+  void notify_connection(const QString &address, const quint16 port);
+  void set_status_text(const QString &str);
+  void show_disconnect(void);
+  void show_error_message(const char *message);
+  void show_game_over(const int turn);
+  void start_timers(const int which);
+  void stop_timers(const int which);
 
  private:
   QPointer<QLabel> m_status_label;
@@ -153,7 +153,7 @@ class qtchess_gui: public QMainWindow
   QPointer<qtchess_gui_board> m_board;
   QPointer<qtchess_help> m_help;
   QPointer<qtchess_promotion> m_promotion;
-  QPointer<qtchess_setup_dialog> setup_dialog;
+  QPointer<qtchess_setup> m_setup;
   Ui_qtchess_mainwindow m_ui;
 
   void closeEvent(QCloseEvent *event)
@@ -161,15 +161,15 @@ class qtchess_gui: public QMainWindow
     if(event)
       event->ignore();
 
-    quit();
+    slot_quit();
   }
 
  private slots:
-  void about(void);
-  void help(void);
-  void newGame(void);
-  void quit(void);
-  void setup(void);
+  void slot_about(void);
+  void slot_help(void);
+  void slot_new_game(void);
+  void slot_quit(void);
+  void slot_setup(void);
   void slot_update_opponent(void);
   void slot_update_player(void);
 };
