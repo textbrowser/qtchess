@@ -163,7 +163,7 @@ void qtchess_communications::connect_remotely(void)
 	  text().trimmed();
     }
 
-  remote_port = (quint16) str2.toInt();
+  remote_port = static_cast<quint16> (str2.toInt());
 
   QHostAddress address(str1);
 
@@ -233,13 +233,13 @@ void qtchess_communications::initialize(void)
     m_listening_sock.close();
 
   if(gui && gui->get_setup_dialog() &&
-     gui->get_setup_dialog()->get_local_host_field())
-    gui->get_setup_dialog()->get_local_host_field()->setText
+     gui->get_setup_dialog()->get_allowed_host_field())
+    gui->get_setup_dialog()->get_allowed_host_field()->setText
       (QHostAddress(QHostAddress::LocalHost).toString());
 
   if(gui && gui->get_setup_dialog() &&
-     gui->get_setup_dialog()->get_allowed_host_field())
-    gui->get_setup_dialog()->get_allowed_host_field()->setText
+     gui->get_setup_dialog()->get_local_host_field())
+    gui->get_setup_dialog()->get_local_host_field()->setText
       (QHostAddress(QHostAddress::LocalHost).toString());
 }
 
@@ -311,8 +311,8 @@ void qtchess_communications::send_move(const struct move_s &current_move)
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
-  if(m_client_connection->
-     write(buffer.constData(), buffer.length()) != (qint64) buffer.length())
+  if(m_client_connection->write(buffer.constData(), buffer.length()) !=
+     static_cast<qint64> (buffer.length()))
     {
       QApplication::restoreOverrideCursor();
 

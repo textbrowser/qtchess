@@ -25,8 +25,13 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <QtDebug>
 #include <QtGlobal>
+
+#ifdef Q_OS_ANDROID
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))
+#include <QJniObject>
+#endif
+#endif
 
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x050000
@@ -74,5 +79,14 @@ int main(int argc, char *argv[])
   else
     gui->initialize();
 
-  return application.exec();
+  auto rc = application.exec();
+
+#ifdef Q_OS_ANDROID
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))
+  auto activity = QJniObject(QNativeInterface::QAndroidApplication::context());
+
+  activity.callMethod<void> ("finishAndRemoveTask");
+#endif
+#endif
+  return rc;
 }
