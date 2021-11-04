@@ -606,9 +606,6 @@ qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
 	  SIGNAL(clicked(void)),
 	  this,
 	  SLOT(slot_ok(void)));
-  setMinimumWidth(600);
-  setMinimumHeight(300);
-  setWindowModality(Qt::NonModal);
   m_ui.text->append
     (tr("An empty Allowed IP Address value will allow any peer to connect.\n"
 	"Moves are prohibited until connections have been established.\n"
@@ -619,6 +616,15 @@ qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
 	"To view a selected piece's valid moves, "
 	"double-click the selected piece while the Control key is depressed."
 	));
+#ifdef Q_OS_ANDROID
+  auto font(m_ui.text->font());
+
+  font.setPointSize(20);
+  m_ui.text->setFont(font);
+#else
+  resize(sizeHint());
+#endif
+  setWindowModality(Qt::NonModal);
 }
 
 void qtchess_help::slot_ok(void)
@@ -632,7 +638,11 @@ void qtchess_help::setup(void)
     hide();
 
   m_ui.ok->setFocus();
+#ifdef Q_OS_ANDROID
+  showMaximized();
+#else
   show();
+#endif
 }
 
 qtchess_promotion::qtchess_promotion(QWidget *parent):QDialog(parent)

@@ -26,7 +26,27 @@ TEMPLATE        = app
 
 QMAKE_CLEAN	+= QtChess
 
-freebsd-* {
+android {
+QMAKE_CXXFLAGS  += -Wall \
+                   -Wcast-align \
+                   -Wcast-qual \
+                   -Werror \
+                   -Werror=format-security \
+                   -Wextra \
+                   -Wfloat-equal \
+                   -Wformat=2 \
+                   -Woverloaded-virtual \
+                   -Wpointer-arith \
+                   -Wstack-protector \
+                   -Wstrict-overflow=5 \
+                   -Wundef \
+                   -Wzero-as-null-pointer-constant \
+                   -fPIE \
+                   -fstack-protector-all \
+                   -fwrapv \
+                   -pedantic \
+                   -std=c++11
+} else:freebsd-* {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
                    -Wcast-qual \

@@ -52,7 +52,9 @@ qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 
 	auto font(m_labels[i][j]->font());
 
+#ifndef Q_OS_ANDROID
 	font.setPointSize(30);
+#endif
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
 	m_labels[i][j]->setFont(font);
