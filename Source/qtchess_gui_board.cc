@@ -242,7 +242,7 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
       return;
     }
 #endif
-  
+
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {

@@ -203,6 +203,10 @@ void qtchess_communications::connect_remotely(void)
 	  SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
 	  m_client_connection,
 	  SIGNAL(disconnected(void)));
+  connect(m_client_connection,
+	  SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
+	  this,
+	  SLOT(slot_disconnected(QAbstractSocket::SocketError)));
 #endif
   connect(m_client_connection,
 	  SIGNAL(readyRead(void)),
@@ -486,6 +490,12 @@ void qtchess_communications::slot_client_disconnected(void)
     gui->set_status_text(tr("Status: Peer Disconnected"));
 
   emit disconnected_from_client();
+}
+
+void qtchess_communications::slot_disconnected
+(QAbstractSocket::SocketError error)
+{
+  Q_UNUSED(error);
 }
 
 void qtchess_communications::slot_update_board(void)

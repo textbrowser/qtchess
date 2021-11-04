@@ -70,6 +70,7 @@ class qtchess_communications: public QObject
   void slot_accept_connection(void);
   void slot_client_connected(void);
   void slot_client_disconnected(void);
+  void slot_disconnected(QAbstractSocket::SocketError error);
   void slot_update_board(void);
 
  signals:

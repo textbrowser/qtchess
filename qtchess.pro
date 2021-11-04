@@ -82,7 +82,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
                    -Wstack-protector \
-                   -Wstrict-overflow=5 \
+                   -Wstrict-overflow=1 \
                    -Wundef \
                    -Wzero-as-null-pointer-constant \
                    -fPIE \
