@@ -26,6 +26,7 @@
 */
 
 #include <QCryptographicHash>
+#include <QNetworkInterface>
 
 #include "qtchess.h"
 #include "qtchess_communications.h"
@@ -107,6 +108,22 @@ QByteArray qtchess_communications::xor_arrays
     bytes[i] = static_cast<char> (a[i] ^ b[i]);
 
   return bytes;
+}
+
+QHostAddress qtchess_communications::preferred_host_address
+(const QAbstractSocket::NetworkLayerProtocol protocol)
+{
+  foreach(const auto &interface, QNetworkInterface::allInterfaces())
+    if(!(interface.flags() & QNetworkInterface::IsLoopBack))
+      if(interface.flags() & QNetworkInterface::IsUp)
+	foreach(const auto &address, interface.addressEntries())
+	  if(address.ip().protocol() == protocol)
+	    return address.ip();
+
+  if(protocol == QAbstractSocket::IPv4Protocol)
+    return QHostAddress(QHostAddress::LocalHost);
+  else
+    return QHostAddress(QHostAddress::LocalHostIPv6);
 }
 
 bool qtchess_communications::is_connected_remotely(void) const
@@ -238,13 +255,12 @@ void qtchess_communications::initialize(void)
 
   if(gui && gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_allowed_host_field())
-    gui->get_setup_dialog()->get_allowed_host_field()->setText
-      (QHostAddress(QHostAddress::LocalHost).toString());
+    gui->get_setup_dialog()->get_allowed_host_field()->clear();
 
   if(gui && gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_local_host_field())
     gui->get_setup_dialog()->get_local_host_field()->setText
-      (QHostAddress(QHostAddress::LocalHost).toString());
+      (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
 }
 
 void qtchess_communications::quit(void)

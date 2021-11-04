@@ -669,7 +669,9 @@ void qtchess_promotion::setup(void)
 qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 {
   m_ui.setupUi(this);
-  m_ui.local_host->setText(QHostAddress(QHostAddress::LocalHost).toString());
+  m_ui.local_host->setText
+    (qtchess_communications::
+     preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
   m_ui.local_scope_id->setEnabled(false);
   m_ui.remote_host->setText(QHostAddress(QHostAddress::LocalHost).toString());
   m_ui.remote_scope_id->setEnabled(false);
@@ -882,19 +884,24 @@ void qtchess_setup::slot_protocol_changed(void)
 {
   if(sender() == m_ui.local_ipv4)
     {
-      m_ui.local_host->setText
-	(QHostAddress(QHostAddress::LocalHost).toString());
+      auto preferred_host_address
+	(qtchess_communications::
+	 preferred_host_address(QAbstractSocket::IPv4Protocol));
+
+      m_ui.local_host->setText(preferred_host_address.toString());
       m_ui.allowed_host->setText(m_ui.local_host->text());
       m_ui.local_scope_id->clear();
       m_ui.local_scope_id->setEnabled(false);
     }
   else if(sender() == m_ui.local_ipv6)
     {
-      m_ui.local_host->setText
-	(QHostAddress(QHostAddress::LocalHostIPv6).toString());
+      auto preferred_host_address
+	(qtchess_communications::
+	 preferred_host_address(QAbstractSocket::IPv6Protocol));
+
+      m_ui.local_host->setText(preferred_host_address.toString());
       m_ui.allowed_host->setText(m_ui.local_host->text());
-      m_ui.local_scope_id->setText
-	(QHostAddress(QHostAddress::LocalHostIPv6).scopeId());
+      m_ui.local_scope_id->setText(preferred_host_address.scopeId());
       m_ui.local_scope_id->setEnabled(true);
     }
   else if(sender() == m_ui.remote_ipv4)
