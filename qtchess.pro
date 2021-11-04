@@ -70,7 +70,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 } else:linux {
 QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-align \
                    -Wcast-qual \
                    -Wdouble-promotion \
                    -Werror \
