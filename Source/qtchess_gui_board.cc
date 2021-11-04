@@ -50,14 +50,14 @@ qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 		this,
 		SLOT(slot_piece_pressed(qtchess_piece *)));
 
-	auto font(m_labels[i][j]->font());
-
-#ifndef Q_OS_ANDROID
-	font.setPointSize(30);
-#endif
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
+#ifndef Q_OS_ANDROID
+	auto font(m_labels[i][j]->font());
+
+	font.setPointSize(30);
 	m_labels[i][j]->setFont(font);
+#endif
 	m_labels[i][j]->setSizePolicy
 	  (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 	m_labels[i][j]->setTextFormat(Qt::RichText);
@@ -99,7 +99,6 @@ void qtchess_gui_board::add(QFrame *frame)
 	label->setContentsMargins(0, 0, 0, 0);
 	label->setFont(font);
 	label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-	label->setTextFormat(Qt::RichText);
 
 	if(i == 0)
 	  layout->addWidget(label, j + 1, 0);
@@ -109,7 +108,17 @@ void qtchess_gui_board::add(QFrame *frame)
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
-      layout->addWidget(m_labels[i][j], i + 1, j + 1);
+      {
+	layout->addWidget(m_labels[i][j], i + 1, j + 1);
+
+#ifdef Q_OS_ANDROID
+	auto font(m_labels[i][j]->font());
+	auto size(m_labels[i][j]->size());
+
+	font.setPointSize(qMax(size.height(), size.width()) / 2.0);
+	m_labels[i][j]->setFont(font);
+#endif
+      }
 
   paint();
 }
