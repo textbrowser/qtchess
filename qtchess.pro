@@ -72,7 +72,6 @@ QMAKE_CXXFLAGS  += -Wall \
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
                    -Wcast-qual \
-                   -Wconversion \
                    -Wdouble-promotion \
                    -Werror \
                    -Werror=format-security \
@@ -83,7 +82,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wno-deprecated-copy \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
-                   -Wsign-conversion \
                    -Wstack-protector \
                    -Wstrict-overflow=5 \
                    -Wundef \
