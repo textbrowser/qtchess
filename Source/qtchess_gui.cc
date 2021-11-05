@@ -471,7 +471,7 @@ void qtchess_gui::slot_quit(void)
 
 void qtchess_gui::set_status_text(const QString &str)
 {
-  m_status_label->setText(tr(str.toLatin1()));
+  m_status_label->setText(str);
 }
 
 void qtchess_gui::show_disconnect(void)

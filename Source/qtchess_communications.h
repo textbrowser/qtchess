@@ -67,6 +67,7 @@ class qtchess_communications: public QObject
   QByteArray sha1(const QByteArray &data) const;
   QByteArray xor_arrays(const QByteArray &a, const QByteArray &b) const;
   bool memcmp(const QByteArray &a, const QByteArray &b) const;
+  void prepare_connection_status(void);
 
  private slots:
   void slot_accept_connection(void);

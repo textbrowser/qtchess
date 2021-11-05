@@ -250,9 +250,6 @@ void qtchess_communications::disconnect_remotely(void)
 
 void qtchess_communications::initialize(void)
 {
-  if(m_listening_sock.isListening())
-    m_listening_sock.close();
-
   if(gui && gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_allowed_host_field())
     gui->get_setup_dialog()->get_allowed_host_field()->clear();
@@ -261,6 +258,28 @@ void qtchess_communications::initialize(void)
      gui->get_setup_dialog()->get_local_host_field())
     gui->get_setup_dialog()->get_local_host_field()->setText
       (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
+
+  m_listening_sock.close();
+  prepare_connection_status();
+}
+
+void qtchess_communications::prepare_connection_status(void)
+{
+  if(gui)
+    {
+      if(m_client_connection &&
+	 m_client_connection->state() == QAbstractSocket::ConnectedState)
+	gui->notify_connection
+	  (m_client_connection->peerAddress().toString(),
+	   m_client_connection->peerPort());
+      else if(m_listening_sock.isListening())
+	gui->set_status_text
+	  (tr("Status: %1:%2 Listening").
+	   arg(m_listening_sock.serverAddress().toString()).
+	   arg(m_listening_sock.serverPort()));
+      else
+	gui->set_status_text(tr("Status: Peer Disconnected"));
+    }
 }
 
 void qtchess_communications::quit(void)
@@ -385,6 +404,8 @@ void qtchess_communications::set_listen(void)
      m_listening_sock.isListening())
     gui->get_setup_dialog()->get_local_port_field()->setValue
       (static_cast<int> (m_listening_sock.serverPort()));
+
+  prepare_connection_status();
 }
 
 void qtchess_communications::slot_accept_connection(void)
@@ -502,10 +523,8 @@ void qtchess_communications::slot_client_disconnected(void)
       chess->set_turn(-1);
     }
 
-  if(gui)
-    gui->set_status_text(tr("Status: Peer Disconnected"));
-
   emit disconnected_from_client();
+  prepare_connection_status();
 }
 
 void qtchess_communications::slot_disconnected
@@ -560,4 +579,5 @@ void qtchess_communications::slot_update_board(void)
 void qtchess_communications::stop_listening(void)
 {
   m_listening_sock.close();
+  prepare_connection_status();
 }
