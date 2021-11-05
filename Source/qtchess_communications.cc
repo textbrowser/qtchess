@@ -39,7 +39,7 @@ static QByteArray s_eof = "\n";
 
 qtchess_communications::qtchess_communications(void):QObject()
 {
-  connect(&m_listening_sock,
+  connect(&m_listening_socket,
 	  SIGNAL(newConnection(void)),
 	  this,
 	  SLOT(slot_accept_connection(void)));
@@ -134,7 +134,7 @@ bool qtchess_communications::is_connected_remotely(void) const
 
 bool qtchess_communications::is_listening(void) const
 {
-  return m_listening_sock.isListening();
+  return m_listening_socket.isListening();
 }
 
 bool qtchess_communications::is_ready(void) const
@@ -259,7 +259,7 @@ void qtchess_communications::initialize(void)
     gui->get_setup_dialog()->get_local_host_field()->setText
       (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
 
-  m_listening_sock.close();
+  m_listening_socket.close();
   prepare_connection_status();
 }
 
@@ -272,11 +272,11 @@ void qtchess_communications::prepare_connection_status(void)
 	gui->notify_connection
 	  (m_client_connection->peerAddress().toString(),
 	   m_client_connection->peerPort());
-      else if(m_listening_sock.isListening())
+      else if(m_listening_socket.isListening())
 	gui->set_status_text
 	  (tr("Status: %1:%2 Listening").
-	   arg(m_listening_sock.serverAddress().toString()).
-	   arg(m_listening_sock.serverPort()));
+	   arg(m_listening_socket.serverAddress().toString()).
+	   arg(m_listening_socket.serverPort()));
       else
 	gui->set_status_text(tr("Status: Peer Disconnected"));
     }
@@ -291,7 +291,7 @@ void qtchess_communications::quit(void)
   if(m_client_connection)
     m_client_connection->deleteLater();
 
-  m_listening_sock.close();
+  m_listening_socket.close();
 }
 
 void qtchess_communications::send_move(const struct move_s &current_move)
@@ -374,10 +374,10 @@ void qtchess_communications::set_caissa(const QString &caissa)
 
 void qtchess_communications::set_listen(void)
 {
-  if(m_listening_sock.isListening())
+  if(m_listening_socket.isListening())
     return;
 
-  m_listening_sock.setMaxPendingConnections(1);
+  m_listening_socket.setMaxPendingConnections(1);
 
   /*
   ** Listen!
@@ -393,7 +393,7 @@ void qtchess_communications::set_listen(void)
       port = gui->get_setup_dialog()->get_local_port_field()->text().toUShort();
     }
 
-  m_listening_sock.listen(address, port);
+  m_listening_socket.listen(address, port);
 
   /*
   ** Save the port number.
@@ -401,16 +401,16 @@ void qtchess_communications::set_listen(void)
 
   if(gui && gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_local_port_field() &&
-     m_listening_sock.isListening())
+     m_listening_socket.isListening())
     gui->get_setup_dialog()->get_local_port_field()->setValue
-      (static_cast<int> (m_listening_sock.serverPort()));
+      (static_cast<int> (m_listening_socket.serverPort()));
 
   prepare_connection_status();
 }
 
 void qtchess_communications::slot_accept_connection(void)
 {
-  auto socket = m_listening_sock.nextPendingConnection();
+  auto socket = m_listening_socket.nextPendingConnection();
 
   if(!socket)
     return;
@@ -578,6 +578,6 @@ void qtchess_communications::slot_update_board(void)
 
 void qtchess_communications::stop_listening(void)
 {
-  m_listening_sock.close();
+  m_listening_socket.close();
   prepare_connection_status();
 }

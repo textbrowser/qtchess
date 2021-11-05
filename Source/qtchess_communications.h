@@ -60,7 +60,7 @@ class qtchess_communications: public QObject
  private:
   QPointer<QTcpSocket> m_client_connection;
   QString m_caissa;
-  QTcpServer m_listening_sock;
+  QTcpServer m_listening_socket;
   static const int s_buffer_size = 1024;
   QByteArray digest(const QByteArray &data) const;
   QByteArray hmac(const QByteArray &data, const QByteArray &k) const;
