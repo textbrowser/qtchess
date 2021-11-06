@@ -607,22 +607,28 @@ qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
 	  this,
 	  SLOT(slot_ok(void)));
   m_ui.text->append
-    (tr("An empty Allowed IP Address value will allow any peer to connect.\n"
-	"Moves are prohibited until connections have been established.\n"
-	"To move a piece, first click it and then click "
-	"the desired destination.\n"
-	"To prevent peer connections, please set the "
-	"Allowed IP Address to 0.0.0.0 (:: for IPv6).\n"
-	"To view a selected piece's valid moves, "
-	"double-click the selected piece while the Control key is depressed."
-	));
+    (tr("<html>"
+	"<ul>"
+	"<li>An empty Allowed IP Address value will allow any peer to "
+	"connect.</li>"
+	"<li>Moves are prohibited until connections have been "
+	"established.</li>"
+	"<li>To move a piece, first click it and then click "
+	"the desired destination.</li>"
+	"<li>To prevent peer connections, please set the "
+	"Allowed IP Address to 0.0.0.0 (:: for IPv6).</li>"
+	"<li>To view a selected piece's valid moves, "
+	"double-click the selected piece while the Control key is "
+	"depressed.</li>"
+	"</ul>"
+	"</html>"));
 #ifdef Q_OS_ANDROID
   auto font(m_ui.text->font());
 
   font.setPointSize(20);
   m_ui.text->setFont(font);
 #else
-  resize(sizeHint());
+  resize(600, 200);
 #endif
   setWindowModality(Qt::NonModal);
 }
