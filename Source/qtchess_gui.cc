@@ -894,8 +894,8 @@ void qtchess_setup::slot_protocol_changed(void)
 	(qtchess_communications::
 	 preferred_host_address(QAbstractSocket::IPv4Protocol));
 
+      m_ui.allowed_host->clear();
       m_ui.local_host->setText(preferred_host_address.toString());
-      m_ui.allowed_host->setText(m_ui.local_host->text());
       m_ui.local_scope_id->clear();
       m_ui.local_scope_id->setEnabled(false);
     }
@@ -905,10 +905,10 @@ void qtchess_setup::slot_protocol_changed(void)
 	(qtchess_communications::
 	 preferred_host_address(QAbstractSocket::IPv6Protocol));
 
+      m_ui.allowed_host->clear();
       m_ui.local_host->setText(preferred_host_address.toString());
-      m_ui.allowed_host->setText(m_ui.local_host->text());
-      m_ui.local_scope_id->setText(preferred_host_address.scopeId());
       m_ui.local_scope_id->setEnabled(true);
+      m_ui.local_scope_id->setText(preferred_host_address.scopeId());
     }
   else if(sender() == m_ui.remote_ipv4)
     {
