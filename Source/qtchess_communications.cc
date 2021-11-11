@@ -523,6 +523,9 @@ void qtchess_communications::slot_client_disconnected(void)
       chess->set_turn(-1);
     }
 
+  if(gui)
+    gui->show_disconnect();
+
   emit disconnected_from_client();
   prepare_connection_status();
 }

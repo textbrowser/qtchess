@@ -46,6 +46,7 @@ extern QPointer<qtchess_communications> comm;
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  m_ui.side->setVisible(false);
   m_ui.splitter->setStretchFactor(0, 1);
   m_ui.splitter->setStretchFactor(1, 0);
 
@@ -345,12 +346,12 @@ void qtchess_gui::initialize(void)
 	}
     }
 
-  delete m_ui.boardFrame->layout();
-  m_ui.boardFrame->setFocus();
-  m_ui.boardFrame->setLayout(new QGridLayout());
+  delete m_ui.board_frame->layout();
+  m_ui.board_frame->setFocus();
+  m_ui.board_frame->setLayout(new QGridLayout());
 
   if(m_board)
-    m_board->add(m_ui.boardFrame);
+    m_board->add(m_ui.board_frame);
 
 #ifndef Q_OS_ANDROID
   resize(800, 600);
@@ -376,6 +377,18 @@ void qtchess_gui::initialize_clocks(void)
 void qtchess_gui::notify_connection(const QString &address,
 				    const quint16 port)
 {
+  if(chess)
+    {
+      if(chess->get_my_color() == WHITE)
+	m_ui.side->setText(tr("You Play As Left"));
+      else
+	m_ui.side->setText(tr("You Play As Right"));
+
+      m_ui.side->setVisible(true);
+    }
+  else
+    m_ui.side->setVisible(false);
+
   set_status_text
     (tr("Status: Peer %1:%2 Connected").arg(address).arg(port));
 }
@@ -436,12 +449,21 @@ void qtchess_gui::slot_new_game(void)
   clear_history();
   initialize_clocks();
 
-  /*
-  ** Careful here. Set this after calling send_move().
-  */
-
   if(chess)
-    chess->set_turn(MY_TURN);
+    {
+      /*
+      ** Careful here. Set this after calling send_move().
+      */
+
+      chess->set_turn(MY_TURN);
+
+      if(chess->get_my_color() == WHITE)
+	m_ui.side->setText(tr("You Play As Left"));
+      else
+	m_ui.side->setText(tr("You Play As Right"));
+
+      m_ui.side->setVisible(true);
+    }
 }
 
 void qtchess_gui::slot_quit(void)
@@ -476,6 +498,7 @@ void qtchess_gui::set_status_text(const QString &str)
 
 void qtchess_gui::show_disconnect(void)
 {
+  m_ui.side->setVisible(false);
   stop_timers(OPPONENT_TIMER);
   stop_timers(PLAYER_TIMER);
 }
