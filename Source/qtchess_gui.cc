@@ -457,12 +457,17 @@ void qtchess_gui::slot_new_game(void)
 
       chess->set_turn(MY_TURN);
 
-      if(chess->get_my_color() == WHITE)
-	m_ui.side->setText(tr("You Play As Left"));
-      else
-	m_ui.side->setText(tr("You Play As Right"));
+      if(comm->is_ready())
+	{
+	  if(chess->get_my_color() == WHITE)
+	    m_ui.side->setText(tr("You Play As Left"));
+	  else
+	    m_ui.side->setText(tr("You Play As Right"));
 
-      m_ui.side->setVisible(true);
+	  m_ui.side->setVisible(true);
+	}
+      else
+	m_ui.side->setVisible(false);
     }
 }
 
