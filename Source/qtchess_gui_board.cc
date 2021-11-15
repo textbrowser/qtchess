@@ -207,8 +207,7 @@ void qtchess_gui_board::paint(void)
 	  background_color = QColor(255, 255, 237);
 
 	m_labels[i][j]->setStyleSheet
-	  (QString("QLabel {background-color: %1; "
-		   "border: 1px solid navy;}").
+	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
 	   arg(background_color.name()));
       }
 }
