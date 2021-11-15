@@ -531,7 +531,7 @@ void qtchess_gui::show_game_over(const int turn)
     (this,
      tr("QtChess: Game Over"),
      tr("Game Over. Please enjoy another game."),
-     QMessageBox::Ok | QMessageBox::Default);
+     QMessageBox::Default | QMessageBox::Ok);
 }
 
 void qtchess_gui::slot_about(void)
