@@ -114,15 +114,13 @@ QHostAddress qtchess_communications::preferred_host_address
 (const QAbstractSocket::NetworkLayerProtocol protocol)
 {
   foreach(const auto &interface, QNetworkInterface::allInterfaces())
-    {
-      if(!(interface.flags() & QNetworkInterface::IsLoopBack))
+    if(!(interface.flags() & QNetworkInterface::IsLoopBack))
+      {
 	if(interface.flags() & QNetworkInterface::IsUp)
 	  foreach(const auto &address, interface.addressEntries())
-	    {
-	      if(address.ip().protocol() == protocol)
-		return address.ip();
-	    }
-    }
+	    if(address.ip().protocol() == protocol)
+	      return address.ip();
+      }
 
   if(protocol == QAbstractSocket::IPv4Protocol)
     return QHostAddress(QHostAddress::LocalHost);
