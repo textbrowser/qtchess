@@ -209,6 +209,11 @@ void qtchess_gui_board::paint(void)
 	m_labels[i][j]->setStyleSheet
 	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
 	   arg(background_color.name()));
+
+	auto size = qMax(m_labels[i][j]->size().height(),
+			 m_labels[i][j]->size().width());
+
+	m_labels[i][j]->resize(size, size);
       }
 }
 
