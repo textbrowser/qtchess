@@ -56,6 +56,8 @@ class qtchess: public QObject
     m_won_piece = false;
   }
 
+  int m_board[NSQUARES][NSQUARES];
+
   bool has_king_moved(void) const
   {
     return m_king_has_moved;
@@ -150,7 +152,6 @@ class qtchess: public QObject
   void initialize(void);
   void quit(const char *message_text, const int exit_code);
   void update_board(const QByteArray &buffer);
-  int m_board[NSQUARES][NSQUARES];
 
  private:
   bool m_game_over;

@@ -213,7 +213,7 @@ void qtchess_gui::clear_history(void)
 
 void qtchess_gui::initialize(void)
 {
-  static bool s_initialized = false;
+  static auto s_initialized = false;
 
   if(s_initialized)
     return;
@@ -323,8 +323,7 @@ void qtchess_gui::initialize(void)
 	}
     }
 
-  if((m_promotion = new(std::nothrow) qtchess_promotion(this)) ==
-     nullptr)
+  if((m_promotion = new(std::nothrow) qtchess_promotion(this)) == nullptr)
     {
       if(chess)
 	chess->quit("Memory allocation failure.", EXIT_FAILURE);
