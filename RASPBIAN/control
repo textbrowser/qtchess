@@ -1,0 +1,10 @@
+Architecture: armhf
+Depends: libqt5core5a (>= 5.5.1), libqt5gui5 (>= 5.5.1), libqt5network5 (>= 5.5.1), libqt5widgets5 (>= 5.5.1)
+Maintainer: f83043e79dc03a0abfbcbc376879a97d66f2cacb@protonmail.ch
+Package: QtChess
+Priority: optional
+Section: Games
+Version: 2021.12.01
+Description: QtChess
+ Welcome to QtChess on ARM!
+ QtChess is governed by a BSD license. Enjoy!
