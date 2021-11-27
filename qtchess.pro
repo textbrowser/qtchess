@@ -124,10 +124,7 @@ QMAKE_CXXFLAGS  += -Wall \
 }
 
 QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
-
-unix {
 QMAKE_EXTRA_TARGETS = purge
-}
 
 PROJECTNAME	= QtChess
 TARGET		= QtChess
