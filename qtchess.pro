@@ -1,6 +1,6 @@
 include(qtchess-source.pro)
 
-win {
+win32 {
 purge.commands = del *~ && del */*~
 } else {
 purge.commands = rm -f *~ && rm -f */*~
@@ -11,14 +11,14 @@ DEFINES		+= QT_DEPRECATED_WARNINGS
 
 mac {
 ICON            = Images/chess.icns
-} else:win {
+} else:win32 {
 ICON            = Images/chess.png
 }
 
 LANGUAGE        = C++
 QT		+= gui network widgets
 
-win {
+win32 {
 RC_FILE		= qtchess.win.rc
 }
 
@@ -108,7 +108,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -mtune=generic \
                    -pedantic \
                    -std=c++11
-} else:win {
+} else:win32 {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
                    -Wcast-qual \
@@ -150,7 +150,7 @@ macdeployqt.path  = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
 
 INSTALLS	= macdeployqt
-} else:win {
+} else:win32 {
 plugins1.files = $$[QT_INSTALL_PLUGINS]\\*
 plugins1.path = release\\plugins\\.
 plugins2.files = $$[QT_INSTALL_PLUGINS]\\gamepads\\xinputgamepad.dll
