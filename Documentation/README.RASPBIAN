@@ -9,7 +9,7 @@ find ./usr/local/qtchess -type f -exec chmod g+w {} \;
 Preparing QtChess-x_armhf.deb:
 
 mkdir -p qtchess-debian/usr/local
-cp -pr ./RASPBIAN qtchess-debian/.
+cp -pr ./RASPBIAN qtchess-debian/DEBIAN
 cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
 fakeroot dpkg-deb --build qtchess-debian QtChess-2021.12.01_armhf.deb
 make distclean
