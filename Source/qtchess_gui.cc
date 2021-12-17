@@ -352,7 +352,9 @@ void qtchess_gui::initialize(void)
   if(m_board)
     {
       m_board->add(m_ui.board_frame);
+#ifdef Q_OS_ANDROID
       m_ui.splitter->setSizes(QList<int> () << 1 << 0);
+#endif
     }
 
 #ifndef Q_OS_ANDROID
