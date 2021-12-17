@@ -350,7 +350,10 @@ void qtchess_gui::initialize(void)
   m_ui.board_frame->setLayout(new QGridLayout());
 
   if(m_board)
-    m_board->add(m_ui.board_frame);
+    {
+      m_board->add(m_ui.board_frame);
+      m_ui.splitter->setSizes(QList<int> () << 1 << 0);
+    }
 
 #ifndef Q_OS_ANDROID
   resize(800, 600);

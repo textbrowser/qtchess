@@ -1,5 +1,17 @@
 <RCC>
     <qresource prefix="/">
+	<file>Chess_bdt60.png</file>
+        <file>Chess_blt60.png</file>
+        <file>Chess_kdt60.png</file>
+        <file>Chess_klt60.png</file>
+        <file>Chess_ndt60.png</file>
+        <file>Chess_nlt60.png</file>
+        <file>Chess_pdt60.png</file>
+        <file>Chess_plt60.png</file>
+        <file>Chess_qdt60.png</file>
+        <file>Chess_qlt60.png</file>
+        <file>Chess_rdt60.png</file>
+        <file>Chess_rlt60.png</file>
     	<file>chess.png</file>
     </qresource>
 </RCC>

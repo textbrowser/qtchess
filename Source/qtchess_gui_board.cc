@@ -49,18 +49,10 @@ qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 		SIGNAL(pressed(qtchess_piece *)),
 		this,
 		SLOT(slot_piece_pressed(qtchess_piece *)));
-
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
-#ifndef Q_OS_ANDROID
-	auto font(m_labels[i][j]->font());
-
-	font.setPointSize(30);
-	m_labels[i][j]->setFont(font);
-#endif
 	m_labels[i][j]->setSizePolicy
 	  (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-	m_labels[i][j]->setTextFormat(Qt::RichText);
       }
 
   m_mouse_pressed = 0;
@@ -92,7 +84,7 @@ void qtchess_gui_board::add(QFrame *frame)
 	c[1] = 0;
 
 	auto font(this->font());
-	auto label = new QLabel(QString("     %1     ").arg(c), this);
+	auto label = new QLabel(QString(" %1 ").arg(c), this);
 
 	font.setBold(true);
 	label->setAlignment(Qt::AlignCenter);
@@ -108,17 +100,7 @@ void qtchess_gui_board::add(QFrame *frame)
 
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
-      {
-	layout->addWidget(m_labels[i][j], i + 1, j + 1);
-
-#ifdef Q_OS_ANDROID
-	auto font(m_labels[i][j]->font());
-	auto size(m_labels[i][j]->size());
-
-	font.setPointSize(qMax(size.height(), size.width()) / 2.0);
-	m_labels[i][j]->setFont(font);
-#endif
-      }
+      layout->addWidget(m_labels[i][j], i + 1, j + 1);
 
   paint();
 }
@@ -170,34 +152,46 @@ void qtchess_gui_board::paint(void)
 	** Label the pieces.
 	*/
 
-	int offset = 0;
-	int piece = 0;
+	QString piece("");
+	QChar letter;
+	bool transform = false;
 
 	if(!qtchess_validate::is_empty(chess->m_board[i][j]))
 	  {
-	    if(qtchess_validate::is_white(chess->m_board[i][j]))
-	      offset = 0;
+	    if(qtchess_validate::is_black(chess->m_board[i][j]))
+	      letter = 'd';
 	    else
-	      offset = 6;
+	      letter = 'l';
 	  }
 
 	if(qtchess_validate::is_bishop(chess->m_board[i][j]))
-	  piece = 9815 + offset;
+	  piece = QString(":/Chess_b%1t60.png").arg(letter);
 	else if(qtchess_validate::is_king(chess->m_board[i][j]))
-	  piece = 9812 + offset;
+	  piece = QString(":/Chess_k%1t60.png").arg(letter);
 	else if(qtchess_validate::is_knight(chess->m_board[i][j]))
-	  piece = 9816 + offset;
+	  {
+	    piece = QString(":/Chess_n%1t60.png").arg(letter);
+	    transform = letter == 'd' ? false : true;
+	  }
 	else if(qtchess_validate::is_pawn(chess->m_board[i][j]))
-	  piece = 9817 + offset;
+	  piece = QString(":/Chess_p%1t60.png").arg(letter);
 	else if(qtchess_validate::is_queen(chess->m_board[i][j]))
-	  piece = 9813 + offset;
+	  piece = QString(":/Chess_q%1t60.png").arg(letter);
 	else if(qtchess_validate::is_rook(chess->m_board[i][j]))
-	  piece = 9814 + offset;
+	  piece = QString(":/Chess_r%1t60.png").arg(letter);
 
-	if(piece == 0)
+	if(piece.isEmpty())
 	  m_labels[i][j]->clear();
 	else
-	  m_labels[i][j]->setText(QString("&#%1;").arg(piece));
+	  {
+	    QPixmap pixmap(piece);
+
+	    if(transform)
+	      pixmap = pixmap.transformed
+		(QTransform().scale(-1, 1), Qt::SmoothTransformation);
+
+	    m_labels[i][j]->setPixmap(pixmap);
+	  }
 
 	QColor background_color;
 
