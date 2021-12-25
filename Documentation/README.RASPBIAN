@@ -11,7 +11,7 @@ Preparing QtChess-x_armhf.deb:
 mkdir -p qtchess-debian/usr/local
 cp -pr ./RASPBIAN qtchess-debian/DEBIAN
 cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
-fakeroot dpkg-deb --build qtchess-debian QtChess-2021.12.01_armhf.deb
+fakeroot dpkg-deb --build qtchess-debian QtChess-2021.12.25_armhf.deb
 make distclean
 rm -fr ./qtchess-debian
 rm -fr ./usr
