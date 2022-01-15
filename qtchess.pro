@@ -69,6 +69,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -std=c++11
 } else:linux {
+greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 5) {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-qual \
                    -Wdouble-promotion \
@@ -91,6 +92,28 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -pie \
                    -std=c++11
+} else {
+                   QMAKE_CXXFLAGS  += -Wall \
+                   -Wcast-qual \
+                   -Wdouble-promotion \
+                   -Werror \
+                   -Werror=format-security \
+                   -Wextra \
+                   -Wfloat-equal \
+                   -Wformat=2 \
+                   -Wno-deprecated-copy \
+                   -Woverloaded-virtual \
+                   -Wpointer-arith \
+                   -Wstack-protector \
+                   -Wstrict-overflow=1 \
+                   -Wundef \
+                   -fPIE \
+                   -fstack-protector-all \
+                   -fwrapv \
+                   -pedantic \
+                   -pie \
+                   -std=c++11
+}
 } else:mac {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
