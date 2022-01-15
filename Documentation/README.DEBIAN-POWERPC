@@ -9,7 +9,7 @@ find ./usr/local/qtchess -type f -exec chmod g+w {} \;
 Preparing QtChess-x_powerpc.deb:
 
 mkdir -p qtchess-debian/usr/local
-cp -pr ./DEBIAN-POWERPC qtchess-debian/.
+cp -pr ./DEBIAN-POWERPC qtchess-debian/DEBIAN
 cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
 fakeroot dpkg-deb --build qtchess-debian QtChess-2021.12.25_powerpc.deb
 make distclean
