@@ -34,6 +34,11 @@
 extern QPointer<qtchess> chess;
 extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
+#ifdef Q_OS_ANDROID
+static int s_size = 30;
+#else
+static int s_size = 60;
+#endif
 
 qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 {
@@ -51,7 +56,7 @@ qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 		SLOT(slot_piece_pressed(qtchess_piece *)));
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
-	m_labels[i][j]->setMinimumSize(60, 60);
+	m_labels[i][j]->setMinimumSize(s_size, s_size);
 	m_labels[i][j]->setSizePolicy
 	  (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
       }
@@ -186,6 +191,12 @@ void qtchess_gui_board::paint(void)
 	else
 	  {
 	    QPixmap pixmap(piece);
+
+#ifdef Q_OS_ANDROID
+	    pixmap = pixmap.scaled(QSize(s_size, s_size),
+				   Qt::KeepAspectRatio,
+				   Qt::SmoothTransformation);
+#endif
 
 	    if(transform)
 	      pixmap = pixmap.transformed
