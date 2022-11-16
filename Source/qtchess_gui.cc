@@ -479,9 +479,9 @@ void qtchess_gui::slot_new_game(void)
 	current_move.m_board[i][j] = EMPTY_SQUARE;
 
   current_move.m_enpassant =
+    current_move.m_is_opponent_king_threat =
     current_move.m_pawn2 =
     current_move.m_promoted = 0;
-  current_move.m_is_opponent_king_threat = 0;
   current_move.m_piece =
     current_move.m_rook =
     current_move.m_rook_x1 =
@@ -492,7 +492,9 @@ void qtchess_gui::slot_new_game(void)
     current_move.m_x2 =
     current_move.m_y1 =
     current_move.m_y2 = -1;
-  memset(current_move.m_departure, 0, sizeof(current_move.m_departure));
+  memset(current_move.m_departure,
+	 0,
+	 sizeof(char) * sizeof(current_move.m_departure));
   current_move.m_departure[0] = '0';
 
   if(comm)
