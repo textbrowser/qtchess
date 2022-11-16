@@ -92,21 +92,33 @@ void qtchess_gui::add_history_move(const struct move_s &current_move,
 	snprintf(insert_x, sizeof(insert_x), "%s%s", from_position, "x");
 
       if(qtchess_validate::is_bishop(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%dB", insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%dB",
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
       else if(qtchess_validate::is_knight(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%dN", insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%dN",
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
       else if(qtchess_validate::is_queen(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%dQ", insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%dQ",
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
       if(qtchess_validate::is_rook(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%dR", insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%dR",
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
     }
   else
     {
@@ -114,58 +126,94 @@ void qtchess_gui::add_history_move(const struct move_s &current_move,
 	snprintf(insert_x, sizeof(insert_x), "%s", "x");
 
       if(qtchess_validate::is_bishop(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "B",
-		 current_move.m_departure, insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%s%s%d",
+		 "B",
+		 current_move.m_departure,
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
       else if(qtchess_validate::is_king(current_move.m_piece))
 	{
 	  if(current_move.m_rook_x1 != -1)
 	    {
 	      if(current_move.m_y2 == 6)
-		snprintf(hist, sizeof(hist),
-			 "%s%s%s%d 0-0", "K", insert_x,
-			 to_let, current_move.m_x2 + 1);
+		snprintf(hist,
+			 sizeof(hist),
+			 "%s%s%s%d 0-0",
+			 "K",
+			 insert_x,
+			 to_let,
+			 current_move.m_x2 + 1);
 	      else
-		snprintf(hist, sizeof(hist),
-			 "%s%s%s%d 0-0-0", "K", insert_x,
-			 to_let, current_move.m_x2 + 1);
+		snprintf(hist,
+			 sizeof(hist),
+			 "%s%s%s%d 0-0-0",
+			 "K",
+			 insert_x,
+			 to_let,
+			 current_move.m_x2 + 1);
 	    }
 	  else
-	    snprintf(hist, sizeof(hist),
-		     "%s%s%s%d", "K", insert_x,
-		     to_let, current_move.m_x2 + 1);
+	    snprintf(hist,
+		     sizeof(hist),
+		     "%s%s%s%d",
+		     "K",
+		     insert_x,
+		     to_let,
+		     current_move.m_x2 + 1);
 	}
       else if(qtchess_validate::is_knight(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "N",
-		 current_move.m_departure, insert_x,
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%s%s%d",
+		 "N",
+		 current_move.m_departure,
+		 insert_x,
 		 to_let, current_move.m_x2 + 1);
       else if(qtchess_validate::is_pawn(current_move.m_piece))
 	{
 	  if(chess && chess->was_piece_won())
-	    snprintf(insert_x, sizeof(insert_x), "%s%s",
-		     from_position, "x");
+	    snprintf(insert_x,
+		     sizeof(insert_x),
+		     "%s%s",
+		     from_position,
+		     "x");
 
 	  if(current_move.m_enpassant)
-	    snprintf(hist, sizeof(hist),
-		     "%s%s%d e.p.", insert_x,
-		     to_let, current_move.m_x2 + 1);
+	    snprintf(hist,
+		     sizeof(hist),
+		     "%s%s%d e.p.",
+		     insert_x,
+		     to_let,
+		     current_move.m_x2 + 1);
 	  else
-	    snprintf(hist, sizeof(hist),
-		     "%s%s%d", insert_x,
-		     to_let, current_move.m_x2 + 1);
+	    snprintf(hist,
+		     sizeof(hist),
+		     "%s%s%d",
+		     insert_x,
+		     to_let,
+		     current_move.m_x2 + 1);
 	}
       else if(qtchess_validate::is_queen(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "Q",
-		 current_move.m_departure, insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%s%s%d",
+		 "Q",
+		 current_move.m_departure,
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
       else if(qtchess_validate::is_rook(current_move.m_piece))
-	snprintf(hist, sizeof(hist),
-		 "%s%s%s%s%d", "R",
-		 current_move.m_departure, insert_x,
-		 to_let, current_move.m_x2 + 1);
+	snprintf(hist,
+		 sizeof(hist),
+		 "%s%s%s%s%d",
+		 "R",
+		 current_move.m_departure,
+		 insert_x,
+		 to_let,
+		 current_move.m_x2 + 1);
       else
 	snprintf(hist, sizeof(hist), "%s", "-----");
     }

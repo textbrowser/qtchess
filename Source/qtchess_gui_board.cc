@@ -518,10 +518,15 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 
       chess->m_board[x][y] = EMPTY_SQUARE;
       snprintf
-	(current_move.m_departure, sizeof(current_move.m_departure), "%s",
-	 qtchess_validate::find_departure
-	 (m_point_selected.m_x, m_point_selected.m_y,
-	  x, y, original_piece).toLatin1().constData());
+	(current_move.m_departure,
+	 sizeof(current_move.m_departure),
+	 "%s",
+	 qtchess_validate::
+	 find_departure(m_point_selected.m_x,
+			m_point_selected.m_y,
+			x,
+			y,
+			original_piece).toLatin1().constData());
       chess->m_board[x][y] = original_piece;
 
       for(int i = 0; i < NSQUARES; i++)
