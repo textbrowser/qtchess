@@ -83,7 +83,7 @@ void qtchess::initialize(void)
     m_last_opponent_move.m_y2 = -1;
   memset(m_last_opponent_move.m_departure,
 	 0,
-	 sizeof(m_last_opponent_move.m_departure));
+	 sizeof(char) * sizeof(m_last_opponent_move.m_departure));
 }
 
 void qtchess::quit(const char *message_text, const int exit_code)

@@ -79,11 +79,11 @@ void qtchess_gui::add_history_move(const struct move_s &current_move,
   char insert_x[3];
   char to_let[2];
 
+  memset(from_position, 0, sizeof(char) * sizeof(from_position));
+  memset(hist, 0, sizeof(char) * sizeof(hist));
+  memset(insert_x, 0, sizeof(char) * sizeof(insert_x));
+  memset(to_let, 0, sizeof(char) * sizeof(to_let));
   from_position[0] = static_cast<char> (97 + current_move.m_y1);
-  memset(from_position, 0, sizeof(from_position));
-  memset(hist, 0, sizeof(hist));
-  memset(insert_x, 0, sizeof(insert_x));
-  memset(to_let, 0, sizeof(to_let));
   to_let[0] = static_cast<char> (97 + current_move.m_y2);
 
   if(current_move.m_promoted)

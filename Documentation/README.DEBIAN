@@ -11,7 +11,7 @@ Preparing QtChess-x_amd64.deb:
 mkdir -p qtchess-debian/usr/local
 cp -pr ./DEBIAN qtchess-debian/.
 cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
-fakeroot dpkg-deb --build qtchess-debian QtChess-2021.12.25_amd64.deb
+fakeroot dpkg-deb --build qtchess-debian QtChess-2022.11.20_amd64.deb
 make distclean
 rm -fr ./qtchess-debian
 rm -fr ./usr

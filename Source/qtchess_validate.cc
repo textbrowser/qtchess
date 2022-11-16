@@ -55,7 +55,7 @@ QString qtchess_validate::find_departure(const int X1,
   int fcount = 0;
   int rcount = 0;
 
-  memset(departure, 0, sizeof(departure));
+  memset(departure, 0, sizeof(char) * sizeof(departure));
 
   /*
   ** Same rank? Use the file of the departure square.
