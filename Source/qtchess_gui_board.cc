@@ -51,6 +51,7 @@ qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 		SLOT(slot_piece_pressed(qtchess_piece *)));
 	m_labels[i][j]->setAlignment(Qt::AlignCenter);
 	m_labels[i][j]->setContentsMargins(0, 0, 0, 0);
+	m_labels[i][j]->setMinimumSize(60, 60);
 	m_labels[i][j]->setSizePolicy
 	  (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
       }
