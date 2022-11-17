@@ -70,31 +70,16 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
-  if((chess = new(std::nothrow) qtchess()) == nullptr)
-    {
-      qDebug() << "Memory allocation failure.";
-#ifdef Q_OS_ANDROID
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))
-      auto activity = QJniObject
-	(QNativeInterface::QAndroidApplication::context());
+  qtchess qtchess;
+  qtchess_communications qtchess_communications;
+  qtchess_gui qtchess_gui;
 
-      activity.callMethod<void> ("finishAndRemoveTask");
-#endif
-#endif
-      return EXIT_FAILURE;
-    }
-  else
-    chess->initialize();
-
-  if((comm = new(std::nothrow) qtchess_communications()) == nullptr)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
-  else
-    comm->initialize();
-
-  if((gui = new(std::nothrow) qtchess_gui()) == nullptr)
-    chess->quit("Memory allocation failure.", EXIT_FAILURE);
-  else
-    gui->initialize();
+  chess = &qtchess;
+  chess->initialize();
+  comm = &qtchess_communications;
+  comm->initialize();
+  gui = &qtchess_gui;
+  gui->initialize();
 
   auto rc = application.exec();
 
