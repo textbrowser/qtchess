@@ -339,6 +339,7 @@ void qtchess_gui::initialize(void)
     {
       connect(m_opponent_timer,
 	      SIGNAL(timeout(void)),
+	      this,
 	      SLOT(slot_update_opponent(void)));
       m_opponent_timer->start(1000);
     }
@@ -357,6 +358,7 @@ void qtchess_gui::initialize(void)
     {
       connect(m_player_timer,
 	      SIGNAL(timeout(void)),
+	      this,
 	      SLOT(slot_update_player(void)));
       m_player_timer->start(1000);
     }
