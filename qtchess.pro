@@ -146,6 +146,11 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 }
 
+versionAtLeast(QT_VERSION, 6.0.0) {
+QMAKE_CXXFLAGS_RELEASE += -std=c++17
+QMAKE_CXXFLAGS_RELEASE -= -std=c++11
+}
+
 QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
 QMAKE_EXTRA_TARGETS = purge
 

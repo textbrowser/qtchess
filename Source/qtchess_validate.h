@@ -28,6 +28,8 @@
 #ifndef _QTCHESS_VALIDATE_
 #define _QTCHESS_VALIDATE_
 
+#include <QString>
+
 namespace qtchess_validate
 {
   QString find_departure
