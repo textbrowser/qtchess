@@ -57,9 +57,6 @@ int main(int argc, char *argv[])
 
   QApplication application(argc, argv);
 
-#if QT_VERSION >= 0x050700
-  application.setAttribute(Qt::AA_DontUseNativeDialogs);
-#endif
 #ifdef Q_OS_MAC
 #if QT_VERSION >= 0x050000
   /*
