@@ -146,7 +146,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -std=c++11
 }
 
-versionAtLeast(QT_VERSION, 6.0.0) {
+greaterThan(QT_MAJOR_VERSION, 5) {
 QMAKE_CXXFLAGS_RELEASE += -std=c++17
 QMAKE_CXXFLAGS_RELEASE -= -std=c++11
 }
