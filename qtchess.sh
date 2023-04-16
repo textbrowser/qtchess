@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# Alexis Megas.
 
 # Enable if necessary.
 
@@ -10,12 +11,15 @@ export QT_X11_NO_MITSHM=1
 
 if [ -r ./QtChess ] && [ -x ./QtChess ]
 then
+    echo "Launching a local QtChess."
     ./QtChess "$@"
     exit $?
 elif [ -r /usr/local/qtchess/QtChess ] && [ -x /usr/local/qtchess/QtChess ]
 then
+    echo "Launching an official QtChess."
     cd /usr/local/qtchess && exec ./QtChess "$@"
     exit $?
 else
+    echo "Cannot locate QtChess."
     exit 1
 fi
