@@ -1,0 +1,2 @@
+* Corrected history information.
+* Qt 5.15.7 for Mac.
