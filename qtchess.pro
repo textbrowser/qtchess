@@ -69,7 +69,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -std=c++11
 } else:linux {
-greaterThan(QT_MAJOR_VERSION, 4):greaterThan(QT_MINOR_VERSION, 5) {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-qual \
                    -Wdouble-promotion \
@@ -84,6 +83,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wpointer-arith \
                    -Wstack-protector \
                    -Wstrict-overflow=1 \
+		   -Wstringop-overflow=4 \
                    -Wundef \
                    -Wzero-as-null-pointer-constant \
                    -fPIE \
@@ -92,28 +92,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -pie \
                    -std=c++11
-} else {
-                   QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-qual \
-                   -Wdouble-promotion \
-                   -Werror \
-                   -Werror=format-security \
-                   -Wextra \
-                   -Wfloat-equal \
-                   -Wformat=2 \
-                   -Wno-deprecated-copy \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstack-protector \
-                   -Wstrict-overflow=1 \
-                   -Wundef \
-                   -fPIE \
-                   -fstack-protector-all \
-                   -fwrapv \
-                   -pedantic \
-                   -pie \
-                   -std=c++11
-}
 } else:mac {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
@@ -188,10 +166,10 @@ pluginspurge.extra = del /Q /S *d.dll
 pluginspurge.path = release\\plugins\\.
 qt.files = Qt\\qt.conf
 qt.path = release\\.
-qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt5Core.dll \
-                    $$[QT_INSTALL_BINS]\\Qt5Gui.dll \
-                    $$[QT_INSTALL_BINS]\\Qt5Network.dll \
-                    $$[QT_INSTALL_BINS]\\Qt5Widgets.dll \
+qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt6Core.dll \
+                    $$[QT_INSTALL_BINS]\\Qt6Gui.dll \
+                    $$[QT_INSTALL_BINS]\\Qt6Network.dll \
+                    $$[QT_INSTALL_BINS]\\Qt6Widgets.dll \
                     $$[QT_INSTALL_BINS]\\libgcc_s_dw2-1.dll \
                     $$[QT_INSTALL_BINS]\\libstdc++-6.dll \
                     $$[QT_INSTALL_BINS]\\libwinpthread-1.dll
