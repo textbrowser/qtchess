@@ -600,7 +600,7 @@ void qtchess_gui::slot_about(void)
   mb.setStandardButtons(QMessageBox::Ok);
   mb.setText
     (tr("<html>QtChess Version %1.<br>"
-	"Copyright (c) 2003 - 2022. Made with love by textbrowser.<br>"
+	"Copyright (c) 2003 - present. Made with love by textbrowser.<br>"
 	"Qt version %2."
 	"<hr>"
 	"Please visit <a href=\"https://textbrowser.github.io/qtchess\">"
