@@ -1,6 +1,8 @@
 include(qtchess-source.pro)
 
-win32 {
+mac {
+dmg.commands = hdiutil create QtChess.d.dmg -srcfolder QtChess.app
+} else:win32 {
 purge.commands = del *~ && del */*~
 } else {
 purge.commands = rm -f *~ && rm -f */*~
@@ -131,6 +133,10 @@ QMAKE_CXXFLAGS_RELEASE -= -std=c++11
 
 QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
 QMAKE_EXTRA_TARGETS = purge
+
+mac {
+QMAKE_EXTRA_TARGETS += dmg
+}
 
 PROJECTNAME	= QtChess
 TARGET		= QtChess
