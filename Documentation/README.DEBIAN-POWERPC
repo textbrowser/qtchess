@@ -6,12 +6,12 @@ cp ./QtChess ./usr/local/qtchess/.
 cp ./qtchess.sh ./usr/local/qtchess/.
 find ./usr/local/qtchess -type f -exec chmod g+w {} \;
 
-Preparing QtChess-2024.01.05_powerpc.deb:
+Preparing QtChess-2024.01.10_powerpc.deb:
 
 mkdir -p qtchess-debian/usr/local
 cp -pr ./DEBIAN-POWERPC qtchess-debian/DEBIAN
 cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
-fakeroot dpkg-deb --build qtchess-debian QtChess-2024.01.05_powerpc.deb
+fakeroot dpkg-deb --build qtchess-debian QtChess-2024.01.10_powerpc.deb
 make distclean
 rm -fr ./qtchess-debian
 rm -fr ./usr

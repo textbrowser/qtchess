@@ -7,7 +7,7 @@ Maintainer: f83043e79dc03a0abfbcbc376879a97d66f2cacb@protonmail.ch
 Package: QtChess
 Priority: optional
 Section: Games
-Version: 2024.01.05
+Version: 2024.01.10
 Description: QtChess
  Welcome to QtChess!
  QtChess is governed by a BSD license. Enjoy!
