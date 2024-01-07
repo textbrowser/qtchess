@@ -1,0 +1,5 @@
+* Deprecated Windows x86.
+* Happy New Year!
+* Qt 6.5.3 Android 10.
+* Qt 6.5.3 MacOS.
+* Qt 6.5.3 Windows 11.
