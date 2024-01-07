@@ -43,7 +43,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wstrict-overflow=5 \
                    -Wundef \
                    -Wzero-as-null-pointer-constant \
-                   -fPIE \
+                   -fPIC \
                    -fstack-protector-all \
                    -fwrapv \
                    -pedantic \
