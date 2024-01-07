@@ -157,7 +157,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 } else:mac {
 macdeployqt.path  = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
-
 INSTALLS	= macdeployqt
 } else:win32 {
 plugins1.files = $$[QT_INSTALL_PLUGINS]\\*
@@ -176,7 +175,7 @@ qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt6Core.dll \
                     $$[QT_INSTALL_BINS]\\Qt6Gui.dll \
                     $$[QT_INSTALL_BINS]\\Qt6Network.dll \
                     $$[QT_INSTALL_BINS]\\Qt6Widgets.dll \
-                    $$[QT_INSTALL_BINS]\\libgcc_s_dw2-1.dll \
+                    $$[QT_INSTALL_BINS]\\libgcc_s_seh-1.dll \
                     $$[QT_INSTALL_BINS]\\libstdc++-6.dll \
                     $$[QT_INSTALL_BINS]\\libwinpthread-1.dll
 qtlibraries.path = release\\.
