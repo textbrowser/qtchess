@@ -119,7 +119,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wformat=2 \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
-                   -Wstrict-overflow=5 \
+                   -Wstrict-overflow=1 \
                    -fwrapv \
                    -pedantic \
                    -pie \
