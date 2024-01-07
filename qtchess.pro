@@ -127,8 +127,8 @@ QMAKE_CXXFLAGS  += -Wall \
 }
 
 greaterThan(QT_MAJOR_VERSION, 5) {
-QMAKE_CXXFLAGS_RELEASE += -std=c++17
-QMAKE_CXXFLAGS_RELEASE -= -std=c++11
+QMAKE_CXXFLAGS += -std=c++17
+QMAKE_CXXFLAGS -= -std=c++11
 }
 
 QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
