@@ -18,17 +18,17 @@ fi
 
 # Prepare local files.
 
-mkdir -p ./usr/local/qtchess
+mkdir -p ./opt/qtchess
 qmake -o Makefile qtchess.pro && make -j $(nproc)
-cp ./QtChess ./usr/local/qtchess/.
-cp ./qtchess.sh ./usr/local/qtchess/.
-find ./usr/local/qtchess -type f -exec chmod g+w {} \;
+cp ./QtChess ./opt/qtchess/.
+cp ./qtchess.sh ./opt/qtchess/.
+find ./opt/qtchess -type f -exec chmod g+w {} \;
 
 # Prepare the Debian file.
 
-mkdir -p qtchess-debian/usr/local
+mkdir -p qtchess-debian/opt
 cp -pr ./DEBIAN qtchess-debian/.
-cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
+cp -r ./opt/qtchess qtchess-debian/opt/.
 fakeroot dpkg-deb --build qtchess-debian QtChess-2024.01.10_amd64.deb
 make distclean
 rm -fr ./qtchess-debian

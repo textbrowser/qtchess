@@ -14,10 +14,10 @@ then
     echo "Launching a local QtChess."
     ./QtChess "$@"
     exit $?
-elif [ -r /usr/local/qtchess/QtChess ] && [ -x /usr/local/qtchess/QtChess ]
+elif [ -r /opt/qtchess/QtChess ] && [ -x /opt/qtchess/QtChess ]
 then
     echo "Launching an official QtChess."
-    cd /usr/local/qtchess && exec ./QtChess "$@"
+    cd /opt/qtchess && exec ./QtChess "$@"
     exit $?
 else
     echo "Cannot locate QtChess."
