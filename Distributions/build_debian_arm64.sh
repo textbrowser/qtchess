@@ -27,9 +27,9 @@ find ./usr/local/qtchess -type f -exec chmod g+w {} \;
 # Prepare the Debian file.
 
 mkdir -p qtchess-debian/usr/local
-cp -pr ./RASPBIAN qtchess-debian/DEBIAN
+cp -pr ./PiOS64 qtchess-debian/DEBIAN
 cp -r ./usr/local/qtchess qtchess-debian/usr/local/.
-fakeroot dpkg-deb --build qtchess-debian QtChess-2024.01.10_armhf.deb
+fakeroot dpkg-deb --build qtchess-debian QtChess-2024.01.10_arm64.deb
 make distclean
 rm -fr ./qtchess-debian
 rm -fr ./usr
