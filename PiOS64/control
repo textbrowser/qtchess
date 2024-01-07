@@ -1,5 +1,5 @@
 Architecture: arm64
-Depends: libqt6core6a (>= 6.0),
+Depends: libqt6core6 (>= 6.0),
          libqt6gui6 (>= 6.0),
          libqt6network6 (>= 6.0),
          libqt6widgets6 (>= 6.0)
