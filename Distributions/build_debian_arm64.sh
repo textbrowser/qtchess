@@ -19,7 +19,7 @@ fi
 # Prepare local files.
 
 mkdir -p ./usr/local/qtchess
-qmake -o Makefile qtchess.pro && make -j $(nproc)
+qmake6 -o Makefile qtchess.pro && make -j $(nproc)
 cp ./QtChess ./usr/local/qtchess/.
 cp ./qtchess.sh ./usr/local/qtchess/.
 find ./usr/local/qtchess -type f -exec chmod g+w {} \;
