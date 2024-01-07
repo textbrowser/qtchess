@@ -31,5 +31,5 @@ cp -pr ./PiOS64 qtchess-debian/DEBIAN
 cp -r ./opt/qtchess qtchess-debian/opt/.
 fakeroot dpkg-deb --build qtchess-debian QtChess-2024.01.10_arm64.deb
 make distclean
+rm -fr ./opt
 rm -fr ./qtchess-debian
-rm -fr ./usr
