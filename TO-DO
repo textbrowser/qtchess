@@ -1,2 +1,3 @@
 1. Chess engine.
 2. NAT IP addresses.
+3. SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
