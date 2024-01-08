@@ -64,7 +64,7 @@ class qtchess_communications: public QObject
   static const int s_buffer_size = 1024;
   QByteArray digest(const QByteArray &data) const;
   QByteArray hmac(const QByteArray &data, const QByteArray &k) const;
-  QByteArray sha1(const QByteArray &data) const;
+  QByteArray shax(const QByteArray &data) const;
   QByteArray xor_arrays(const QByteArray &a, const QByteArray &b) const;
   bool memcmp(const QByteArray &a, const QByteArray &b) const;
   void prepare_connection_status(void);

@@ -68,12 +68,12 @@ QByteArray qtchess_communications::
 hmac(const QByteArray &data, const QByteArray &k) const
 {
   auto key(k);
-  static const int s_block_length = 512 / CHAR_BIT;
+  static const int s_block_length = 576 / CHAR_BIT;
 
-  if(s_block_length < key.length())
-    key = sha1(key);
+  if(key.length() > s_block_length)
+    key = shax(key);
 
-  if(s_block_length > key.length())
+  if(key.length() < s_block_length)
     key.append(QByteArray(s_block_length - key.length(), 0));
 
   QByteArray left(s_block_length, 0);
@@ -86,17 +86,17 @@ hmac(const QByteArray &data, const QByteArray &k) const
   QByteArray right(s_block_length, 0);
 
   for(int i = 0; i < s_block_length; i++)
-    right[i] = static_cast<char> (key.at(i) ^ ipad.at(i));
+    right[i] = static_cast<char> (ipad.at(i) ^ key.at(i));
 
-  return sha1(left.append(sha1(right.append(data))));
+  return shax(left.append(shax(right.append(data))));
 }
 
-QByteArray qtchess_communications::sha1(const QByteArray &data) const
+QByteArray qtchess_communications::shax(const QByteArray &data) const
 {
-  QCryptographicHash sha1(QCryptographicHash::Sha1);
+  QCryptographicHash sha(QCryptographicHash::Sha3_512);
 
-  sha1.addData(data);
-  return sha1.result();
+  sha.addData(data);
+  return sha.result();
 }
 
 QByteArray qtchess_communications::xor_arrays
@@ -541,7 +541,7 @@ void qtchess_communications::slot_disconnected
 void qtchess_communications::slot_update_board(void)
 {
   int ntries = 1;
-  static const int s_sha1_output_size = 40;
+  static const int s_shax_output_size = 128; // Hexadecimal.
 
   while(m_client_connection &&
 	m_client_connection->canReadLine() &&
@@ -561,9 +561,9 @@ void qtchess_communications::slot_update_board(void)
 
 	      auto d
 		(QByteArray::fromHex(buffer.mid(buffer.length() -
-						s_sha1_output_size)));
+						s_shax_output_size)));
 
-	      buffer = buffer.mid(0, buffer.length() - s_sha1_output_size);
+	      buffer = buffer.mid(0, buffer.length() - s_shax_output_size);
 
 	      if(memcmp(d, digest(buffer)))
 		chess->update_board(buffer);

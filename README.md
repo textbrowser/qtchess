@@ -4,7 +4,7 @@ C++11 is required. C++17 for Qt 6.
 
 Qt LTS is supported.
 
-Data authentication is provided by SHA-1 HMAC. Encryption is not necessary!
+Data authentication is provided by SHA3-512 HMAC. Encryption is not necessary!
 
 Key = (Local Address xor Peer Address) || (Local Port xor Peer Port) || (Caissa)
 
