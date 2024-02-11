@@ -1,4 +1,4 @@
-Android, FreeBSD, Linux, MacOS, OpenBSD, and Windows. Just about anywhere.
+Android, FreeBSD, Linux, MacOS, OpenBSD, and Windows. Just about anyware.
 
 C++11 is required. C++17 for Qt 6.
 
