@@ -160,7 +160,7 @@ void qtchess_gui_board::paint(void)
 
 	QString piece("");
 	QChar letter;
-	bool transform = false;
+	auto transform = false;
 
 	if(!qtchess_validate::is_empty(chess->m_board[i][j]))
 	  {
@@ -302,8 +302,8 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
     return;
 #endif
 
-  auto x = piece->i();
-  auto y = piece->j();
+  auto const x = piece->i();
+  auto const y = piece->j();
 
   if(m_mouse_pressed == 1)
     goto move_label;
@@ -526,7 +526,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
       chess->m_board[m_point_selected.m_x][m_point_selected.m_y] =
 	EMPTY_SQUARE;
 
-      auto original_piece = chess->m_board[x][y];
+      auto const original_piece = chess->m_board[x][y];
 
       chess->m_board[x][y] = EMPTY_SQUARE;
       snprintf

@@ -100,7 +100,7 @@ void qtchess::quit(const char *message_text, const int exit_code)
 
 void qtchess::update_board(const QByteArray &buffer)
 {
-  auto list(buffer.simplified().split(' '));
+  auto const list(buffer.simplified().split(' '));
 
   if(list.size() < 15 + NSQUARES * NSQUARES)
     {
@@ -170,8 +170,6 @@ void qtchess::update_board(const QByteArray &buffer)
 
 	x += 1;
       }
-
-  list.clear();
 
   if(current_move.m_x1 == -1)
     {

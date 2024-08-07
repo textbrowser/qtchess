@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
   gui = &qtchess_gui;
   gui->initialize();
 
-  auto rc = application.exec();
+  auto const rc = application.exec();
 
 #ifdef Q_OS_ANDROID
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))

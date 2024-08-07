@@ -485,7 +485,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** Castling
 	*/
 
-	auto king_has_moved = chess->has_king_moved();
+	auto const king_has_moved = chess->has_king_moved();
 
 	if(!king_has_moved && (col_to == 2 || col_to == 6) && row_to == 7)
 	  {
@@ -570,7 +570,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** Castling
 	*/
 
-	auto king_has_moved = chess->has_king_moved();
+	auto const king_has_moved = chess->has_king_moved();
 
 	if(!king_has_moved && (col_to == 2 || col_to == 6) && row_to == 0)
 	  {
@@ -740,7 +740,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** En Passant
 	*/
 
-	auto move = chess->get_last_opponent_move();
+	auto const move = chess->get_last_opponent_move();
 
 	if(move.m_pawn2)
 	  {
@@ -826,7 +826,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 	** En Passant
 	*/
 
-	auto move = chess->get_last_opponent_move();
+	auto const move = chess->get_last_opponent_move();
 
 	if(move.m_pawn2)
 	  {

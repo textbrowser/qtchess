@@ -51,8 +51,8 @@ QByteArray qtchess_communications::digest(const QByteArray &data) const
 
   if(m_client_connection)
     {
-      auto a(m_client_connection->localAddress());
-      auto b(m_client_connection->peerAddress());
+      auto const a(m_client_connection->localAddress());
+      auto const b(m_client_connection->peerAddress());
 
       key = xor_arrays
 	(a.toString().toUtf8().toHex(), b.toString().toUtf8().toHex());
@@ -76,9 +76,9 @@ hmac(const QByteArray &data, const QByteArray &k) const
   if(key.length() < s_block_length)
     key.append(QByteArray(s_block_length - key.length(), 0));
 
+  QByteArray const ipad(s_block_length, 0x36);
+  QByteArray const opad(s_block_length, 0x5c);
   QByteArray left(s_block_length, 0);
-  const QByteArray ipad(s_block_length, 0x36);
-  const QByteArray opad(s_block_length, 0x5c);
 
   for(int i = 0; i < s_block_length; i++)
     left[i] = static_cast<char> (key.at(i) ^ opad.at(i));
@@ -147,7 +147,7 @@ bool qtchess_communications::is_ready(void) const
 bool qtchess_communications::
 memcmp(const QByteArray &a, const QByteArray &b) const
 {
-  auto length = qMax(a.length(), b.length());
+  auto const length = qMax(a.length(), b.length());
   quint64 rc = 0;
 
   for(int i = 0; i < length; i++)

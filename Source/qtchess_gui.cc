@@ -408,7 +408,7 @@ void qtchess_gui::initialize(void)
     }
 
 #ifndef Q_OS_ANDROID
-  resize(800, 600);
+  resize(800, 800);
 #endif
 #if QT_VERSION < 0x050000
   m_ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -639,7 +639,7 @@ void qtchess_gui::slot_setup(void)
 
 void qtchess_gui::slot_update_opponent(void)
 {
-  static QString stylesheet(m_ui.opponent_clock->styleSheet());
+  static auto const stylesheet(m_ui.opponent_clock->styleSheet());
 
   if(chess &&
      chess->get_turn() == THEIR_TURN &&
@@ -657,7 +657,7 @@ void qtchess_gui::slot_update_opponent(void)
 
 void qtchess_gui::slot_update_player(void)
 {
-  static QString stylesheet(m_ui.player_clock->styleSheet());
+  static auto const stylesheet(m_ui.player_clock->styleSheet());
 
   if(chess &&
      chess->get_turn() == MY_TURN &&
@@ -985,7 +985,7 @@ void qtchess_setup::slot_protocol_changed(void)
     }
   else if(sender() == m_ui.local_ipv6)
     {
-      auto preferred_host_address
+      auto const preferred_host_address
 	(qtchess_communications::
 	 preferred_host_address(QAbstractSocket::IPv6Protocol));
 
