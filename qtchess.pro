@@ -81,6 +81,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wformat=2 \
                    -Wformat-overflow=2 \
                    -Wno-deprecated-copy \
+                   -Wold-style-cast \
                    -Woverloaded-virtual \
                    -Wpointer-arith \
                    -Wstack-protector \
