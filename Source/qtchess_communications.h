@@ -63,10 +63,10 @@ class qtchess_communications: public QObject
   QTcpServer m_listening_socket;
   static const int s_buffer_size = 1024;
   QByteArray digest(const QByteArray &data) const;
-  QByteArray hmac(const QByteArray &data, const QByteArray &k) const;
-  QByteArray shax(const QByteArray &data) const;
   QByteArray xor_arrays(const QByteArray &a, const QByteArray &b) const;
   bool memcmp(const QByteArray &a, const QByteArray &b) const;
+  static QByteArray hmac(const QByteArray &data, const QByteArray &k);
+  static QByteArray shax(const QByteArray &data);
   void prepare_connection_status(void);
 
  private slots:

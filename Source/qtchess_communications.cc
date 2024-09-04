@@ -47,18 +47,14 @@ qtchess_communications::qtchess_communications(void):QObject()
 
 QByteArray qtchess_communications::digest(const QByteArray &data) const
 {
-  QByteArray key;
-
-  if(m_client_connection)
-    key.append(m_caissa.toUtf8().toHex());
-
   return hmac
     (data,
-     hmac(key, QByteArray("QtChess").append(QTCHESS_VERSION).append(0x01)));
+     hmac(m_caissa.toUtf8().toHex(),
+	  QByteArray("QtChess").append(QTCHESS_VERSION).append(0x01)));
 }
 
 QByteArray qtchess_communications::
-hmac(const QByteArray &data, const QByteArray &k) const
+hmac(const QByteArray &data, const QByteArray &k)
 {
   auto key(k);
   static const int s_block_length = 576 / CHAR_BIT;
@@ -84,7 +80,7 @@ hmac(const QByteArray &data, const QByteArray &k) const
   return shax(left.append(shax(right.append(data))));
 }
 
-QByteArray qtchess_communications::shax(const QByteArray &data) const
+QByteArray qtchess_communications::shax(const QByteArray &data)
 {
   QCryptographicHash sha(QCryptographicHash::Sha3_512);
 
