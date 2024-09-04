@@ -53,10 +53,10 @@
          <item>
           <widget class="QLineEdit" name="caissa">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Data authentication is provided by SHA-1 HMAC. The secret key is created from the local and remote peer information. The optional secret will be mixed into the key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Data authentication is provided by SHA3-512 HMAC. The secret key is created from the required secret.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="placeholderText">
-            <string>Optional Secret</string>
+            <string>Required Secret</string>
            </property>
            <property name="clearButtonEnabled">
             <bool>true</bool>

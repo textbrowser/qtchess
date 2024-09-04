@@ -50,18 +50,11 @@ QByteArray qtchess_communications::digest(const QByteArray &data) const
   QByteArray key;
 
   if(m_client_connection)
-    {
-      auto const a(m_client_connection->localAddress());
-      auto const b(m_client_connection->peerAddress());
+    key.append(m_caissa.toUtf8().toHex());
 
-      key = xor_arrays
-	(a.toString().toUtf8().toHex(), b.toString().toUtf8().toHex());
-      key.append(QByteArray::number(m_client_connection->localPort() ^
-				    m_client_connection->peerPort()).toHex());
-      key.append(m_caissa.toUtf8().toHex());
-    }
-
-  return hmac(data, hmac(key, QByteArray("QtChess").append(0x01)));
+  return hmac
+    (data,
+     hmac(key, QByteArray("QtChess").append(QTCHESS_VERSION).append(0x01)));
 }
 
 QByteArray qtchess_communications::
