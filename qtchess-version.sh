@@ -22,7 +22,7 @@ FILE="Source/qtchess.h"
 sed -i 's/\(QTCHESS_VERSION "\)[0-9]\+\(\.[0-9]\+\)*"/\1'"$VERSION"'"/' \
     $FILE
 
-FILE="android/AndroidManifest.xml"
+FILE="Android/AndroidManifest.xml"
 
 sed -i \
     's/\(android:versionCode="\)[0-9]\+\([0-9]\+\)*"/\1'"${VERSION//./}"'"/' \
