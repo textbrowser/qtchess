@@ -1,4 +1,4 @@
-include(qtchess-source.pro)
+include(qtchess-source.qt-project)
 
 mac {
 dmg.commands = hdiutil create QtChess.d.dmg -srcfolder QtChess.app
