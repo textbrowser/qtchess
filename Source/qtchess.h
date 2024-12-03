@@ -32,7 +32,7 @@
 
 #include "qtchess_definitions.h"
 
-#define QTCHESS_VERSION "2024.01.10"
+#define QTCHESS_VERSION "2024.12.04"
 
 class qtchess: public QObject
 {
