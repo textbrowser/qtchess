@@ -142,6 +142,7 @@ PROJECTNAME	= QtChess
 TARGET		= QtChess
 
 android {
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/Android
 DISTFILES += Android/AndroidManifest.xml \
              Android/build.gradle \
              Android/gradle.properties \
@@ -150,10 +151,6 @@ DISTFILES += Android/AndroidManifest.xml \
              Android/gradlew \
              Android/gradlew.bat \
              Android/res/values/libs.xml
-
-contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
-ANDROID_PACKAGE_SOURCE_DIR = $$PWD/Android
-}
 } else:mac {
 macdeployqt.path  = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
