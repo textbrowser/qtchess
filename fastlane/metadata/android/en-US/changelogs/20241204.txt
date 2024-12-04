@@ -1,0 +1,6 @@
+* Android is ARM32 and ARM64!
+* Automatics and constants.
+* Qt 6.8.1 LTS on Android.
+* Qt 6.8.1 LTS on MacOS.
+* SHA3-512 HMAC.
+* Simpler communications key.

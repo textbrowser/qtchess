@@ -1,2 +1,1 @@
-QtChess is a peer-to-peer chess program.
-ARM, Android, MacOS, PowerPC, Sparc, Windows, etc. Written in C++.
+QtChess is a peer-to-peer chess program available everyware. 
