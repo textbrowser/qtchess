@@ -13,6 +13,12 @@ for file in */control; do
     sed -i "s/Version: .*/Version: $VERSION/" $file
 done
 
+for file in Distributions/build*; do
+    sed -i \
+    "s/QtChess-[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+/QtChess-$VERSION/" \
+    $file
+done
+
 FILE="Source/qtchess.h"
 
 sed -i 's/\(QTCHESS_VERSION "\)[0-9]\+\(\.[0-9]\+\)*"/\1'"$VERSION"'"/' \
