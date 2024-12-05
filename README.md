@@ -2,6 +2,8 @@ Android, FreeBSD, Linux, MacOS, OpenBSD, and Windows. Just about anyware.
 
 C++11 is required. C++17 for Qt 6.
 
+Debian PowerPC is Qt 5.5.1. Notice QT_SHA3_KECCAK_COMPAT in qtchess.pro.
+
 Qt LTS is supported. Qt 4.8.x is obsolete.
 
 Data authentication is provided by SHA3-512 HMAC. Encryption is not necessary!

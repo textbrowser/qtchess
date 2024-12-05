@@ -2,5 +2,8 @@
 * Automatics and constants.
 * Qt 6.8.1 LTS on Android.
 * Qt 6.8.1 LTS on MacOS.
+* Qt 6.8.1 LTS on Windows.
 * SHA3-512 HMAC.
 * Simpler communications key.
+* The releases include some corrections which were introduced
+  after this tag was manufactured.
