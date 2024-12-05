@@ -46,12 +46,12 @@ class qtchess_piece: public QLabel
     m_j = j;
   };
 
-  int i() const
+  int i(void) const
   {
     return m_i;
   }
 
-  int j() const
+  int j(void) const
   {
     return m_j;
   }
@@ -65,8 +65,12 @@ class qtchess_piece: public QLabel
     if(!event)
       return;
 
+#ifdef Q_OS_ANDROID
+    emit double_clicked(this);
+#else
     if(event->button() == Qt::LeftButton)
       emit double_clicked(this);
+#endif
 
     QLabel::mouseDoubleClickEvent(event);
   }
@@ -76,8 +80,12 @@ class qtchess_piece: public QLabel
     if(!event)
       return;
 
+#ifdef Q_OS_ANDROID
+    emit pressed(this);
+#else
     if(event->button() == Qt::LeftButton)
       emit pressed(this);
+#endif
 
     QLabel::mousePressEvent(event);
   }
