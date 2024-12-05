@@ -86,7 +86,6 @@ QMAKE_CXXFLAGS  += -Wall \
                    -Wstack-protector \
                    -Wstrict-overflow=1 \
                    -Wundef \
-                   -Wzero-as-null-pointer-constant \
                    -fPIE \
                    -fstack-protector-all \
                    -fwrapv \
