@@ -70,6 +70,30 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -std=c++11
 } else:linux {
+contains(QMAKE_HOST.arc, ppc) {
+QMAKE_CXXFLAGS  += -Wall \
+                   -Wcast-qual \
+                   -Wdouble-promotion \
+                   -Werror \
+                   -Werror=format-security \
+                   -Wextra \
+                   -Wfloat-equal \
+                   -Wformat=2 \
+                   -Wno-deprecated-copy \
+                   -Wold-style-cast \
+                   -Woverloaded-virtual \
+                   -Wpointer-arith \
+                   -Wstack-protector \
+                   -Wstrict-overflow=1 \
+                   -Wundef \
+                   -Wzero-as-null-pointer-constant \
+                   -fPIE \
+                   -fstack-protector-all \
+                   -fwrapv \
+                   -pedantic \
+                   -pie \
+                   -std=c++11
+else {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-qual \
                    -Wdouble-promotion \
@@ -94,6 +118,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -pie \
                    -std=c++11
+}
 } else:mac {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-align \
