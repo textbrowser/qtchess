@@ -49,7 +49,8 @@ qtchess_gui_board::qtchess_gui_board(QWidget *parent):QWidget(parent)
 	connect(m_labels[i][j],
 		SIGNAL(double_clicked(qtchess_piece *)),
 		this,
-		SLOT(slot_piece_double_clicked(qtchess_piece *)));
+		SLOT(slot_piece_double_clicked(qtchess_piece *)),
+		Qt::QueuedConnection);
 	connect(m_labels[i][j],
 		SIGNAL(pressed(qtchess_piece *)),
 		this,
@@ -225,9 +226,6 @@ void qtchess_gui_board::paint(void)
 
 void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 {
-  if(!(QApplication::keyboardModifiers() & Qt::ControlModifier))
-    return;
-
   if(!chess || !piece)
     return;
 
@@ -286,19 +284,16 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 
 void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 {
-  if(QApplication::keyboardModifiers() & Qt::ControlModifier)
-    return;
-
 #ifdef QTCHESS_DEBUG
   if(!chess || !gui || !piece)
     return;
 #else
   if(!chess ||
-     chess->get_turn() != MY_TURN ||
-     chess->is_game_over() ||
      !chess->is_ready() ||
      !gui ||
-     !piece)
+     !piece ||
+     chess->get_turn() != MY_TURN ||
+     chess->is_game_over())
     return;
 #endif
 
