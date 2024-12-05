@@ -82,7 +82,7 @@ hmac(const QByteArray &data, const QByteArray &k)
 
 QByteArray qtchess_communications::shax(const QByteArray &data)
 {
-  QCryptographicHash sha(QCryptographicHash::RealSha3_512);
+  QCryptographicHash sha(QCryptographicHash::Sha3_512);
 
   sha.addData(data);
   return sha.result();

@@ -9,7 +9,7 @@ purge.commands = rm -f *~ && rm -f */*~
 }
 
 CONFIG		+= qt release warn_on
-DEFINES		+= QT_DEPRECATED_WARNINGS
+DEFINES		+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
 
 mac {
 ICON            = Images/chess.icns
