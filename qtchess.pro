@@ -93,7 +93,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -pie \
                    -std=c++11
-else {
+} else {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-qual \
                    -Wdouble-promotion \
