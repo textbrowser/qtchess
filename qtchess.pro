@@ -70,7 +70,7 @@ QMAKE_CXXFLAGS  += -Wall \
                    -pedantic \
                    -std=c++11
 } else:linux {
-contains(QMAKE_HOST.arc, ppc) {
+contains(QMAKE_HOST.arch, ppc) {
 QMAKE_CXXFLAGS  += -Wall \
                    -Wcast-qual \
                    -Wdouble-promotion \
