@@ -64,6 +64,16 @@ qtchess_gui::~qtchess_gui()
   m_gnuchess.waitForFinished();
 }
 
+bool qtchess_gui::is_ready(void) const
+{
+  if(comm && comm->is_ready())
+    return true;
+  else if(m_gnuchess.state() == QProcess::Running)
+    return true;
+  else
+    return false;
+}
+
 qtchess_promotion *qtchess_gui::get_promote_dialog(void) const
 {
   return m_promotion;
@@ -480,7 +490,7 @@ void qtchess_gui::initialize_board(void)
 
       chess->set_turn(MY_TURN);
 
-      if(comm->is_ready() || m_gnuchess.state() == QProcess::Running)
+      if((comm && comm->is_ready()) || m_gnuchess.state() == QProcess::Running)
 	{
 	  if(chess->get_my_color() == WHITE)
 	    m_ui.side->setText(tr("You Play As Left"));
@@ -538,11 +548,13 @@ void qtchess_gui::slot_new_game(void)
     }
 
   initialize_board();
+  m_gnuchess.kill();
 }
 
 void qtchess_gui::slot_new_gnuchess_game(void)
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
+  comm ? comm->disconnect_remotely(), comm->stop_listening() : (void) 0;
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
   m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
@@ -946,16 +958,15 @@ void qtchess_setup::slot_listen(void)
 {
   auto state = false;
 
-  if(sender() == m_ui.listen)
-    if(comm)
-      {
-	if(comm->is_listening())
-	  comm->stop_listening();
-	else
-	  comm->set_listen();
+  if(comm && m_ui.listen == sender())
+    {
+      if(comm->is_listening())
+	comm->stop_listening();
+      else
+	comm->set_listen();
 
-	state = comm->is_listening();
-      }
+      state = comm->is_listening();
+    }
 
   m_ui.local_host->setReadOnly(state);
   m_ui.local_ipv4->setEnabled(!state);

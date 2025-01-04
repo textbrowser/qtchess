@@ -165,6 +165,7 @@ class qtchess_gui: public QMainWindow
   QPointer<qtchess_setup> m_setup;
   QProcess m_gnuchess;
   Ui_qtchess_mainwindow m_ui;
+  bool is_ready(void) const;
 
   void closeEvent(QCloseEvent *event)
   {
