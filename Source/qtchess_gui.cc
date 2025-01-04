@@ -71,7 +71,7 @@ qtchess_promotion *qtchess_gui::get_promote_dialog(void) const
 
 qtchess_setup *qtchess_gui::get_setup_dialog(void) const
 {
-  return m_setup;;
+  return m_setup;
 }
 
 void qtchess_gui::add_history_move(const struct move_s &current_move,
