@@ -46,6 +46,7 @@ extern QPointer<qtchess_communications> comm;
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  m_ui.action_New_GNUChess_Game->setEnabled(QTCHESS_GNUCHESS_ENABLED);
   m_ui.side->setVisible(false);
   m_ui.splitter->setStretchFactor(0, 1);
   m_ui.splitter->setStretchFactor(1, 0);
@@ -304,6 +305,10 @@ void qtchess_gui::initialize(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_help(void)));
+  connect(m_ui.action_New_GNUChess_Game,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slot_new_gnuchess_game(void)));
   connect(m_ui.action_New_Game,
 	  SIGNAL(triggered(void)),
 	  this,
@@ -525,6 +530,13 @@ void qtchess_gui::slot_new_game(void)
       else
 	m_ui.side->setVisible(false);
     }
+}
+
+void qtchess_gui::slot_new_gnuchess_game(void)
+{
+  m_gnuchess.kill();
+  m_gnuchess.waitForFinished();
+  m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList());
 }
 
 void qtchess_gui::slot_quit(void)

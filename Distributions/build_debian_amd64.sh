@@ -32,7 +32,7 @@ find ./opt/qtchess -type f -exec chmod g+w {} \;
 mkdir -p qtchess-debian/opt
 cp -pr ./DEBIAN qtchess-debian/.
 cp -r ./opt/qtchess qtchess-debian/opt/.
-fakeroot dpkg-deb --build qtchess-debian QtChess-2024.12.04_amd64.deb
+fakeroot dpkg-deb --build qtchess-debian QtChess-2025.01.15_amd64.deb
 make distclean
 rm -fr ./opt
 rm -fr ./qtchess-debian

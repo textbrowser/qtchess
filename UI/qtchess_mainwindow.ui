@@ -176,6 +176,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="action_New_GNUChess_Game"/>
     <addaction name="action_New_Game"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
@@ -233,6 +234,11 @@
   <action name="action_Help">
    <property name="text">
     <string>&amp;Help...</string>
+   </property>
+  </action>
+  <action name="action_New_GNUChess_Game">
+   <property name="text">
+    <string>New GNUChess Game</string>
    </property>
   </action>
  </widget>

@@ -32,6 +32,7 @@
 #include <QComboBox>
 #include <QHostAddress>
 #include <QPointer>
+#include <QProcess>
 #include <QTimer>
 
 #include "qtchess_gui_board.h"
@@ -162,6 +163,7 @@ class qtchess_gui: public QMainWindow
   QPointer<qtchess_help> m_help;
   QPointer<qtchess_promotion> m_promotion;
   QPointer<qtchess_setup> m_setup;
+  QProcess m_gnuchess;
   Ui_qtchess_mainwindow m_ui;
 
   void closeEvent(QCloseEvent *event)
@@ -176,6 +178,7 @@ class qtchess_gui: public QMainWindow
   void slot_about(void);
   void slot_help(void);
   void slot_new_game(void);
+  void slot_new_gnuchess_game(void);
   void slot_quit(void);
   void slot_setup(void);
   void slot_update_opponent(void);

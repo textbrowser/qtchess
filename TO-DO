@@ -1,8 +1,7 @@
 Completed Items
 
+- Chess engine. GNUChess if available.
 - NAT IP addresses. Not required.
 - SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
 
 Remaining Items
-
-- Chess engine.

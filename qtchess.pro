@@ -12,6 +12,13 @@ purge.commands = rm -f *~ && rm -f */*~
 CONFIG		+= qt release warn_on
 DEFINES		+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
 
+exists(/usr/games/gnuchess) {
+DEFINES         += QTCHESS_GNUCHESS_ENABLED=1 \
+                   QTCHESS_GNUCHESS_PATH="'\"/usr/games/gnuchess\"'"
+} else {
+DEFINES         += QTCHESS_GNUCHESS_ENABLED=0
+}
+
 mac {
 ICON            = Images/chess.icns
 } else:win32 {
