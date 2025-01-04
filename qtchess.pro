@@ -16,7 +16,8 @@ exists(/usr/games/gnuchess) {
 DEFINES         += QTCHESS_GNUCHESS_ENABLED=1 \
                    QTCHESS_GNUCHESS_PATH="'\"/usr/games/gnuchess\"'"
 } else {
-DEFINES         += QTCHESS_GNUCHESS_ENABLED=0
+DEFINES         += QTCHESS_GNUCHESS_ENABLED=0 \
+                   QTCHESS_GNUCHESS_PATH="'\"\"'"
 }
 
 mac {
@@ -32,9 +33,12 @@ win32 {
 RC_FILE		= qtchess.win.rc
 }
 
-TEMPLATE        = app
-
-QMAKE_CLEAN	+= QtChess
+MOC_DIR     = Temporary/moc
+OBJECTS_DIR = Temporary/obj
+QMAKE_CLEAN += QtChess
+RCC_DIR     = Temporary/rcc
+TEMPLATE    = app
+UI_DIR      = Temporary/ui
 
 android {
 QMAKE_CXXFLAGS  += -Wall \
