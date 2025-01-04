@@ -130,6 +130,8 @@ class qtchess_gui: public QMainWindow
       return "";
   }
 
+  bool is_ready(void) const;
+
   qtchess_gui_board *board(void) const
   {
     return m_board;
@@ -167,7 +169,6 @@ class qtchess_gui: public QMainWindow
   QPointer<qtchess_setup> m_setup;
   QProcess m_gnuchess;
   Ui_qtchess_mainwindow m_ui;
-  bool is_ready(void) const;
 
   void closeEvent(QCloseEvent *event)
   {

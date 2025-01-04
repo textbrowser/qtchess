@@ -35,9 +35,12 @@
 extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
 
-bool qtchess::is_ready(void)
+bool qtchess::is_ready(void) const
 {
-  return comm && comm->is_ready() && get_turn() == MY_TURN;
+  if(gui && gui->is_ready())
+    return get_turn() == MY_TURN;
+  else
+    return false;
 }
 
 void qtchess::initialize(void)

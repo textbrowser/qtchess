@@ -490,7 +490,7 @@ void qtchess_gui::initialize_board(void)
 
       chess->set_turn(MY_TURN);
 
-      if((comm && comm->is_ready()) || m_gnuchess.state() == QProcess::Running)
+      if(is_ready())
 	{
 	  if(chess->get_my_color() == WHITE)
 	    m_ui.side->setText(tr("You Play As Left"));
@@ -554,14 +554,23 @@ void qtchess_gui::slot_new_game(void)
 void qtchess_gui::slot_new_gnuchess_game(void)
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
-  comm ? comm->disconnect_remotely(), comm->stop_listening() : (void) 0;
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
   m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
   m_gnuchess.waitForStarted();
-  m_setup ? m_setup->stop() : (void) 0;
-  m_ui.action_Connection_Configuration->setEnabled(false);
-  initialize_board();
+
+  if(m_gnuchess.state() == QProcess::Running)
+    {
+      comm ? comm->disconnect_remotely(), comm->stop_listening() : (void) 0;
+      m_setup ? m_setup->stop() : (void) 0;
+      m_ui.action_Connection_Configuration->setEnabled(false);
+      m_ui.action_New_Game->setEnabled(false);
+      set_status_text
+	(tr("Status: GNUChess PID %1").arg(m_gnuchess.processId()));
+      chess ? chess->set_my_color(WHITE) : (void) 0;
+      initialize_board();
+    }
+
   QApplication::restoreOverrideCursor();
 }
 
@@ -682,8 +691,7 @@ void qtchess_gui::slot_update_opponent(void)
   if(chess &&
      chess->get_turn() == THEIR_TURN &&
      !chess->is_game_over() &&
-     comm &&
-     comm->is_ready())
+     is_ready())
     {
       m_ui.opponent_clock->setStyleSheet
 	("QWidget {background: rgb(240, 128, 128);}");
@@ -700,8 +708,7 @@ void qtchess_gui::slot_update_player(void)
   if(chess &&
      chess->get_turn() == MY_TURN &&
      !chess->is_game_over() &&
-     comm &&
-     comm->is_ready())
+     is_ready())
     {
       m_ui.player_clock->setStyleSheet
 	("QWidget {background: rgb(144, 238, 144);}");
@@ -1087,6 +1094,5 @@ void qtchess_setup::slot_set_caissa(void)
 
 void qtchess_setup::stop(void)
 {
-  comm ? comm->stop_listening() : (void) 0;
   m_ui.listen->setText(tr("&Listen"));
 }

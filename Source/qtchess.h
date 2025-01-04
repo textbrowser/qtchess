@@ -148,7 +148,7 @@ class qtchess: public QObject
     m_won_piece = won_piece;
   }
 
-  bool is_ready(void);
+  bool is_ready(void) const;
   void initialize(void);
   void quit(const char *message_text, const int exit_code);
   void update_board(const QByteArray &buffer);
