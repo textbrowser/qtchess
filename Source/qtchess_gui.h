@@ -174,6 +174,8 @@ class qtchess_gui: public QMainWindow
     slot_quit();
   }
 
+  void initialize_board(void);
+
  private slots:
   void slot_about(void);
   void slot_help(void);

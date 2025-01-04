@@ -59,6 +59,9 @@ qtchess_gui::~qtchess_gui()
 {
   if(m_board)
     m_board->deleteLater();
+
+  m_gnuchess.kill();
+  m_gnuchess.waitForFinished();
 }
 
 qtchess_promotion *qtchess_gui::get_promote_dialog(void) const
@@ -427,6 +430,70 @@ void qtchess_gui::initialize(void)
   show();
 }
 
+void qtchess_gui::initialize_board(void)
+{
+  struct move_s current_move = {};
+
+  if(chess)
+    chess->initialize();
+
+  if(m_board)
+    m_board->new_game();
+
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      if(chess)
+	current_move.m_board[i][j] = chess->m_board[i][j];
+      else
+	current_move.m_board[i][j] = EMPTY_SQUARE;
+
+  current_move.m_enpassant =
+    current_move.m_is_opponent_king_threat =
+    current_move.m_pawn2 =
+    current_move.m_promoted = 0;
+  current_move.m_piece =
+    current_move.m_rook =
+    current_move.m_rook_x1 =
+    current_move.m_rook_x2 =
+    current_move.m_rook_y1 =
+    current_move.m_rook_y2 =
+    current_move.m_x1 =
+    current_move.m_x2 =
+    current_move.m_y1 =
+    current_move.m_y2 = -1;
+  memset(current_move.m_departure,
+	 0,
+	 sizeof(char) * sizeof(current_move.m_departure));
+  current_move.m_departure[0] = '0';
+
+  if(comm && m_gnuchess.state() == QProcess::NotRunning)
+    comm->send_move(current_move);
+
+  clear_history();
+  initialize_clocks();
+
+  if(chess)
+    {
+      /*
+      ** Careful here. Set this after calling send_move().
+      */
+
+      chess->set_turn(MY_TURN);
+
+      if(comm->is_ready() || m_gnuchess.state() == QProcess::Running)
+	{
+	  if(chess->get_my_color() == WHITE)
+	    m_ui.side->setText(tr("You Play As Left"));
+	  else
+	    m_ui.side->setText(tr("You Play As Right"));
+
+	  m_ui.side->setVisible(true);
+	}
+      else
+	m_ui.side->setVisible(false);
+    }
+}
+
 void qtchess_gui::initialize_clocks(void)
 {
   m_ui.opponent_clock->setTime(QTime(0, 0, 0));
@@ -470,73 +537,18 @@ void qtchess_gui::slot_new_game(void)
 	return;
     }
 
-  struct move_s current_move = {};
-
-  if(chess)
-    chess->initialize();
-
-  if(m_board)
-    m_board->new_game();
-
-  for(int i = 0; i < NSQUARES; i++)
-    for(int j = 0; j < NSQUARES; j++)
-      if(chess)
-	current_move.m_board[i][j] = chess->m_board[i][j];
-      else
-	current_move.m_board[i][j] = EMPTY_SQUARE;
-
-  current_move.m_enpassant =
-    current_move.m_is_opponent_king_threat =
-    current_move.m_pawn2 =
-    current_move.m_promoted = 0;
-  current_move.m_piece =
-    current_move.m_rook =
-    current_move.m_rook_x1 =
-    current_move.m_rook_x2 =
-    current_move.m_rook_y1 =
-    current_move.m_rook_y2 =
-    current_move.m_x1 =
-    current_move.m_x2 =
-    current_move.m_y1 =
-    current_move.m_y2 = -1;
-  memset(current_move.m_departure,
-	 0,
-	 sizeof(char) * sizeof(current_move.m_departure));
-  current_move.m_departure[0] = '0';
-
-  if(comm)
-    comm->send_move(current_move);
-
-  clear_history();
-  initialize_clocks();
-
-  if(chess)
-    {
-      /*
-      ** Careful here. Set this after calling send_move().
-      */
-
-      chess->set_turn(MY_TURN);
-
-      if(comm->is_ready())
-	{
-	  if(chess->get_my_color() == WHITE)
-	    m_ui.side->setText(tr("You Play As Left"));
-	  else
-	    m_ui.side->setText(tr("You Play As Right"));
-
-	  m_ui.side->setVisible(true);
-	}
-      else
-	m_ui.side->setVisible(false);
-    }
+  initialize_board();
 }
 
 void qtchess_gui::slot_new_gnuchess_game(void)
 {
+  QApplication::setOverrideCursor(Qt::WaitCursor);
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
-  m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList());
+  m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
+  m_gnuchess.waitForStarted();
+  initialize_board();
+  QApplication::restoreOverrideCursor();
 }
 
 void qtchess_gui::slot_quit(void)

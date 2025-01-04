@@ -67,18 +67,21 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
-  qtchess qtchess;
-  qtchess_communications qtchess_communications;
-  qtchess_gui qtchess_gui;
+  int rc = 0;
 
-  chess = &qtchess;
-  chess->initialize();
-  comm = &qtchess_communications;
-  comm->initialize();
-  gui = &qtchess_gui;
-  gui->initialize();
+  {
+    qtchess qtchess;
+    qtchess_communications qtchess_communications;
+    qtchess_gui qtchess_gui;
 
-  auto const rc = application.exec();
+    chess = &qtchess;
+    chess->initialize();
+    comm = &qtchess_communications;
+    comm->initialize();
+    gui = &qtchess_gui;
+    gui->initialize();
+    rc = static_cast<int> (application.exec());
+  }
 
 #ifdef Q_OS_ANDROID
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))
