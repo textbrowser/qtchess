@@ -96,6 +96,8 @@ class qtchess_setup: public QDialog
     return m_ui.color->currentText();
   }
 
+  void stop(void);
+
  private:
   Ui_qtchess_setup m_ui;
 

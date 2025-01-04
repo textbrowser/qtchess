@@ -559,6 +559,8 @@ void qtchess_gui::slot_new_gnuchess_game(void)
   m_gnuchess.waitForFinished();
   m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
   m_gnuchess.waitForStarted();
+  m_setup ? m_setup->stop() : (void) 0;
+  m_ui.action_Connection_Configuration->setEnabled(false);
   initialize_board();
   QApplication::restoreOverrideCursor();
 }
@@ -1081,4 +1083,10 @@ void qtchess_setup::slot_set_caissa(void)
       comm->set_caissa(m_ui.caissa->text());
       m_ui.caissa->selectAll();
     }
+}
+
+void qtchess_setup::stop(void)
+{
+  comm ? comm->stop_listening() : (void) 0;
+  m_ui.listen->setText(tr("&Listen"));
 }
