@@ -572,6 +572,7 @@ void qtchess_gui::slot_new_gnuchess_game(void)
 
       if(comm && comm->is_connected_remotely())
 	{
+	  m_setup ? m_setup->reset() : (void) 0;
 	  m_ui.action_Connection_Configuration->setEnabled(false);
 	  m_ui.action_New_Game->setEnabled(false);
 	  chess ? chess->set_my_color(WHITE) : (void) 0;
@@ -871,6 +872,10 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	  SIGNAL(clicked(void)),
 	  this,
 	  SLOT(slot_protocol_changed(void)));
+  connect(m_ui.reset,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(slot_reset(void)));
   connect(m_ui.set_caissa,
 	  SIGNAL(clicked(void)),
 	  this,
@@ -923,6 +928,39 @@ QSpinBox *qtchess_setup::get_remote_port_field(void) const
   return m_ui.remote_port;
 }
 
+void qtchess_setup::reset(void)
+{
+  comm ? comm->disconnect_remotely(), comm->stop_listening() : (void) 0;
+  m_ui.allowed_host->clear();
+  m_ui.caissa->clear();
+  m_ui.color->setCurrentIndex(0);
+  m_ui.connect->setText(tr("&Connect"));
+  m_ui.listen->setText(tr("&Listen"));
+  m_ui.local->setChecked(true);
+  m_ui.local_host->setReadOnly(false);
+  m_ui.local_host->setText
+    (qtchess_communications::
+     preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
+  m_ui.local_ipv4->setChecked(true);
+  m_ui.local_ipv4->setEnabled(true);
+  m_ui.local_ipv6->setEnabled(true);
+  m_ui.local_port->setReadOnly(false);
+  m_ui.local_port->setValue(4710);
+  m_ui.local_scope_id->clear();
+  m_ui.local_scope_id->setEnabled(false);
+  m_ui.local_scope_id->setReadOnly(false);
+  m_ui.remote_host->setReadOnly(false);
+  m_ui.remote_host->setText(QHostAddress(QHostAddress::LocalHost).toString());
+  m_ui.remote_ipv4->setChecked(true);
+  m_ui.remote_ipv4->setEnabled(true);
+  m_ui.remote_ipv6->setEnabled(true);
+  m_ui.remote_port->setReadOnly(false);
+  m_ui.remote_port->setValue(4710);
+  m_ui.remote_scope_id->clear();
+  m_ui.remote_scope_id->setEnabled(false);
+  m_ui.remote_scope_id->setReadOnly(false);
+}
+
 void qtchess_setup::slot_close(void)
 {
   hide();
@@ -941,9 +979,6 @@ void qtchess_setup::slot_connect(void)
 
 void qtchess_setup::slot_connected_to_client(void)
 {
-  if(m_ui.local->isChecked())
-    return;
-
   m_ui.connect->setText(tr("&Disconnect"));
   m_ui.remote_host->setReadOnly(true);
   m_ui.remote_ipv4->setEnabled(false);
@@ -960,9 +995,6 @@ void qtchess_setup::slot_disconnect(void)
 
 void qtchess_setup::slot_disconnected_from_client(void)
 {
-  if(m_ui.local->isChecked())
-    return;
-
   m_ui.connect->setText(tr("&Connect"));
   m_ui.remote_host->setReadOnly(false);
   m_ui.remote_ipv4->setEnabled(true);
@@ -1091,6 +1123,11 @@ void qtchess_setup::slot_remote(bool state)
     }
 }
 
+void qtchess_setup::slot_reset(void)
+{
+  reset();
+}
+
 void qtchess_setup::slot_set_caissa(void)
 {
   if(comm)
@@ -1102,5 +1139,6 @@ void qtchess_setup::slot_set_caissa(void)
 
 void qtchess_setup::stop(void)
 {
+  m_ui.connect->setText(tr("&Connect"));
   m_ui.listen->setText(tr("&Listen"));
 }

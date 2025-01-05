@@ -95,6 +95,7 @@ class qtchess_setup: public QDialog
     return m_ui.color->currentText();
   }
 
+  void reset(void);
   void stop(void);
 
  private:
@@ -110,6 +111,7 @@ class qtchess_setup: public QDialog
   void slot_local(bool state);
   void slot_protocol_changed(void);
   void slot_remote(bool state);
+  void slot_reset(void);
   void slot_set_caissa(void);
 };
 

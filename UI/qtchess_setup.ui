@@ -473,6 +473,24 @@
    <item>
     <layout class="QHBoxLayout" name="_4">
      <item>
+      <widget class="QPushButton" name="reset">
+       <property name="minimumSize">
+        <size>
+         <width>115</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="spacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -528,6 +546,7 @@
   <tabstop>remote_scope_id</tabstop>
   <tabstop>remote_port</tabstop>
   <tabstop>connect</tabstop>
+  <tabstop>reset</tabstop>
   <tabstop>cancel</tabstop>
  </tabstops>
  <resources>
