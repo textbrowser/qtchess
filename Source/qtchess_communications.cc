@@ -45,6 +45,12 @@ qtchess_communications::qtchess_communications(void):QObject()
 	  SLOT(slot_accept_connection(void)));
 }
 
+qtchess_communications::~qtchess_communications()
+{
+  m_gnuchess.kill();
+  m_gnuchess.waitForFinished();
+}
+
 QByteArray qtchess_communications::digest(const QByteArray &data) const
 {
   return hmac
@@ -53,8 +59,8 @@ QByteArray qtchess_communications::digest(const QByteArray &data) const
 	  QByteArray("QtChess").append(QTCHESS_VERSION).append(0x01)));
 }
 
-QByteArray qtchess_communications::
-hmac(const QByteArray &data, const QByteArray &k)
+QByteArray qtchess_communications::hmac
+(const QByteArray &data, const QByteArray &k)
 {
   auto key(k);
   static const int s_block_length = 576 / CHAR_BIT;
@@ -119,8 +125,12 @@ QHostAddress qtchess_communications::preferred_host_address
 
 bool qtchess_communications::is_connected_remotely(void) const
 {
-  return m_client_connection &&
-    m_client_connection->state() == QAbstractSocket::ConnectedState;
+  if(m_client_connection)
+    return m_client_connection->state() == QAbstractSocket::ConnectedState;
+  else if(m_gnuchess.state() == QProcess::Running)
+    return true;
+  else
+    return false;
 }
 
 bool qtchess_communications::is_listening(void) const
@@ -133,8 +143,8 @@ bool qtchess_communications::is_ready(void) const
   return is_connected_remotely();
 }
 
-bool qtchess_communications::
-memcmp(const QByteArray &a, const QByteArray &b) const
+bool qtchess_communications::memcmp
+(const QByteArray &a, const QByteArray &b) const
 {
   auto const length = qMax(a.length(), b.length());
   quint64 rc = 0;
@@ -144,6 +154,11 @@ memcmp(const QByteArray &a, const QByteArray &b) const
       (i < b.length() ? static_cast<quint64> (b.at(i)) : 0ULL);
 
   return rc == 0;
+}
+
+qint64 qtchess_communications::gnuchess_process_id(void) const
+{
+  return m_gnuchess.processId();
 }
 
 void qtchess_communications::connect_remotely(void)
@@ -250,6 +265,7 @@ void qtchess_communications::initialize(void)
     gui->get_setup_dialog()->get_local_host_field()->setText
       (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
 
+  m_gnuchess.kill();
   m_listening_socket.close();
   prepare_connection_status();
 }
@@ -263,6 +279,9 @@ void qtchess_communications::prepare_connection_status(void)
 	gui->notify_connection
 	  (m_client_connection->peerAddress().toString(),
 	   m_client_connection->peerPort());
+      else if(m_gnuchess.state() == QProcess::Running)
+	gui->set_status_text
+	  (tr("Status: GNUChess PID %1").arg(comm->gnuchess_process_id()));
       else if(m_listening_socket.isListening())
 	gui->set_status_text
 	  (tr("Status: %1:%2 Listening").
@@ -279,9 +298,8 @@ void qtchess_communications::quit(void)
   ** Terminate all communications.
   */
 
-  if(m_client_connection)
-    m_client_connection->deleteLater();
-
+  m_client_connection ? m_client_connection->deleteLater() : (void) 0;
+  m_gnuchess.kill();
   m_listening_socket.close();
 }
 
@@ -568,6 +586,17 @@ void qtchess_communications::slot_update_board(void)
 
   if(m_client_connection)
     m_client_connection->readAll();
+}
+
+void qtchess_communications::start_gnuchess(void)
+{
+  disconnect_remotely();
+  stop_listening();
+  m_gnuchess.kill();
+  m_gnuchess.waitForFinished();
+  m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
+  m_gnuchess.waitForStarted();
+  prepare_connection_status();
 }
 
 void qtchess_communications::stop_listening(void)

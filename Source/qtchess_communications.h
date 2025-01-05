@@ -29,6 +29,7 @@
 #define _QTCHESS_COMMUNICATIONS_
 
 #include <QPointer>
+#include <QProcess>
 #include <QTcpServer>
 #include <QTcpSocket>
 
@@ -38,14 +39,11 @@ class qtchess_communications: public QObject
 
  public:
   qtchess_communications(void);
-
-  ~qtchess_communications()
-  {
-  }
-
+  ~qtchess_communications();
   bool is_connected_remotely(void) const;
   bool is_listening(void) const;
   bool is_ready(void) const;
+  qint64 gnuchess_process_id(void) const;
   static QHostAddress preferred_host_address
     (const QAbstractSocket::NetworkLayerProtocol protocol);
   void connect_remotely(void);
@@ -55,10 +53,12 @@ class qtchess_communications: public QObject
   void send_move(const struct move_s &current_move);
   void set_caissa(const QString &caissa);
   void set_listen(void);
+  void start_gnuchess(void);
   void stop_listening(void);
 
  private:
   QPointer<QTcpSocket> m_client_connection;
+  QProcess m_gnuchess;
   QString m_caissa;
   QTcpServer m_listening_socket;
   static const int s_buffer_size = 1024;
