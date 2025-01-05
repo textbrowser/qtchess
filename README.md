@@ -1,6 +1,8 @@
 Online chess program. Available on Android, FreeBSD, Linux, MacOS, OpenBSD,
 and Windows. Just about anyware.
 
+QtChess also interfaces with GNUChess!
+
 C++11 is required. C++17 for Qt 6.
 
 Debian PowerPC is Qt 5.5.1. Notice QT_SHA3_KECCAK_COMPAT in qtchess.pro.
