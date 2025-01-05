@@ -74,6 +74,7 @@ class qtchess_communications: public QObject
   void slot_client_connected(void);
   void slot_client_disconnected(void);
   void slot_disconnected(QAbstractSocket::SocketError error);
+  void slot_read_gnuchess_output(void);
   void slot_update_board(void);
 
  signals:

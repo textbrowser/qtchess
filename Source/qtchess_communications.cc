@@ -39,6 +39,10 @@ static QByteArray s_eof = "\n";
 
 qtchess_communications::qtchess_communications(void):QObject()
 {
+  connect(&m_gnuchess,
+	  SIGNAL(readyReadStandardOutput(void)),
+	  this,
+	  SLOT(slot_read_gnuchess_output(void)));
   connect(&m_listening_socket,
 	  SIGNAL(newConnection(void)),
 	  this,
@@ -305,6 +309,19 @@ void qtchess_communications::quit(void)
 
 void qtchess_communications::send_move(const struct move_s &current_move)
 {
+  if(m_gnuchess.state() == QProcess::Running)
+    {
+      auto const string(qtchess_gui::move_as_history_string(current_move));
+
+      m_gnuchess.write(string.toLatin1());
+      m_gnuchess.write("\n");
+
+      if(chess)
+	chess->set_turn(THEIR_TURN);
+
+      return;
+    }
+
   if(!m_client_connection)
     return;
   else if(m_client_connection->state() != QAbstractSocket::ConnectedState)
@@ -543,6 +560,14 @@ void qtchess_communications::slot_disconnected
 (QAbstractSocket::SocketError error)
 {
   Q_UNUSED(error);
+}
+
+void qtchess_communications::slot_read_gnuchess_output(void)
+{
+  QByteArray data;
+
+  while(m_gnuchess.bytesAvailable() > 0)
+    data.append(m_gnuchess.readAll());
 }
 
 void qtchess_communications::slot_update_board(void)
