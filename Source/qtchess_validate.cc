@@ -162,50 +162,73 @@ bool qtchess_validate::is_king(const int piece)
 
 bool qtchess_validate::is_king_checked(const struct move_s &current_move)
 {
-  auto checked = false;
-
   if(!chess)
-    return checked;
+    return false;
 
+  return is_king_checked_implementation
+    (chess->m_board, chess->get_my_color(), current_move);
+}
+
+bool qtchess_validate::is_king_checked_implementation
+(const int board[NSQUARES][NSQUARES],
+ const int color,
+ const struct move_s &current_move)
+{
   int I = -1;
   int J = -1;
 
-  for(int i = 0; i < NSQUARES && I == -1 && J == -1; i++)
+  for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
-      if(chess->get_my_color() == WHITE)
+      if(color == WHITE)
 	{
-	  if(is_color(chess->m_board[i][j], BLACK) &&
-	     is_king(chess->m_board[i][j]))
+	  if(is_color(board[i][j], BLACK) && is_king(board[i][j]))
 	    {
 	      I = i;
 	      J = j;
-	      break;
+	      goto done_label;
 	    }
 	}
       else
 	{
-	  if(is_color(chess->m_board[i][j], WHITE) &&
-	     is_king(chess->m_board[i][j]))
+	  if(is_color(board[i][j], WHITE) && is_king(board[i][j]))
 	    {
 	      I = i;
 	      J = j;
-	      break;
+	      goto done_label;
 	    }
 	}
 
-  if(I != -1 && J != -1)
-    for(int i = 0; i < NSQUARES && !checked; i++)
-      for(int j = 0; j < NSQUARES; j++)
-	if(is_valid_move(j, i, J, I, chess->m_board[i][j]) != INVALID)
-	  {
-	    if(i == current_move.m_y2 && j == current_move.m_x2)
-	      {
-		checked = true;
-		break;
-	      }
-	  }
+ done_label:
 
-  return checked;
+  if(I != -1 && J != -1)
+    for(int i = 0; i < NSQUARES; i++)
+      for(int j = 0; j < NSQUARES; j++)
+	if(current_move.m_y2 == i &&
+	   current_move.m_x2 == j &&
+	   is_valid_move(j, i, J, I, board[i][j]) != INVALID)
+	  return true;
+
+  return false;
+}
+
+bool qtchess_validate::is_king_checked_implementation
+(const int board[NSQUARES][NSQUARES],
+ const int color,
+ const int x,
+ const int y)
+{
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      if(is_color(board[i][j], color) &&
+	 is_valid_move(j, i, y, x, board[i][j]) != INVALID)
+	{
+	  if(i == x && is_pawn(board[i][j]))
+	    continue;
+	  else
+	    return true;
+	}
+
+  return false;
 }
 
 bool qtchess_validate::is_knight(const int piece)
@@ -261,19 +284,34 @@ bool qtchess_validate::is_rook2(const int piece)
     return false;
 }
 
-bool qtchess_validate::is_threatened(const int x, const int y, int color)
+bool qtchess_validate::is_threatened(const int x, const int y, const int color)
 {
   /*
   ** Determine if the given opponent threatens a certain square.
   */
 
   if(chess)
-    for(int i = 0; i < NSQUARES; i++)
-      for(int j = 0; j < NSQUARES; j++)
-	if(!is_empty(chess->m_board[i][j]))
-	  if(is_color(chess->m_board[i][j], color))
-	    if(is_valid_move(j, i, y, x, chess->m_board[i][j]) != INVALID)
-	      return true;
+    return is_threatened_implementation(chess->m_board, x, y, color);
+  else
+    return false;
+}
+
+bool qtchess_validate::is_threatened_implementation
+(const int board[NSQUARES][NSQUARES],
+ const int x,
+ const int y,
+ const int color)
+{
+  /*
+  ** Determine if the given opponent threatens a certain square.
+  */
+
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      if(!is_empty(board[i][j]))
+	if(is_color(board[i][j], color))
+	  if(is_valid_move(j, i, y, x, board[i][j]) != INVALID)
+	    return true;
 
   return false;
 }

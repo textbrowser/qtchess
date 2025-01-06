@@ -300,6 +300,7 @@ void qtchess_communications::quit(void)
 
   m_client_connection ? m_client_connection->deleteLater() : (void) 0;
   m_gnuchess.kill();
+  m_gnuchess.waitForFinished();
   m_gnuchessData.clear();
   m_listening_socket.close();
 }

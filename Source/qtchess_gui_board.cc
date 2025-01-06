@@ -271,8 +271,52 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 
 	if(qtchess_validate::
 	   is_valid_move(y, x, j, i, chess->m_board[x][y]) != INVALID)
-	  m_labels[i][j]->setStyleSheet
-	    ("QLabel {background-color: orange; border: 1px solid navy;}");
+	  {
+	    if(qtchess_validate::is_king(chess->m_board[x][y]))
+	      {
+		int board[NSQUARES][NSQUARES];
+		int m_board[NSQUARES][NSQUARES];
+		int color = BLACK;
+
+		std::copy
+		  (&chess->m_board[0][0],
+		   &chess->m_board[0][0] + NSQUARES * NSQUARES,
+		   &m_board[0][0]);
+		std::copy
+		  (&m_board[0][0],
+		   &m_board[0][0] + NSQUARES * NSQUARES,
+		   &board[0][0]);
+		board[i][j] = chess->get_my_color() == BLACK ?
+		  static_cast<int> (KING_BLACK) :
+		  static_cast<int> (KING_WHITE);
+		board[x][y] = EMPTY_SQUARE;
+		color = chess->get_my_color() == BLACK ?
+		  static_cast<int> (WHITE) :
+		  static_cast<int> (BLACK);
+		std::copy
+		  (&board[0][0],
+		   &board[0][0] + NSQUARES * NSQUARES,
+		   &chess->m_board[0][0]);
+
+		if(qtchess_validate::
+		   is_king_checked_implementation(board, color, i, j))
+		  {
+		    std::copy
+		      (&m_board[0][0],
+		       &m_board[0][0] + NSQUARES * NSQUARES,
+		       &chess->m_board[0][0]);
+		    continue;
+		  }
+		else
+		  std::copy
+		    (&m_board[0][0],
+		     &m_board[0][0] + NSQUARES * NSQUARES,
+		     &chess->m_board[0][0]);
+	      }
+
+	    m_labels[i][j]->setStyleSheet
+	      ("QLabel {background-color: orange; border: 1px solid navy;}");
+	  }
       }
 
   m_mouse_pressed = 1;

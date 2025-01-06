@@ -40,6 +40,13 @@ namespace qtchess_validate
   bool is_empty(const int piece);
   bool is_king(const int piece);
   bool is_king_checked(const struct move_s &current_move);
+  bool is_king_checked_implementation(const int board[NSQUARES][NSQUARES],
+				      const int color,
+				      const struct move_s &current_move);
+  bool is_king_checked_implementation(const int board[NSQUARES][NSQUARES],
+				      const int color,
+				      const int x,
+				      const int y);
   bool is_knight(const int piece);
   bool is_pawn(const int piece);
   bool is_queen(const int piece);
@@ -47,6 +54,10 @@ namespace qtchess_validate
   bool is_rook1(const int piece);
   bool is_rook2(const int piece);
   bool is_threatened(const int x, const int y, const int color);
+  bool is_threatened_implementation(const int board[NSQUARES][NSQUARES],
+				    const int x,
+				    const int y,
+				    const int color);
   bool is_white(const int piece);
   int color(const int piece);
   int is_valid_move(const int row_from,
