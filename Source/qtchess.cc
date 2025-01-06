@@ -266,6 +266,45 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 	  gui->stop_timers(OPPONENT_TIMER);
 	}
 
+      int board[NSQUARES][NSQUARES];
+
+      for(int i = 0; i < state.size(); i++)
+	{
+	  auto const row(state.at(i).split(' '));
+
+	  for(int j = 0; j < row.size(); j++)
+	    if(row[j] == ".")
+	      board[i][j] = EMPTY_SQUARE;
+	    else if(row[j] == "B")
+	      board[i][j] = BISHOP_WHITE;
+	    else if(row[j] == "K")
+	      board[i][j] = KING_WHITE;
+	    else if(row[j] == "N")
+	      board[i][j] = KNIGHT_WHITE;
+	    else if(row[j] == "Q")
+	      board[i][j] = QUEEN_WHITE;
+	    else if(row[j] == "P")
+	      board[i][j] = PAWN_WHITE;
+	    else if(row[j] == "R")
+	      board[i][j] = ROOK_WHITE;
+	    else if(row[j] == "b")
+	      board[i][j] = BISHOP_BLACK;
+	    else if(row[j] == "k")
+	      board[i][j] = KING_BLACK;
+	    else if(row[j] == "n")
+	      board[i][j] = KNIGHT_BLACK;
+	    else if(row[j] == "q")
+	      board[i][j] = QUEEN_BLACK;
+	    else if(row[j] == "p")
+	      board[i][j] = PAWN_BLACK;
+	    else if(row[j] == "r")
+	      board[i][j] = ROOK_BLACK;
+	}
+
+      for(int i = 0; i < NSQUARES; i++)
+	for(int j = 0; j < NSQUARES; j++)
+	  m_board[i][j] = board[i][j];
+
       set_turn(MY_TURN);
 
       if(gui)

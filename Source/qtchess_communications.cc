@@ -462,7 +462,7 @@ void qtchess_communications::slot_accept_connection(void)
      !gui->get_setup_dialog()->get_allowed_host_field()->text().
      trimmed().isEmpty())
     {
-      auto str
+      auto const str
 	(gui->get_setup_dialog()->get_allowed_host_field()->text().trimmed());
 
       if(QHostAddress(str) != m_client_connection->peerAddress())
@@ -615,7 +615,7 @@ void qtchess_communications::slot_update_board(void)
 	    {
 	      buffer = buffer.mid(0, buffer.indexOf(s_eof));
 
-	      auto d
+	      auto const d
 		(QByteArray::fromHex(buffer.mid(buffer.length() -
 						s_shax_output_size)));
 

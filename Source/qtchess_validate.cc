@@ -310,7 +310,7 @@ int qtchess_validate::is_valid_move(const int row_from,
 				    const int col_to,
 				    const int piece)
 {
-  int rc = INVALID;
+  auto rc = INVALID;
 
   if(!chess)
     return rc;
