@@ -43,7 +43,6 @@ class qtchess_communications: public QObject
   bool is_connected_remotely(void) const;
   bool is_listening(void) const;
   bool is_ready(void) const;
-  qint64 gnuchess_process_id(void) const;
   static QHostAddress preferred_host_address
     (const QAbstractSocket::NetworkLayerProtocol protocol);
   void connect_remotely(void);

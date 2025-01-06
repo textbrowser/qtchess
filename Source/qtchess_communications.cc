@@ -160,11 +160,6 @@ bool qtchess_communications::memcmp
   return rc == 0;
 }
 
-qint64 qtchess_communications::gnuchess_process_id(void) const
-{
-  return m_gnuchess.processId();
-}
-
 void qtchess_communications::connect_remotely(void)
 {
   QString scope_id("");
@@ -286,7 +281,7 @@ void qtchess_communications::prepare_connection_status(void)
 	   m_client_connection->peerPort());
       else if(m_gnuchess.state() == QProcess::Running)
 	gui->set_status_text
-	  (tr("Status: GNUChess PID %1").arg(comm->gnuchess_process_id()));
+	  (tr("Status: GNUChess Process ID %1").arg(m_gnuchess.processId()));
       else if(m_listening_socket.isListening())
 	gui->set_status_text
 	  (tr("Status: %1:%2 Listening").
