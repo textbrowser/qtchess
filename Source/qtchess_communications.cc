@@ -645,6 +645,7 @@ void qtchess_communications::start_gnuchess(void)
   m_gnuchess.waitForFinished();
   m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
   m_gnuchess.waitForStarted();
+  m_gnuchess.write("depth 5\n");
   m_gnuchessData.clear();
   prepare_connection_status();
 }
