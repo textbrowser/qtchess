@@ -360,8 +360,7 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 		                  [m_point_selected.m_y])) != INVALID)
     {
       if(qtchess_validate::
-	 is_king(chess->m_board[m_point_selected.m_x]
-		 [m_point_selected.m_y]))
+	 is_king(chess->m_board[m_point_selected.m_x][m_point_selected.m_y]))
 	chess->set_king_has_moved(true);
       else if(qtchess_validate::
 	      is_rook1(chess->m_board[m_point_selected.m_x]
