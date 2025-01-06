@@ -240,6 +240,9 @@
    <property name="text">
     <string>New GNUChess Game</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
   </action>
  </widget>
  <tabstops>
