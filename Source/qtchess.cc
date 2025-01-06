@@ -195,11 +195,11 @@ void qtchess::update_board(const QByteArray &buffer)
     {
       if(gui)
 	{
-	  gui->stop_timers(OPPONENT_TIMER);
 	  gui->start_timers(PLAYER_TIMER);
+	  gui->stop_timers(OPPONENT_TIMER);
 	}
 
-      int color = BLACK;
+      auto color = BLACK;
 
       if(get_my_color() == BLACK)
 	color = WHITE;
@@ -260,8 +260,19 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 {
   if(state.size() == 8)
     {
-      gui->add_history_move
-	(move.mid(move.lastIndexOf(' ') + 1).trimmed(), BLACK);
-      gui->update();
+      if(gui)
+	{
+	  gui->start_timers(PLAYER_TIMER);
+	  gui->stop_timers(OPPONENT_TIMER);
+	}
+
+      set_turn(MY_TURN);
+
+      if(gui)
+	{
+	  gui->add_history_move
+	    (move.mid(move.lastIndexOf(' ') + 1).trimmed(), BLACK);
+	  gui->update();
+	}
     }
 }
