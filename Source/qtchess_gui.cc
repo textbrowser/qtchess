@@ -47,6 +47,11 @@ qtchess_gui::qtchess_gui(void):QMainWindow()
 {
   m_ui.setupUi(this);
   m_ui.action_New_GNUChess_Game->setEnabled(QTCHESS_GNUCHESS_ENABLED);
+  m_ui.action_New_GNUChess_Game->isEnabled() ?
+    m_ui.action_New_GNUChess_Game->
+    setText(m_ui.action_New_GNUChess_Game->text()) :
+    m_ui.action_New_GNUChess_Game->
+    setText(tr("New GNUChess Game (Missing GNUChess Program)"));
   m_ui.side->setVisible(false);
   m_ui.splitter->setStretchFactor(0, 1);
   m_ui.splitter->setStretchFactor(1, 0);
@@ -260,14 +265,16 @@ qtchess_setup *qtchess_gui::get_setup_dialog(void) const
   return m_setup;
 }
 
-void qtchess_gui::add_history_move(const struct move_s &current_move,
-				   const int color)
+void qtchess_gui::add_history_move
+(const QString &string, const int color)
 {
-  QTableWidgetItem *item = nullptr;
-  auto const string(move_as_history_string(current_move));
+  if(string.trimmed().isEmpty())
+    return;
 
-  if((item = new(std::nothrow) QTableWidgetItem(tr(string.toLatin1()))) !=
-     nullptr)
+  QTableWidgetItem *item = nullptr;
+
+  if((item = new(std::nothrow)
+      QTableWidgetItem(tr(string.trimmed().toLatin1()))) != nullptr)
     {
       item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 
@@ -292,6 +299,12 @@ void qtchess_gui::add_history_move(const struct move_s &current_move,
 
       m_ui.history->scrollToBottom();
     }
+}
+
+void qtchess_gui::add_history_move
+(const struct move_s &current_move, const int color)
+{
+  add_history_move(move_as_history_string(current_move), color);
 }
 
 void qtchess_gui::clear_history(void)

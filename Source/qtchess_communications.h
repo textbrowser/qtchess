@@ -57,6 +57,7 @@ class qtchess_communications: public QObject
   void stop_listening(void);
 
  private:
+  QByteArray m_gnuchessData;
   QPointer<QTcpSocket> m_client_connection;
   QProcess m_gnuchess;
   QString m_caissa;

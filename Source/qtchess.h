@@ -152,6 +152,7 @@ class qtchess: public QObject
   void initialize(void);
   void quit(const char *message_text, const int exit_code);
   void update_board(const QByteArray &buffer);
+  void update_board(const QString &move, const QStringList &state);
 
  private:
   bool m_game_over;

@@ -141,6 +141,7 @@ class qtchess_gui: public QMainWindow
   qtchess_promotion *get_promote_dialog(void) const;
   qtchess_setup *get_setup_dialog(void) const;
   static QString move_as_history_string(const struct move_s &move);
+  void add_history_move(const QString &string, const int color);
   void add_history_move(const struct move_s &current_move, const int color);
   void clear_history(void);
   void initialize(void);

@@ -270,6 +270,7 @@ void qtchess_communications::initialize(void)
       (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
 
   m_gnuchess.kill();
+  m_gnuchessData.clear();
   m_listening_socket.close();
   prepare_connection_status();
 }
@@ -304,6 +305,7 @@ void qtchess_communications::quit(void)
 
   m_client_connection ? m_client_connection->deleteLater() : (void) 0;
   m_gnuchess.kill();
+  m_gnuchessData.clear();
   m_listening_socket.close();
 }
 
@@ -568,6 +570,28 @@ void qtchess_communications::slot_read_gnuchess_output(void)
 
   while(m_gnuchess.bytesAvailable() > 0)
     data.append(m_gnuchess.readAll());
+
+  m_gnuchessData.append(data);
+
+  if(m_gnuchessData.contains("White ("))
+    {
+      QString move("");
+      QStringList state;
+      auto const list(m_gnuchessData.split('\n'));
+
+      for(int i = 0; i < list.size(); i++)
+	if(list.at(i).count(' ') == 8)
+	  state << list.at(i).trimmed();
+	else if(list.at(i).startsWith("My move is : "))
+	  move = list.at(i);
+
+      state = state.mid(8);
+
+      if(move.length() > 0 && state.size() == 8)
+	chess->update_board(move, state);
+
+      m_gnuchessData.clear();
+    }
 }
 
 void qtchess_communications::slot_update_board(void)
@@ -621,6 +645,7 @@ void qtchess_communications::start_gnuchess(void)
   m_gnuchess.waitForFinished();
   m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
   m_gnuchess.waitForStarted();
+  m_gnuchessData.clear();
   prepare_connection_status();
 }
 

@@ -204,7 +204,7 @@
   </widget>
   <action name="action_New_Game">
    <property name="text">
-    <string>&amp;New Game</string>
+    <string>&amp;New Network Game</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
