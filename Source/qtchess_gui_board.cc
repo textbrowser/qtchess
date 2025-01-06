@@ -217,8 +217,8 @@ void qtchess_gui_board::paint(void)
 	  (QString("QLabel {background-color: %1; border: 1px solid navy;}").
 	   arg(background_color.name()));
 
-	auto size = qMax(m_labels[i][j]->size().height(),
-			 m_labels[i][j]->size().width());
+	auto const size = qMax
+	  (m_labels[i][j]->size().height(), m_labels[i][j]->size().width());
 
 	m_labels[i][j]->resize(size, size);
       }
@@ -229,8 +229,8 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
   if(!chess || !piece)
     return;
 
-  auto x = piece->i();
-  auto y = piece->j();
+  auto const x = piece->i();
+  auto const y = piece->j();
 
   if(x < 0 || x > NSQUARES || y < 0 || y > NSQUARES)
     return;
