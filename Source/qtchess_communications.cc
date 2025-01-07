@@ -260,11 +260,13 @@ void qtchess_communications::disconnect_remotely(void)
 
 void qtchess_communications::initialize(void)
 {
-  if(gui && gui->get_setup_dialog() &&
+  if(gui &&
+     gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_allowed_host_field())
     gui->get_setup_dialog()->get_allowed_host_field()->clear();
 
-  if(gui && gui->get_setup_dialog() &&
+  if(gui &&
+     gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_local_host_field())
     gui->get_setup_dialog()->get_local_host_field()->setText
       (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
@@ -314,14 +316,10 @@ void qtchess_communications::send_move(const struct move_s &current_move)
 {
   if(m_gnuchess.state() == QProcess::Running)
     {
-      auto const string(qtchess_gui::move_as_history_string(current_move));
-
-      m_gnuchess.write(string.toLatin1());
+      m_gnuchess.write
+	(qtchess_gui::move_as_history_string(current_move).toLatin1());
       m_gnuchess.write("\n");
-
-      if(chess)
-	chess->set_turn(THEIR_TURN);
-
+      chess ? chess->set_turn(THEIR_TURN) : (void) 0;
       return;
     }
 
@@ -415,7 +413,8 @@ void qtchess_communications::set_listen(void)
   QHostAddress address(QHostAddress::Any);
   quint16 port = 0;
 
-  if(gui && gui->get_setup_dialog() &&
+  if(gui &&
+     gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_local_port_field())
     {
       address = gui->get_setup_dialog()->get_listening_address();
@@ -428,7 +427,8 @@ void qtchess_communications::set_listen(void)
   ** Save the port number.
   */
 
-  if(gui && gui->get_setup_dialog() &&
+  if(gui &&
+     gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_local_port_field() &&
      m_listening_socket.isListening())
     gui->get_setup_dialog()->get_local_port_field()->setValue
@@ -458,10 +458,11 @@ void qtchess_communications::slot_accept_connection(void)
   ** Acceptable peer?
   */
 
-  if(gui && gui->get_setup_dialog() &&
+  if(gui &&
+     gui->get_setup_dialog() &&
      gui->get_setup_dialog()->get_allowed_host_field() &&
-     !gui->get_setup_dialog()->get_allowed_host_field()->text().
-     trimmed().isEmpty())
+     gui->get_setup_dialog()->get_allowed_host_field()->text().
+     trimmed().isEmpty() == false)
     {
       auto const str
 	(gui->get_setup_dialog()->get_allowed_host_field()->text().trimmed());
