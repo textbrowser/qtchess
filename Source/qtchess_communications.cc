@@ -569,7 +569,13 @@ void qtchess_communications::slot_read_gnuchess_output(void)
 
   m_gnuchessData.append(data);
 
-  if(m_gnuchessData.contains("White ("))
+  if(m_gnuchessData.contains("Black mates"))
+    {
+      chess ? chess->set_game_over(true) : (void) 0;
+      gui ? gui->show_game_over(WHITE) : (void) 0;
+      m_gnuchessData.clear();
+    }
+  else if(m_gnuchessData.contains("White ("))
     {
       QString move("");
       QStringList state;

@@ -3,7 +3,6 @@ Completed Items
 - Chess engine. GNUChess if available.
 - NAT IP addresses. Not required.
 - SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
+- Turn off GNUChess process.
 
 Remaining Items
-
-- Turn off GNUChess process.
