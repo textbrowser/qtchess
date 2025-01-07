@@ -5,3 +5,4 @@
 - GNUChess! Lovely depth of five.
 - New Connection Configuration -> Reset.
 - Prevent king from moving onto a terminal square.
+- Reset the game state after a connection is terminated.

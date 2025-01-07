@@ -639,6 +639,7 @@ void qtchess_gui::slot_quit_gnuchess(void)
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
   comm ? comm->stop_gnuchess() : (void) 0;
+  initialize_board();
   m_ui.action_Connection_Configuration->setEnabled(true);
   m_ui.action_New_Game->setEnabled(true);
   QApplication::restoreOverrideCursor();
@@ -651,6 +652,7 @@ void qtchess_gui::set_status_text(const QString &str)
 
 void qtchess_gui::show_disconnect(void)
 {
+  initialize_board();
   m_ui.side->setVisible(false);
   stop_timers(OPPONENT_TIMER);
   stop_timers(PLAYER_TIMER);
