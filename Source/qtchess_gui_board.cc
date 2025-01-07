@@ -275,8 +275,8 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 	    if(qtchess_validate::is_king(chess->m_board[x][y]))
 	      {
 		int board[NSQUARES][NSQUARES];
-		int m_board[NSQUARES][NSQUARES];
 		int color = BLACK;
+		int m_board[NSQUARES][NSQUARES];
 
 		std::copy
 		  (&chess->m_board[0][0],
