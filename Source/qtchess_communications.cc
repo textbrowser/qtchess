@@ -39,11 +39,11 @@ static QByteArray s_eof = "\n";
 
 qtchess_communications::qtchess_communications(void):QObject()
 {
+  qRegisterMetaType<QProcess::ExitStatus> ("QProcess::ExitStatus");
   connect(&m_gnuchess,
 	  SIGNAL(finished(int, QProcess::ExitStatus)),
 	  this,
-	  SLOT(slot_gnuchess_finished(int, QProcess::ExitStatus)),
-	  Qt::QueuedConnection);
+	  SLOT(slot_gnuchess_finished(int, QProcess::ExitStatus)));
   connect(&m_gnuchess,
 	  SIGNAL(readyReadStandardOutput(void)),
 	  this,

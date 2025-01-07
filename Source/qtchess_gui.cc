@@ -654,11 +654,23 @@ void qtchess_gui::show_error_message(const char *message)
 void qtchess_gui::show_game_over(const int turn)
 {
   Q_UNUSED(turn);
-  QMessageBox::information
-    (this,
-     tr("QtChess: Game Over"),
-     tr("Game Over. Please enjoy another game."),
-     QMessageBox::Default | QMessageBox::Ok);
+
+  auto mb = findChild<QMessageBox *> ("game_over");
+
+  if(!mb)
+    {
+      mb = new QMessageBox(this);
+      mb->setDefaultButton(QMessageBox::Ok);
+      mb->setIcon(QMessageBox::Information);
+      mb->setModal(false);
+      mb->setObjectName("game_over");
+      mb->setStandardButtons(QMessageBox::Ok);
+      mb->setText(tr("Game Over! Please enjoy another game!"));
+      mb->setWindowTitle(tr("QtChess: Game Over"));
+    }
+
+  mb->show();
+  QTimer::singleShot(10000, mb, SLOT(deleteLater(void)));
 }
 
 void qtchess_gui::slot_about(void)
