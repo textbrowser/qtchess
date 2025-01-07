@@ -323,6 +323,12 @@ void qtchess_gui::initialize(void)
   if(s_initialized)
     return;
 
+  if(comm)
+    connect(comm,
+	    SIGNAL(gnuchess_exited(void)),
+	    this,
+	    SLOT(slot_quit_gnuchess(void)));
+
   setWindowTitle(tr("QtChess"));
 
   if(statusBar())
@@ -638,7 +644,7 @@ void qtchess_gui::slot_quit_gnuchess(void)
 
 void qtchess_gui::set_status_text(const QString &str)
 {
-  m_status_label->setText(str);
+  m_status_label ? m_status_label->setText(str) : (void) 0;
 }
 
 void qtchess_gui::show_disconnect(void)

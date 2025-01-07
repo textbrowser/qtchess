@@ -582,6 +582,7 @@ void qtchess_communications::slot_gnuchess_finished
     gui->show_disconnect();
 
   emit disconnected_from_client();
+  emit gnuchess_exited();
   m_gnuchessData.clear();
   prepare_connection_status();
 }

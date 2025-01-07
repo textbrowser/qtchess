@@ -82,6 +82,7 @@ class qtchess_communications: public QObject
  signals:
   void connected_to_client(void);
   void disconnected_from_client(void);
+  void gnuchess_exited(void);
 };
 
 #endif
