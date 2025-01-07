@@ -54,6 +54,8 @@ qtchess_gui::qtchess_gui(void):QMainWindow()
     setText(m_ui.action_New_GNUChess_Game->text()) :
     m_ui.action_New_GNUChess_Game->
     setText(tr("New GNUChess Game (Missing GNUChess Program)"));
+  m_ui.action_Quit_GNUChess_Game->setEnabled
+    (m_ui.action_New_GNUChess_Game->isEnabled());
   m_ui.side->setVisible(false);
   m_ui.splitter->setStretchFactor(0, 1);
   m_ui.splitter->setStretchFactor(1, 0);
