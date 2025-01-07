@@ -40,6 +40,11 @@ static QByteArray s_eof = "\n";
 qtchess_communications::qtchess_communications(void):QObject()
 {
   connect(&m_gnuchess,
+	  SIGNAL(finished(int, QProcess::ExitStatus)),
+	  this,
+	  SLOT(slot_gnuchess_finished(int, QProcess::ExitStatus)),
+	  Qt::QueuedConnection);
+  connect(&m_gnuchess,
 	  SIGNAL(readyReadStandardOutput(void)),
 	  this,
 	  SLOT(slot_read_gnuchess_output(void)));
@@ -558,6 +563,26 @@ void qtchess_communications::slot_disconnected
 (QAbstractSocket::SocketError error)
 {
   Q_UNUSED(error);
+}
+
+void qtchess_communications::slot_gnuchess_finished
+(int exitCode, QProcess::ExitStatus exitStatus)
+{
+  Q_UNUSED(exitCode);
+  Q_UNUSED(exitStatus);
+
+  if(chess)
+    {
+      chess->set_first(-1);
+      chess->set_turn(-1);
+    }
+
+  if(gui)
+    gui->show_disconnect();
+
+  emit disconnected_from_client();
+  m_gnuchessData.clear();
+  prepare_connection_status();
 }
 
 void qtchess_communications::slot_read_gnuchess_output(void)
