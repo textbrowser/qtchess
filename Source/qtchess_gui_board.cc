@@ -441,9 +441,10 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
 
       int old_board[NSQUARES][NSQUARES];
 
-      for(int i = 0; i < NSQUARES; i++)
-	for(int j = 0; j < NSQUARES; j++)
-	  old_board[i][j] = chess->m_board[i][j];
+      std::copy
+	(&chess->m_board[0][0],
+	 &chess->m_board[0][0] + NSQUARES * NSQUARES,
+	 &old_board[0][0]);
 
       /*
       ** Piece promotion?

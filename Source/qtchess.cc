@@ -237,9 +237,10 @@ void qtchess::update_board(const QByteArray &buffer)
       else
 	m_won_piece = false;
 
-      for(int i = 0; i < NSQUARES; i++)
-	for(int j = 0; j < NSQUARES; j++)
-	  m_board[i][j] = current_move.m_board[i][j];
+      std::copy
+	(&current_move.m_board[0][0],
+	 &current_move.m_board[0][0] + NSQUARES * NSQUARES,
+	 &m_board[0][0]);
 
       if(gui)
 	{

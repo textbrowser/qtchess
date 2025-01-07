@@ -1,6 +1,7 @@
 2025.01.15
 
 - Automatics and constants.
+- Faster std::copy().
 - GNUChess! Lovely depth of five.
 - New Connection Configuration -> Reset.
 - Prevent king from moving onto a terminal square.
