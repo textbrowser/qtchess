@@ -32,6 +32,7 @@
 #include "qtchess_validate.h"
 
 #include <QActionGroup>
+#include <QFileInfo>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -46,7 +47,8 @@ extern QPointer<qtchess_communications> comm;
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
   m_ui.setupUi(this);
-  m_ui.action_New_GNUChess_Game->setEnabled(QTCHESS_GNUCHESS_ENABLED);
+  m_ui.action_New_GNUChess_Game->setEnabled
+    (QFileInfo(QTCHESS_GNUCHESS_PATH).isExecutable());
   m_ui.action_New_GNUChess_Game->isEnabled() ?
     m_ui.action_New_GNUChess_Game->
     setText(m_ui.action_New_GNUChess_Game->text()) :
