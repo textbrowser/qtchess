@@ -678,6 +678,13 @@ void qtchess_communications::start_gnuchess(void)
   prepare_connection_status();
 }
 
+void qtchess_communications::stop_gnuchess(void)
+{
+  m_gnuchess.kill();
+  m_gnuchess.waitForFinished();
+  m_gnuchessData.clear();
+}
+
 void qtchess_communications::stop_listening(void)
 {
   m_listening_socket.close();

@@ -373,6 +373,10 @@ void qtchess_gui::initialize(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_quit(void)));
+  connect(m_ui.action_Quit_GNUChess_Game,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slot_quit_gnuchess(void)));
 
   if((m_board = new(std::nothrow) qtchess_gui_board(nullptr)) == nullptr)
     {
@@ -621,6 +625,15 @@ void qtchess_gui::slot_quit(void)
     }
   else
     QApplication::exit(EXIT_FAILURE);
+}
+
+void qtchess_gui::slot_quit_gnuchess(void)
+{
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  comm ? comm->stop_gnuchess() : (void) 0;
+  m_ui.action_Connection_Configuration->setEnabled(true);
+  m_ui.action_New_Game->setEnabled(true);
+  QApplication::restoreOverrideCursor();
 }
 
 void qtchess_gui::set_status_text(const QString &str)

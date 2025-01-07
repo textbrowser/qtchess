@@ -53,6 +53,7 @@ class qtchess_communications: public QObject
   void set_caissa(const QString &caissa);
   void set_listen(void);
   void start_gnuchess(void);
+  void stop_gnuchess(void);
   void stop_listening(void);
 
  private:

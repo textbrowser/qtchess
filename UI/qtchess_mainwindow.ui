@@ -179,6 +179,8 @@
     <addaction name="action_New_GNUChess_Game"/>
     <addaction name="action_New_Game"/>
     <addaction name="separator"/>
+    <addaction name="action_Quit_GNUChess_Game"/>
+    <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
    <widget class="QMenu" name="menu_Setup">
@@ -242,6 +244,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="action_Quit_GNUChess_Game">
+   <property name="text">
+    <string>Quit GNUChess Game</string>
    </property>
   </action>
  </widget>

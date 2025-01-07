@@ -189,6 +189,7 @@ class qtchess_gui: public QMainWindow
   void slot_new_game(void);
   void slot_new_gnuchess_game(void);
   void slot_quit(void);
+  void slot_quit_gnuchess(void);
   void slot_setup(void);
   void slot_update_opponent(void);
   void slot_update_player(void);
