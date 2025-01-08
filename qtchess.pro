@@ -167,7 +167,7 @@ QMAKE_CXXFLAGS += -std=c++17
 QMAKE_CXXFLAGS -= -std=c++11
 }
 
-QMAKE_DISTCLEAN += .qmake.cache .qmake.stash
+QMAKE_DISTCLEAN += -r .qmake.cache .qmake.stash Temporary
 QMAKE_EXTRA_TARGETS = purge
 
 mac {
