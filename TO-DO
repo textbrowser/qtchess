@@ -6,3 +6,5 @@ Completed Items
 - Turn off GNUChess process.
 
 Remaining Items
+
+- Prevent a king from moving onto a dangerous square.
