@@ -2,9 +2,9 @@ Completed Items
 
 - GNUChess, if available.
 - NAT IP addresses. Not required.
+- Prevent a king from moving onto a dangerous square.
 - SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
 - Turn off GNUChess process.
 
 Remaining Items
 
-- Prevent a king from moving onto a dangerous square.

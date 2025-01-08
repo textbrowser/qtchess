@@ -32,6 +32,7 @@ extern "C"
 }
 
 #include <QPointer>
+#include <QtDebug>
 
 #include "qtchess.h"
 #include "qtchess_validate.h"
@@ -160,6 +161,44 @@ bool qtchess_validate::is_king(const int piece)
     return false;
 }
 
+bool qtchess_validate::is_king_checked
+(const int a, const int b, const int x, const int y)
+{
+  if(!chess)
+    return false;
+
+  const int color = chess->get_my_color() == BLACK ?
+    static_cast<int> (WHITE) : static_cast<int> (BLACK);
+  const int king = chess->get_my_color() == BLACK ?
+    static_cast<int> (KING_BLACK) : static_cast<int> (KING_WHITE);
+  int m_board[NSQUARES][NSQUARES];
+
+  std::copy
+    (&chess->m_board[0][0],
+     &chess->m_board[0][0] + NSQUARES * NSQUARES,
+     &m_board[0][0]);
+  chess->m_board[a][b] = EMPTY_SQUARE;
+  chess->m_board[x][y] = king;
+
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      if(is_color(chess->m_board[i][j], color) &&
+	 is_valid_move(j, i, y, x, chess->m_board[i][j]) != INVALID)
+	{
+	  std::copy
+	    (&m_board[0][0],
+	     &m_board[0][0] + NSQUARES * NSQUARES,
+	     &chess->m_board[0][0]);
+	  return true;
+	}
+
+  std::copy
+    (&m_board[0][0],
+     &m_board[0][0] + NSQUARES * NSQUARES,
+     &chess->m_board[0][0]);
+  return false;
+}
+
 bool qtchess_validate::is_king_checked(const struct move_s &current_move)
 {
   if(!chess)
@@ -167,6 +206,26 @@ bool qtchess_validate::is_king_checked(const struct move_s &current_move)
 
   return is_king_checked_implementation
     (chess->m_board, chess->get_my_color(), current_move);
+}
+
+bool qtchess_validate::is_king_checked_implementation
+(const int board[NSQUARES][NSQUARES],
+ const int color,
+ const int x,
+ const int y)
+{
+  for(int i = 0; i < NSQUARES; i++)
+    for(int j = 0; j < NSQUARES; j++)
+      if(is_color(board[i][j], color) &&
+	 is_valid_move(j, i, y, x, board[i][j]) != INVALID)
+	{
+	  if(i == x && is_pawn(board[i][j]))
+	    continue;
+	  else
+	    return true;
+	}
+
+  return false;
 }
 
 bool qtchess_validate::is_king_checked_implementation
@@ -207,26 +266,6 @@ bool qtchess_validate::is_king_checked_implementation
 	   current_move.m_x2 == j &&
 	   is_valid_move(j, i, J, I, board[i][j]) != INVALID)
 	  return true;
-
-  return false;
-}
-
-bool qtchess_validate::is_king_checked_implementation
-(const int board[NSQUARES][NSQUARES],
- const int color,
- const int x,
- const int y)
-{
-  for(int i = 0; i < NSQUARES; i++)
-    for(int j = 0; j < NSQUARES; j++)
-      if(is_color(board[i][j], color) &&
-	 is_valid_move(j, i, y, x, board[i][j]) != INVALID)
-	{
-	  if(i == x && is_pawn(board[i][j]))
-	    continue;
-	  else
-	    return true;
-	}
 
   return false;
 }

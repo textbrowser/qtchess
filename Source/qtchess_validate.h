@@ -39,14 +39,15 @@ namespace qtchess_validate
   bool is_color(const int piece, const int color);
   bool is_empty(const int piece);
   bool is_king(const int piece);
+  bool is_king_checked(const int a, const int b, const int x, const int y);
   bool is_king_checked(const struct move_s &current_move);
-  bool is_king_checked_implementation(const int board[NSQUARES][NSQUARES],
-				      const int color,
-				      const struct move_s &current_move);
   bool is_king_checked_implementation(const int board[NSQUARES][NSQUARES],
 				      const int color,
 				      const int x,
 				      const int y);
+  bool is_king_checked_implementation(const int board[NSQUARES][NSQUARES],
+				      const int color,
+				      const struct move_s &current_move);
   bool is_knight(const int piece);
   bool is_pawn(const int piece);
   bool is_queen(const int piece);

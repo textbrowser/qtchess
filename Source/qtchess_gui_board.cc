@@ -251,6 +251,13 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
     }
 #endif
 
+  int m_board[NSQUARES][NSQUARES];
+
+  std::copy
+    (&chess->m_board[0][0],
+     &chess->m_board[0][0] + NSQUARES * NSQUARES,
+     &m_board[0][0]);
+
   for(int i = 0; i < NSQUARES; i++)
     for(int j = 0; j < NSQUARES; j++)
       {
@@ -276,12 +283,7 @@ void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 	      {
 		int board[NSQUARES][NSQUARES];
 		int color = BLACK;
-		int m_board[NSQUARES][NSQUARES];
 
-		std::copy
-		  (&chess->m_board[0][0],
-		   &chess->m_board[0][0] + NSQUARES * NSQUARES,
-		   &m_board[0][0]);
 		std::copy
 		  (&m_board[0][0],
 		   &m_board[0][0] + NSQUARES * NSQUARES,
@@ -405,7 +407,19 @@ void qtchess_gui_board::slot_piece_pressed(qtchess_piece *piece)
     {
       if(qtchess_validate::
 	 is_king(chess->m_board[m_point_selected.m_x][m_point_selected.m_y]))
-	chess->set_king_has_moved(true);
+	{
+	  if(qtchess_validate::is_king_checked(m_point_selected.m_x,
+					       m_point_selected.m_y,
+					       x,
+					       y))
+	    {
+	      m_mouse_pressed = 0;
+	      m_point_selected.m_x = m_point_selected.m_y = -1;
+	      return;
+	    }
+
+	  chess->set_king_has_moved(true);
+	}
       else if(qtchess_validate::
 	      is_rook1(chess->m_board[m_point_selected.m_x]
 		                     [m_point_selected.m_y]))
