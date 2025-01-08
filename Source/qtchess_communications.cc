@@ -245,7 +245,10 @@ void qtchess_communications::connect_remotely(void)
 void qtchess_communications::disconnect_remotely(void)
 {
   if(m_client_connection)
-    m_client_connection->deleteLater();
+    {
+      m_client_connection->abort();
+      m_client_connection->deleteLater();
+    }
 
   if(chess)
     {
@@ -305,7 +308,9 @@ void qtchess_communications::quit(void)
   ** Terminate all communications.
   */
 
-  m_client_connection ? m_client_connection->deleteLater() : (void) 0;
+  m_client_connection ?
+    m_client_connection->abort(), m_client_connection->deleteLater() :
+    (void) 0;
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
   m_gnuchessData.clear();
@@ -542,9 +547,15 @@ void qtchess_communications::slot_client_disconnected(void)
   auto socket = qobject_cast<QTcpSocket *> (sender());
 
   if(m_client_connection && m_client_connection == socket)
-    m_client_connection->deleteLater();
+    {
+      m_client_connection->abort();
+      m_client_connection->deleteLater();
+    }
   else if(socket)
-    socket->deleteLater();
+    {
+      socket->abort();
+      socket->deleteLater();
+    }
 
   if(chess)
     {
