@@ -33,7 +33,7 @@
 #endif
 #endif
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #if QT_VERSION >= 0x050000
 #include "CocoaInitializer.h"
 #endif
@@ -48,7 +48,7 @@ QPointer<qtchess_gui> gui;
 
 int main(int argc, char *argv[])
 {
-#if defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+#if defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
   QApplication application(argc, argv);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #if QT_VERSION >= 0x050000
   /*
   ** Eliminate warnings.

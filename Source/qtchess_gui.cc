@@ -60,8 +60,13 @@ qtchess_gui::qtchess_gui(void):QMainWindow()
   m_ui.splitter->setStretchFactor(0, 1);
   m_ui.splitter->setStretchFactor(1, 0);
 
+#ifdef Q_OS_MACOS
+  if(menuBar())
+    menuBar()->setNativeMenuBar(false);
+#else
   if(menuBar())
     menuBar()->setNativeMenuBar(true);
+#endif
 }
 
 qtchess_gui::~qtchess_gui()
