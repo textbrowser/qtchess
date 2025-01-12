@@ -4,6 +4,6 @@
 - Faster std::copy().
 - GNUChess! Lovely depth of five.
 - New Connection Configuration -> Reset.
-- Non-native menu on MacOS.
+- Non-native menu bar on MacOS.
 - Prevent king from moving onto a terminal square.
 - Reset the game state after a connection is terminated.
