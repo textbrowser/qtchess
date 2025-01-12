@@ -321,10 +321,17 @@ void qtchess_communications::send_move(const struct move_s &current_move)
 {
   if(m_gnuchess.state() == QProcess::Running)
     {
-      m_gnuchess.write
+      auto const data
 	(qtchess_gui::move_as_history_string(current_move).toLatin1());
-      m_gnuchess.write("\n");
-      chess ? chess->set_turn(THEIR_TURN) : (void) 0;
+
+      if(data.startsWith('-') == false)
+	{
+	  m_gnuchess.write
+	    (qtchess_gui::move_as_history_string(current_move).toLatin1());
+	  m_gnuchess.write("\n");
+	  chess ? chess->set_turn(THEIR_TURN) : (void) 0;
+	}
+
       return;
     }
 
