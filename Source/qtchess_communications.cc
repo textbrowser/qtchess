@@ -620,14 +620,14 @@ void qtchess_communications::slot_read_gnuchess_output(void)
       gui ? gui->show_game_over(WHITE) : (void) 0;
       m_gnuchessData.clear();
     }
-  else if(m_gnuchessData.contains("White ("))
+  else if(m_gnuchessData.contains("My move is : "))
     {
       QString move("");
       QStringList state;
       auto const list(m_gnuchessData.split('\n'));
 
       for(int i = 0; i < list.size(); i++)
-	if(list.at(i).count(' ') == 8)
+	if(list.at(i).count(' ') == 8 && list.at(i).length() == 16)
 	  state << list.at(i).trimmed();
 	else if(list.at(i).startsWith("My move is : "))
 	  move = list.at(i);
