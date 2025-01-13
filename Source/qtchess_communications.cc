@@ -275,7 +275,7 @@ void qtchess_communications::initialize(void)
       (preferred_host_address(QAbstractSocket::IPv4Protocol).toString());
 
   m_gnuchess.kill();
-  m_gnuchessData.clear();
+  m_gnuchess_data.clear();
   m_listening_socket.close();
   prepare_connection_status();
 }
@@ -313,7 +313,7 @@ void qtchess_communications::quit(void)
     (void) 0;
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
-  m_gnuchessData.clear();
+  m_gnuchess_data.clear();
   m_listening_socket.close();
 }
 
@@ -601,7 +601,7 @@ void qtchess_communications::slot_gnuchess_finished
 
   emit disconnected_from_client();
   emit gnuchess_exited();
-  m_gnuchessData.clear();
+  m_gnuchess_data.clear();
   prepare_connection_status();
 }
 
@@ -612,33 +612,48 @@ void qtchess_communications::slot_read_gnuchess_output(void)
   while(m_gnuchess.bytesAvailable() > 0)
     data.append(m_gnuchess.readAll());
 
-  m_gnuchessData.append(data);
+  m_gnuchess_data.append(data);
 
-  if(m_gnuchessData.contains("#") || m_gnuchessData.contains("Black mates"))
+  if(m_gnuchess_data.contains("#") || m_gnuchess_data.contains("Black mates"))
     {
       chess ? chess->set_game_over(true) : (void) 0;
       gui ? gui->show_game_over(WHITE) : (void) 0;
     }
 
-  if(m_gnuchessData.contains("My move is : "))
+  if(m_gnuchess_data.contains("Invalid move:"))
+    {
+      QTimer::singleShot(25, this, SLOT(slot_show_board(void)));
+      m_gnuchess_data.clear();
+      return;
+    }
+
+  if(m_gnuchess_data.contains("My move is : ") ||
+     m_gnuchess_data.contains("White ("))
     {
       QString move("");
       QStringList state;
-      auto const list(m_gnuchessData.split('\n'));
+      auto const list(m_gnuchess_data.split('\n'));
 
       for(int i = 0; i < list.size(); i++)
 	if(list.at(i).count(' ') == 8 && list.at(i).length() == 16)
 	  state << list.at(i).trimmed();
-	else if(list.at(i).startsWith("My move is : "))
+	else if(list.at(i).trimmed().startsWith("My move is : "))
 	  move = list.at(i);
 
-      state = state.mid(8);
+      if(state.size() > 8)
+	state = state.mid(8);
 
-      if(move.length() > 0 && state.size() == 8)
+      if(state.size() == 8)
 	chess->update_board(move, state);
 
-      m_gnuchessData.clear();
+      m_gnuchess_data.clear();
     }
+}
+
+void qtchess_communications::slot_show_board(void)
+{
+  if(m_gnuchess.state() == QProcess::Running)
+    m_gnuchess.write("show board\n");
 }
 
 void qtchess_communications::slot_update_board(void)
@@ -693,7 +708,7 @@ void qtchess_communications::start_gnuchess(void)
   m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
   m_gnuchess.waitForStarted();
   m_gnuchess.write("depth 5\n");
-  m_gnuchessData.clear();
+  m_gnuchess_data.clear();
   prepare_connection_status();
 }
 
@@ -701,7 +716,7 @@ void qtchess_communications::stop_gnuchess(void)
 {
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
-  m_gnuchessData.clear();
+  m_gnuchess_data.clear();
 }
 
 void qtchess_communications::stop_listening(void)

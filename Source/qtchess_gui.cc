@@ -278,7 +278,14 @@ void qtchess_gui::add_history_move
 (const QString &string, const int color)
 {
   if(string.trimmed().isEmpty())
-    return;
+    {
+      /*
+      ** Remove the newest entry.
+      */
+
+      m_ui.history->removeRow(m_ui.history->rowCount() - 1);
+      return;
+    }
 
   QTableWidgetItem *item = nullptr;
 

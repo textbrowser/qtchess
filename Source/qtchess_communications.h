@@ -57,7 +57,7 @@ class qtchess_communications: public QObject
   void stop_listening(void);
 
  private:
-  QByteArray m_gnuchessData;
+  QByteArray m_gnuchess_data;
   QPointer<QTcpSocket> m_client_connection;
   QProcess m_gnuchess;
   QString m_caissa;
@@ -77,6 +77,7 @@ class qtchess_communications: public QObject
   void slot_disconnected(QAbstractSocket::SocketError error);
   void slot_gnuchess_finished(int exitCode, QProcess::ExitStatus exitStatus);
   void slot_read_gnuchess_output(void);
+  void slot_show_board(void);
   void slot_update_board(void);
 
  signals:

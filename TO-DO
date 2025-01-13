@@ -5,7 +5,6 @@ Completed Items
 - Prevent a king from moving onto a dangerous square.
 - SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
 - Turn off GNUChess process.
+- Undo a move if GNUChess declares the move as invalid.
 
 Remaining Items
-
-- Undo a move if GNUChess declares it invalid.
