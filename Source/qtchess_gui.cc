@@ -591,7 +591,9 @@ void qtchess_gui::notify_connection(const QString &address,
 
 void qtchess_gui::slot_new_game(void)
 {
-  if(new_game_prompt())
+  if(comm && comm->is_listening() == false && comm->is_ready() == false)
+    slot_setup();
+  else if(new_game_prompt())
     initialize_board();
 }
 
