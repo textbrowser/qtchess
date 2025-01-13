@@ -121,6 +121,7 @@ class qtchess_gui_board: public QWidget
   void add(QFrame *frame);
   void new_game(void);
   void paint(void);
+  void reset_move(void);
 
  private:
   QPointer<qtchess_piece> m_labels[NSQUARES][NSQUARES];

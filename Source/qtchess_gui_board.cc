@@ -224,6 +224,12 @@ void qtchess_gui_board::paint(void)
       }
 }
 
+void qtchess_gui_board::reset_move(void)
+{
+  m_mouse_pressed = 0;
+  m_point_selected.m_x = m_point_selected.m_y = -1;
+}
+
 void qtchess_gui_board::slot_piece_double_clicked(qtchess_piece *piece)
 {
   if(!chess || !piece)

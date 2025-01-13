@@ -623,6 +623,7 @@ void qtchess_communications::slot_read_gnuchess_output(void)
   if(m_gnuchess_data.contains("Invalid move:"))
     {
       QTimer::singleShot(25, this, SLOT(slot_show_board(void)));
+      gui ? gui->reset_move() : (void) 0;
       m_gnuchess_data.clear();
       return;
     }

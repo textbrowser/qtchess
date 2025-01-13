@@ -578,8 +578,8 @@ void qtchess_gui::initialize_clocks(void)
   m_ui.player_clock->setTime(QTime(0, 0, 0));
 }
 
-void qtchess_gui::notify_connection(const QString &address,
-				    const quint16 port)
+void qtchess_gui::notify_connection
+(const QString &address, const quint16 port)
 {
   if(chess)
     {
@@ -595,6 +595,11 @@ void qtchess_gui::notify_connection(const QString &address,
 
   set_status_text
     (tr("Status: Peer %1:%2 Connected").arg(address).arg(port));
+}
+
+void qtchess_gui::reset_move(void)
+{
+  m_board ? m_board->reset_move() : (void) 0;
 }
 
 void qtchess_gui::slot_new_game(void)
