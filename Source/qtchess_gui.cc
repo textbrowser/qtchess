@@ -280,10 +280,11 @@ void qtchess_gui::add_history_move
   if(string.trimmed().isEmpty())
     {
       /*
-      ** Remove the newest entry.
+      ** Remove the newest row.
       */
 
       m_ui.history->removeRow(m_ui.history->rowCount() - 1);
+      m_ui.history->scrollToBottom();
       return;
     }
 

@@ -308,7 +308,7 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 	  ** Rotate the board!
 	  */
 
-	  m_board[j][NSQUARES - i - 1] = board[i][j];
+	  m_board[j][NSQUARES - 1 - i] = board[i][j];
 
       set_turn(MY_TURN);
 
