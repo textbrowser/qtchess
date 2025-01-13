@@ -618,9 +618,9 @@ void qtchess_communications::slot_read_gnuchess_output(void)
     {
       chess ? chess->set_game_over(true) : (void) 0;
       gui ? gui->show_game_over(WHITE) : (void) 0;
-      m_gnuchessData.clear();
     }
-  else if(m_gnuchessData.contains("My move is : "))
+
+  if(m_gnuchessData.contains("My move is : "))
     {
       QString move("");
       QStringList state;
