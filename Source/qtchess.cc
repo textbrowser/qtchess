@@ -282,10 +282,10 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 	      board[i][j] = KING_WHITE;
 	    else if(row[j] == "N")
 	      board[i][j] = KNIGHT_WHITE;
-	    else if(row[j] == "Q")
-	      board[i][j] = QUEEN_WHITE;
 	    else if(row[j] == "P")
 	      board[i][j] = PAWN_WHITE;
+	    else if(row[j] == "Q")
+	      board[i][j] = QUEEN_WHITE;
 	    else if(row[j] == "R")
 	      board[i][j] = ROOK_WHITE;
 	    else if(row[j] == "b")
@@ -294,10 +294,10 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 	      board[i][j] = KING_BLACK;
 	    else if(row[j] == "n")
 	      board[i][j] = KNIGHT_BLACK;
-	    else if(row[j] == "q")
-	      board[i][j] = QUEEN_BLACK;
 	    else if(row[j] == "p")
 	      board[i][j] = PAWN_BLACK;
+	    else if(row[j] == "q")
+	      board[i][j] = QUEEN_BLACK;
 	    else if(row[j] == "r")
 	      board[i][j] = ROOK_BLACK;
 	}
