@@ -9,157 +9,159 @@ purge.commands = del *~ && del */*~
 purge.commands = rm -f *~ && rm -f */*~
 }
 
-CONFIG		+= qt release warn_on
-DEFINES		+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
+CONFIG += qt release warn_on
+DEFINES	+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
 
 exists(/opt/homebrew/bin/gnuchess) {
-DEFINES         += QTCHESS_GNUCHESS_PATH="'\"/opt/homebrew/bin/gnuchess\"'"
+DEFINES += QTCHESS_GNUCHESS_PATH="'\"/opt/homebrew/bin/gnuchess\"'"
 } else:exists(/usr/games/gnuchess) {
-DEFINES         += QTCHESS_GNUCHESS_PATH="'\"/usr/games/gnuchess\"'"
+DEFINES += QTCHESS_GNUCHESS_PATH="'\"/usr/games/gnuchess\"'"
+} else:exists(/usr/local/bin/gnuchess) {
+DEFINES += QTCHESS_GNUCHESS_PATH="'\"/usr/local/bin/gnuchess\"'"
 } else {
-DEFINES         += QTCHESS_GNUCHESS_PATH="'\"\"'"
+DEFINES += QTCHESS_GNUCHESS_PATH="'\"\"'"
 }
 
 mac {
-ICON            = Images/chess.icns
+ICON = Images/chess.icns
 } else:win32 {
-ICON            = Images/chess.png
+ICON = Images/chess.png
 }
 
-LANGUAGE        = C++
-QT		+= gui network widgets
+LANGUAGE = C++
+QT += gui network widgets
 
 win32 {
-RC_FILE		= qtchess.win.rc
+RC_FILE	= qtchess.win.rc
 }
 
-MOC_DIR     = Temporary/moc
+MOC_DIR = Temporary/moc
 OBJECTS_DIR = Temporary/obj
 QMAKE_CLEAN += QtChess
-RCC_DIR     = Temporary/rcc
-TEMPLATE    = app
-UI_DIR      = Temporary/ui
+RCC_DIR = Temporary/rcc
+TEMPLATE = app
+UI_DIR = Temporary/ui
 
 android {
-QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-align \
-                   -Wcast-qual \
-                   -Werror \
-                   -Werror=format-security \
-                   -Wextra \
-                   -Wfloat-equal \
-                   -Wformat=2 \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstack-protector \
-                   -Wstrict-overflow=5 \
-                   -Wundef \
-                   -fPIC \
-                   -fstack-protector-all \
-                   -fwrapv \
-                   -pedantic \
-                   -std=c++11
+QMAKE_CXXFLAGS += -Wall \
+                  -Wcast-align \
+                  -Wcast-qual \
+                  -Werror \
+                  -Werror=format-security \
+                  -Wextra \
+                  -Wfloat-equal \
+                  -Wformat=2 \
+                  -Woverloaded-virtual \
+                  -Wpointer-arith \
+                  -Wstack-protector \
+                  -Wstrict-overflow=5 \
+                  -Wundef \
+                  -fPIC \
+                  -fstack-protector-all \
+                  -fwrapv \
+                  -pedantic \
+                  -std=c++11
 } else:freebsd-* {
-QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-align \
-                   -Wcast-qual \
-                   -Wdouble-promotion \
-                   -Werror \
-                   -Werror=format-security \
-                   -Wextra \
-                   -Wfloat-equal \
-                   -Wformat=2 \
-                   -Wno-deprecated-copy \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstack-protector \
-                   -Wstrict-overflow=5 \
-                   -Wundef \
-                   -Wzero-as-null-pointer-constant \
-                   -fPIE \
-                   -fstack-protector-all \
-                   -fwrapv \
-                   -pedantic \
-                   -std=c++11
+QMAKE_CXXFLAGS += -Wall \
+                  -Wcast-align \
+                  -Wcast-qual \
+                  -Wdouble-promotion \
+                  -Werror \
+                  -Werror=format-security \
+                  -Wextra \
+                  -Wfloat-equal \
+                  -Wformat=2 \
+                  -Wno-deprecated-copy \
+                  -Woverloaded-virtual \
+                  -Wpointer-arith \
+                  -Wstack-protector \
+                  -Wstrict-overflow=5 \
+                  -Wundef \
+                  -Wzero-as-null-pointer-constant \
+                  -fPIE \
+                  -fstack-protector-all \
+                  -fwrapv \
+                  -pedantic \
+                  -std=c++11
 } else:linux {
 contains(QMAKE_HOST.arch, ppc) {
-QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-qual \
-                   -Wdouble-promotion \
-                   -Werror \
-                   -Werror=format-security \
-                   -Wextra \
-                   -Wfloat-equal \
-                   -Wformat=2 \
-                   -Wno-deprecated-copy \
-                   -Wold-style-cast \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstack-protector \
-                   -Wstrict-overflow=1 \
-                   -Wundef \
-                   -fPIE \
-                   -fstack-protector-all \
-                   -fwrapv \
-                   -pedantic \
-                   -pie \
-                   -std=c++11
+QMAKE_CXXFLAGS += -Wall \
+                  -Wcast-qual \
+                  -Wdouble-promotion \
+                  -Werror \
+                  -Werror=format-security \
+                  -Wextra \
+                  -Wfloat-equal \
+                  -Wformat=2 \
+                  -Wno-deprecated-copy \
+                  -Wold-style-cast \
+                  -Woverloaded-virtual \
+                  -Wpointer-arith \
+                  -Wstack-protector \
+                  -Wstrict-overflow=1 \
+                  -Wundef \
+                  -fPIE \
+                  -fstack-protector-all \
+                  -fwrapv \
+                  -pedantic \
+                  -pie \
+                  -std=c++11
 } else {
-QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-qual \
-                   -Wdouble-promotion \
-                   -Werror \
-                   -Werror=format-security \
-                   -Wextra \
-                   -Wfloat-equal \
-                   -Wformat=2 \
-                   -Wformat-overflow=2 \
-                   -Wno-deprecated-copy \
-                   -Wold-style-cast \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstack-protector \
-                   -Wstrict-overflow=1 \
-		   -Wstringop-overflow=4 \
-                   -Wundef \
-                   -Wzero-as-null-pointer-constant \
-                   -fPIE \
-                   -fstack-protector-all \
-                   -fwrapv \
-                   -pedantic \
-                   -pie \
-                   -std=c++11
+QMAKE_CXXFLAGS += -Wall \
+                  -Wcast-qual \
+                  -Wdouble-promotion \
+                  -Werror \
+                  -Werror=format-security \
+                  -Wextra \
+                  -Wfloat-equal \
+                  -Wformat=2 \
+                  -Wformat-overflow=2 \
+                  -Wno-deprecated-copy \
+                  -Wold-style-cast \
+                  -Woverloaded-virtual \
+                  -Wpointer-arith \
+                  -Wstack-protector \
+                  -Wstrict-overflow=1 \
+                  -Wstringop-overflow=4 \
+                  -Wundef \
+                  -Wzero-as-null-pointer-constant \
+                  -fPIE \
+                  -fstack-protector-all \
+                  -fwrapv \
+                  -pedantic \
+                  -pie \
+                  -std=c++11
 }
 } else:mac {
-QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-align \
-                   -Wcast-qual \
-                   -Werror \
-                   -Wextra \
-                   -Wformat=2 \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstack-protector \
-                   -Wstrict-overflow=5 \
-                   -fPIE \
-                   -fstack-protector-all \
-                   -fwrapv \
-                   -mtune=generic \
-                   -pedantic \
-                   -std=c++11
+QMAKE_CXXFLAGS += -Wall \
+                  -Wcast-align \
+                  -Wcast-qual \
+                  -Werror \
+                  -Wextra \
+                  -Wformat=2 \
+                  -Woverloaded-virtual \
+                  -Wpointer-arith \
+                  -Wstack-protector \
+                  -Wstrict-overflow=5 \
+                  -fPIE \
+                  -fstack-protector-all \
+                  -fwrapv \
+                  -mtune=generic \
+                  -pedantic \
+                  -std=c++11
 } else:win32 {
-QMAKE_CXXFLAGS  += -Wall \
-                   -Wcast-align \
-                   -Wcast-qual \
-                   -Wextra \
-                   -Wformat=2 \
-                   -Woverloaded-virtual \
-                   -Wpointer-arith \
-                   -Wstrict-overflow=1 \
-                   -fwrapv \
-                   -pedantic \
-                   -pie \
-                   -std=c++11
+QMAKE_CXXFLAGS += -Wall \
+                  -Wcast-align \
+                  -Wcast-qual \
+                  -Wextra \
+                  -Wformat=2 \
+                  -Woverloaded-virtual \
+                  -Wpointer-arith \
+                  -Wstrict-overflow=1 \
+                  -fwrapv \
+                  -pedantic \
+                  -pie \
+                  -std=c++11
 }
 
 greaterThan(QT_MAJOR_VERSION, 5) {
@@ -174,8 +176,8 @@ mac {
 QMAKE_EXTRA_TARGETS += dmg
 }
 
-PROJECTNAME	= QtChess
-TARGET		= QtChess
+PROJECTNAME = QtChess
+TARGET = QtChess
 
 android {
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/Android
@@ -188,9 +190,9 @@ DISTFILES += Android/AndroidManifest.xml \
              Android/gradlew.bat \
              Android/res/values/libs.xml
 } else:mac {
-macdeployqt.path  = QtChess.app
+macdeployqt.path = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
-INSTALLS	= macdeployqt
+INSTALLS = macdeployqt
 } else:win32 {
 plugins1.files = $$[QT_INSTALL_PLUGINS]\\*
 plugins1.path = release\\plugins\\.
