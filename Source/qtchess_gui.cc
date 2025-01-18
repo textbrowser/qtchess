@@ -494,7 +494,6 @@ void qtchess_gui::initialize(void)
     }
 
 #ifndef Q_OS_ANDROID
-  resize(800, 800);
 #endif
 #if QT_VERSION < 0x050000
   m_ui.history->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -754,10 +753,6 @@ void qtchess_gui::slot_setup(void)
 
 #ifdef Q_OS_ANDROID
       m_setup->showMaximized();
-#else
-      m_setup->resize
-	(qMax(m_setup->sizeHint().width(), size().width()) - 100,
-	 m_setup->sizeHint().height());
 #endif
       m_setup->exec();
     }
@@ -821,6 +816,7 @@ qtchess_help::qtchess_help(QWidget *parent):QDialog(parent)
 	"connection.</li>"
 	"<li>Moves are prohibited until connections have been "
 	"established.</li>"
+	"<li>On Android, the History panel is initially hidden.</li>"
 	"<li>To move a piece, "
 	"first click it and then click the desired destination.</li>"
 	"<li>To prevent peer connections, "
