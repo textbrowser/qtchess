@@ -30,6 +30,8 @@
 
 #include <QString>
 
+#include "qtchess_definitions.h"
+
 namespace qtchess_validate
 {
   QString find_departure

@@ -269,6 +269,11 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 
       int board[NSQUARES][NSQUARES];
 
+      std::copy
+	(&m_board[0][0],
+	 &m_board[0][0] + NSQUARES * NSQUARES,
+	 &board[0][0]);
+
       for(int i = 0; i < state.size(); i++)
 	{
 	  auto const row(state.at(i).split(' '));
