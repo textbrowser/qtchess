@@ -636,7 +636,8 @@ void qtchess_communications::slot_read_gnuchess_output(void)
       auto const list(m_gnuchess_data.split('\n'));
 
       for(int i = 0; i < list.size(); i++)
-	if(list.at(i).count(' ') == 8 && list.at(i).length() == 16)
+	if(NSQUARES + NSQUARES == list.at(i).length() &&
+	   NSQUARES == list.at(i).count(' '))
 	  state << list.at(i).trimmed();
 	else if(list.at(i).trimmed().startsWith("My move is : "))
 	  move = list.at(i);
