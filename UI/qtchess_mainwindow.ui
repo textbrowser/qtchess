@@ -142,6 +142,9 @@
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>
              </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
              <column>
               <property name="text">
                <string>Beige</string>
@@ -200,7 +203,14 @@
     <addaction name="separator"/>
     <addaction name="action_Help"/>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="action_Undo_GNUChess_Move"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menu_Edit"/>
    <addaction name="menu_Setup"/>
    <addaction name="menu_Help"/>
   </widget>
@@ -249,6 +259,14 @@
   <action name="action_Quit_GNUChess_Game">
    <property name="text">
     <string>Quit GNUChess Game</string>
+   </property>
+  </action>
+  <action name="action_Undo_GNUChess_Move">
+   <property name="text">
+    <string>Undo GNUChess Move</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
  </widget>

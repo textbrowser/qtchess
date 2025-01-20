@@ -8,3 +8,5 @@ Completed Items
 - Undo a move if GNUChess declares the move as invalid.
 
 Remaining Items
+
+- GNUChess undo move.

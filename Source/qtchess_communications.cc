@@ -628,10 +628,11 @@ void qtchess_communications::slot_read_gnuchess_output(void)
       return;
     }
 
-  if(m_gnuchess_data.contains("My move is : ") ||
+  if(m_gnuchess_data.contains("Black (") ||
+     m_gnuchess_data.contains("My move is : ") ||
      m_gnuchess_data.contains("White ("))
     {
-      QString move("");
+      QString move("undo");
       QStringList state;
       auto const list(m_gnuchess_data.split('\n'));
 
@@ -725,4 +726,10 @@ void qtchess_communications::stop_listening(void)
 {
   m_listening_socket.close();
   prepare_connection_status();
+}
+
+void qtchess_communications::undo_gnuchess_move(void)
+{
+  if(m_gnuchess.state() == QProcess::Running)
+    m_gnuchess.write("undo\nundo\n");
 }

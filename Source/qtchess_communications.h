@@ -55,6 +55,7 @@ class qtchess_communications: public QObject
   void start_gnuchess(void);
   void stop_gnuchess(void);
   void stop_listening(void);
+  void undo_gnuchess_move(void);
 
  private:
   QByteArray m_gnuchess_data;

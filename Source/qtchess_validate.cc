@@ -294,6 +294,14 @@ bool qtchess_validate::is_queen(const int piece)
     return false;
 }
 
+bool qtchess_validate::is_rook(const int color, const int piece)
+{
+  if(color == WHITE)
+    return piece == ROOK1_WHITE || piece == ROOK2_WHITE || piece == ROOK_WHITE;
+  else
+    return piece == ROOK1_BLACK || piece == ROOK2_BLACK || piece == ROOK_BLACK;
+}
+
 bool qtchess_validate::is_rook(const int piece)
 {
   if(piece == ROOK1_BLACK ||

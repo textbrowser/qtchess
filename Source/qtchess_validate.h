@@ -53,6 +53,7 @@ namespace qtchess_validate
   bool is_knight(const int piece);
   bool is_pawn(const int piece);
   bool is_queen(const int piece);
+  bool is_rook(const int color, const int piece);
   bool is_rook(const int piece);
   bool is_rook1(const int piece);
   bool is_rook2(const int piece);

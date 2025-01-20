@@ -34,11 +34,14 @@
 #include <QPointer>
 #include <QTimer>
 
+#include "qtchess.h"
 #include "qtchess_gui_board.h"
 #include "ui_qtchess_help.h"
 #include "ui_qtchess_mainwindow.h"
 #include "ui_qtchess_promotion.h"
 #include "ui_qtchess_setup.h"
+
+extern QPointer<qtchess> chess;
 
 class qtchess_help: public QDialog
 {
@@ -158,9 +161,9 @@ class qtchess_gui: public QMainWindow
   void update(void)
   {
     QMainWindow::update();
-
-    if(m_board)
-      m_board->paint();
+    chess ?
+      m_ui.action_Undo_GNUChess_Move->setEnabled(!chess->is_new()) : (void) 0;
+    m_board ? m_board->paint() : (void) 0;
   }
 
  private:
@@ -192,6 +195,7 @@ class qtchess_gui: public QMainWindow
   void slot_quit(void);
   void slot_quit_gnuchess(void);
   void slot_setup(void);
+  void slot_undo_gnuchess_move(void);
   void slot_update_opponent(void);
   void slot_update_player(void);
 };

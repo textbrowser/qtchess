@@ -56,6 +56,7 @@ qtchess_gui::qtchess_gui(void):QMainWindow()
     setText(tr("New GNUChess Game (Missing GNUChess Program)"));
   m_ui.action_Quit_GNUChess_Game->setEnabled
     (m_ui.action_New_GNUChess_Game->isEnabled());
+  m_ui.action_Undo_GNUChess_Move->setEnabled(false);
   m_ui.side->setVisible(false);
   m_ui.splitter->setStretchFactor(0, 1);
   m_ui.splitter->setStretchFactor(1, 0);
@@ -277,14 +278,25 @@ qtchess_setup *qtchess_gui::get_setup_dialog(void) const
 void qtchess_gui::add_history_move
 (const QString &string, const int color)
 {
-  if(string.trimmed().isEmpty())
+  if(string.trimmed() == "undo" || string.trimmed().isEmpty())
     {
-      /*
-      ** Remove the newest row.
-      */
+      auto const row = m_ui.history->rowCount() - 1;
 
-      m_ui.history->removeRow(m_ui.history->rowCount() - 1);
-      m_ui.history->scrollToBottom();
+      if(row >= 0)
+	{
+	  auto item = m_ui.history->takeItem(row, 1);
+
+	  if(item)
+	    delete item;
+	  else
+	    {
+	      item = m_ui.history->takeItem(row, 0);
+	      delete item;
+	      m_ui.history->removeRow(row);
+	      m_ui.history->scrollToBottom();
+	    }
+	}
+
       return;
     }
 
@@ -398,6 +410,10 @@ void qtchess_gui::initialize(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_quit_gnuchess(void)));
+  connect(m_ui.action_Undo_GNUChess_Move,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slot_undo_gnuchess_move(void)));
 
   if((m_board = new(std::nothrow) qtchess_gui_board(nullptr)) == nullptr)
     {
@@ -661,6 +677,7 @@ void qtchess_gui::slot_quit_gnuchess(void)
   initialize_board();
   m_ui.action_Connection_Configuration->setEnabled(true);
   m_ui.action_New_Game->setEnabled(true);
+  m_ui.action_Undo_GNUChess_Move->setEnabled(false);
   QApplication::restoreOverrideCursor();
 }
 
@@ -756,6 +773,12 @@ void qtchess_gui::slot_setup(void)
 #endif
       m_setup->exec();
     }
+}
+
+void qtchess_gui::slot_undo_gnuchess_move(void)
+{
+  if(comm && comm->is_ready())
+    comm->undo_gnuchess_move();
 }
 
 void qtchess_gui::slot_update_opponent(void)

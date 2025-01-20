@@ -321,6 +321,7 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 	{
 	  gui->add_history_move
 	    (move.trimmed().mid(move.lastIndexOf(' ') + 1).trimmed(), BLACK);
+	  gui->reset_move();
 	  gui->update();
 	}
     }

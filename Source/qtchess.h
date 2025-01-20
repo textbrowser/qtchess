@@ -31,8 +31,9 @@
 #include <QObject>
 
 #include "qtchess_definitions.h"
+#include "qtchess_validate.h"
 
-#define QTCHESS_VERSION "2025.01.15"
+#define QTCHESS_VERSION "2025.01.25"
 
 class qtchess: public QObject
 {
@@ -43,7 +44,7 @@ class qtchess: public QObject
   {
     for(int i = 0; i < NSQUARES; i++)
       for(int j = 0; j < NSQUARES; j++)
-	m_board[i][j] = 0;
+	m_board[i][j] = EMPTY_SQUARE;
 
     m_first = -1;
     m_game_over = false;
@@ -76,6 +77,36 @@ class qtchess: public QObject
   bool is_game_over(void) const
   {
     return m_game_over;
+  }
+
+  bool is_new(void) const
+  {
+    auto state = true;
+
+    state &= m_board[1][0] == KNIGHT_WHITE && m_board[6][0] == KNIGHT_WHITE;
+    state &= m_board[1][7] == KNIGHT_BLACK && m_board[6][7] == KNIGHT_BLACK;
+    state &= m_board[2][0] == BISHOP_WHITE && m_board[5][0] == BISHOP_WHITE;
+    state &= m_board[2][7] == BISHOP_BLACK && m_board[5][7] == BISHOP_BLACK;
+    state &= m_board[3][0] == QUEEN_WHITE;
+    state &= m_board[3][7] == QUEEN_BLACK;
+    state &= m_board[4][0] == KING_WHITE;
+    state &= m_board[4][7] == KING_BLACK;
+    state &= qtchess_validate::is_rook(BLACK, m_board[7][7]);
+    state &= qtchess_validate::is_rook(WHITE, m_board[7][0]);
+    state &= qtchess_validate::is_rook(BLACK, m_board[0][7]);
+    state &= qtchess_validate::is_rook(WHITE, m_board[0][0]);
+
+    for(int i = 0; i < NSQUARES; i++)
+      {
+	state &= m_board[i][1] == PAWN_WHITE;
+	state &= m_board[i][6] == PAWN_BLACK;
+      }
+
+    for(int i = 2; i < 6; i++)
+      for(int j = 0; j < NSQUARES; j++)
+	state &= m_board[j][i] == EMPTY_SQUARE;
+
+    return state;
   }
 
   bool was_piece_won(void) const
