@@ -18,7 +18,7 @@ then
 elif [ -r /opt/qtchess/QtChess ] && [ -x /opt/qtchess/QtChess ]
 then
     echo "Launching an official QtChess."
-    cd /opt/qtchess && exec ./QtChess "$@"
+    cd /opt/qtchess && ./QtChess "$@"
     exit $?
 else
     echo "Cannot locate QtChess."
