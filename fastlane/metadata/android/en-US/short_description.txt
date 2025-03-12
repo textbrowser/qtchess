@@ -1,1 +1,0 @@
-QtChess is a peer-to-peer chess program available everyware. 

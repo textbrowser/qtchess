@@ -1,8 +1,0 @@
-* Deprecated Windows x86.
-* Happy New Year!
-* Linux-like installers will install in /opt instead of /usr/local.
-* PiOS64 release! PiOS32 is obsolete.
-* Qt 6.5.3 Android 10.
-* Qt 6.5.3 MacOS.
-* Qt 6.5.3 Windows 11.
-* Twenty-one years of QtChess!
