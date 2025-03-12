@@ -1,5 +1,6 @@
 Completed Items
 
+- GNUChess undo move.
 - GNUChess, if available.
 - NAT IP addresses. Not required.
 - Prevent a king from moving onto a dangerous square.
@@ -10,4 +11,3 @@ Completed Items
 Remaining Items
 
 - Enumerator classes.
-- GNUChess undo move.
