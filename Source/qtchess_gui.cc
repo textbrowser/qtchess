@@ -729,6 +729,7 @@ void qtchess_gui::show_game_over(const int turn)
     }
 
   mb->show();
+  m_ui.action_Undo_GNUChess_Move->setEnabled(false);
   QTimer::singleShot(10000, mb, SLOT(deleteLater(void)));
 }
 
