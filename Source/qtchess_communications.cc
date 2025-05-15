@@ -708,7 +708,7 @@ void qtchess_communications::start_gnuchess(void)
   stop_listening();
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
-  m_gnuchess.start(QTCHESS_GNUCHESS_PATH, QStringList() << "--easy");
+  m_gnuchess.start(gui ? gui->gnuChessPath() : "", QStringList() << "--easy");
   m_gnuchess.waitForStarted();
   m_gnuchess.write("depth 5\n");
   m_gnuchess_data.clear();

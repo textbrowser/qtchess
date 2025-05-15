@@ -98,6 +98,11 @@ class qtchess_setup: public QDialog
     return m_ui.color->currentText();
   }
 
+  QString gnuChessPath(void) const
+  {
+    return m_ui.gnu_chess->text().trimmed();
+  }
+
   void reset(void);
   void stop(void);
 
@@ -132,6 +137,11 @@ class qtchess_gui: public QMainWindow
       return m_setup->color();
     else
       return "";
+  }
+
+  QString gnuChessPath(void) const
+  {
+    return m_setup ? m_setup->gnuChessPath() : "";
   }
 
   bool is_ready(void) const;

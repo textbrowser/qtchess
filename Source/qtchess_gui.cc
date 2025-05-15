@@ -47,8 +47,6 @@ extern QPointer<qtchess_communications> comm;
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
   m_ui.setupUi(this);
-  m_ui.action_New_GNUChess_Game->setEnabled
-    (QFileInfo(QTCHESS_GNUCHESS_PATH).isExecutable());
   m_ui.action_New_GNUChess_Game->isEnabled() ?
     m_ui.action_New_GNUChess_Game->
     setText(m_ui.action_New_GNUChess_Game->text()) :
@@ -386,7 +384,7 @@ void qtchess_gui::initialize(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_about(void)));
-  connect(m_ui.action_Connection_Configuration,
+  connect(m_ui.action_Configuration,
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_setup(void)));
@@ -498,6 +496,8 @@ void qtchess_gui::initialize(void)
     }
 
   delete m_ui.board_frame->layout();
+  m_ui.action_New_GNUChess_Game->setEnabled
+    (QFileInfo(m_setup->gnuChessPath().trimmed()).isExecutable());
   m_ui.board_frame->setFocus();
   m_ui.board_frame->setLayout(new QGridLayout());
 
@@ -635,7 +635,6 @@ void qtchess_gui::slot_new_gnuchess_game(void)
       if(comm && comm->is_connected_remotely())
 	{
 	  m_setup ? m_setup->reset() : (void) 0;
-	  m_ui.action_Connection_Configuration->setEnabled(false);
 	  m_ui.action_New_Game->setEnabled(false);
 	  chess ? chess->set_my_color(WHITE) : (void) 0;
 	  initialize_board();
@@ -675,7 +674,6 @@ void qtchess_gui::slot_quit_gnuchess(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   comm ? comm->stop_gnuchess() : (void) 0;
   initialize_board();
-  m_ui.action_Connection_Configuration->setEnabled(true);
   m_ui.action_New_Game->setEnabled(true);
   m_ui.action_Undo_GNUChess_Move->setEnabled(false);
   QApplication::restoreOverrideCursor();
@@ -771,6 +769,8 @@ void qtchess_gui::slot_setup(void)
 
 #ifdef Q_OS_ANDROID
       m_setup->showMaximized();
+#else
+      m_setup->resize(0.85 * size().width(), m_setup->size().height());
 #endif
       m_setup->exec();
     }
@@ -1024,6 +1024,7 @@ void qtchess_setup::reset(void)
   m_ui.caissa->clear();
   m_ui.color->setCurrentIndex(0);
   m_ui.connect->setText(tr("&Connect"));
+  m_ui.gnu_chess->clear();
   m_ui.listen->setText(tr("&Listen"));
   m_ui.local->setChecked(true);
   m_ui.local_host->setReadOnly(false);
@@ -1048,6 +1049,7 @@ void qtchess_setup::reset(void)
   m_ui.remote_scope_id->clear();
   m_ui.remote_scope_id->setEnabled(false);
   m_ui.remote_scope_id->setReadOnly(false);
+  m_ui.tab->setCurrentIndex(0);
 }
 
 void qtchess_setup::slot_close(void)

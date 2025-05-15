@@ -12,16 +12,6 @@ purge.commands = rm -f *~ && rm -f */*~
 CONFIG += qt release warn_on
 DEFINES	+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
 
-exists(/opt/homebrew/bin/gnuchess) {
-DEFINES += QTCHESS_GNUCHESS_PATH="'\"/opt/homebrew/bin/gnuchess\"'"
-} else:exists(/usr/games/gnuchess) {
-DEFINES += QTCHESS_GNUCHESS_PATH="'\"/usr/games/gnuchess\"'"
-} else:exists(/usr/local/bin/gnuchess) {
-DEFINES += QTCHESS_GNUCHESS_PATH="'\"/usr/local/bin/gnuchess\"'"
-} else {
-DEFINES += QTCHESS_GNUCHESS_PATH="'\"\"'"
-}
-
 mac {
 ICON = Images/chess.icns
 } else:win32 {
@@ -83,7 +73,7 @@ QMAKE_CXXFLAGS += -Wall \
                   -fwrapv \
                   -pedantic \
                   -std=c++11
-} else:linux {
+} else:linux-* {
 contains(QMAKE_HOST.arch, ppc) {
 QMAKE_CXXFLAGS += -Wall \
                   -Wcast-qual \

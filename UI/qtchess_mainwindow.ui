@@ -190,7 +190,7 @@
     <property name="title">
      <string>&amp;Setup</string>
     </property>
-    <addaction name="action_Connection_Configuration"/>
+    <addaction name="action_Configuration"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="windowTitle">
@@ -230,9 +230,9 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_Connection_Configuration">
+  <action name="action_Configuration">
    <property name="text">
-    <string>&amp;Connection Configuration...</string>
+    <string>&amp;Configuration...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
