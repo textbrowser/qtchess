@@ -145,6 +145,11 @@ class qtchess_gui: public QMainWindow
     return m_setup ? m_setup->gnuChessPath() : "";
   }
 
+  Ui_qtchess_mainwindow ui(void) const
+  {
+    return m_ui;
+  }
+
   bool is_ready(void) const;
 
   qtchess_gui_board *board(void) const

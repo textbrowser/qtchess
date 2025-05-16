@@ -44,6 +44,7 @@
 
 extern QPointer<qtchess> chess;
 extern QPointer<qtchess_communications> comm;
+extern QPointer<qtchess_gui> gui;
 
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
@@ -498,7 +499,7 @@ void qtchess_gui::initialize(void)
 
   delete m_ui.board_frame->layout();
   m_ui.action_New_GNUChess_Game->setEnabled
-    (QFileInfo(m_setup->gnuChessPath().trimmed()).isExecutable());
+    (QFileInfo(m_setup->gnuChessPath()).isExecutable());
   m_ui.board_frame->setFocus();
   m_ui.board_frame->setLayout(new QGridLayout());
 
@@ -1240,7 +1241,13 @@ void qtchess_setup::slot_select_gnuchess(void)
 #endif
 
   if(dialog.exec() == QDialog::Accepted)
-    m_ui.gnu_chess->setText(dialog.selectedFiles().value(0));
+    {
+      gui ?
+	gui->ui().action_New_GNUChess_Game->setEnabled
+	(QFileInfo(dialog.selectedFiles().value(0)).isExecutable()) :
+	(void) 0;
+      m_ui.gnu_chess->setText(dialog.selectedFiles().value(0));
+    }
 }
 
 void qtchess_setup::slot_set_caissa(void)
