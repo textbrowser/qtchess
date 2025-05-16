@@ -32,6 +32,7 @@
 #include "qtchess_validate.h"
 
 #include <QActionGroup>
+#include <QFileDialog>
 #include <QFileInfo>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -965,6 +966,10 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	  SIGNAL(clicked(void)),
 	  this,
 	  SLOT(slot_reset(void)));
+  connect(m_ui.select_gnu_chess,
+	  SIGNAL(clicked(void)),
+	  this,
+	  SLOT(slot_select_gnuchess(void)));
   connect(m_ui.set_caissa,
 	  SIGNAL(clicked(void)),
 	  this,
@@ -1217,6 +1222,25 @@ void qtchess_setup::slot_remote(bool state)
 void qtchess_setup::slot_reset(void)
 {
   reset();
+}
+
+void qtchess_setup::slot_select_gnuchess(void)
+{
+  QFileDialog dialog(this);
+
+  dialog.setAcceptMode(QFileDialog::AcceptOpen);
+  dialog.setDirectory(QDir::rootPath());
+  dialog.setFileMode(QFileDialog::ExistingFiles);
+  dialog.setLabelText(QFileDialog::Accept, tr("Select"));
+  dialog.setOption(QFileDialog::DontUseNativeDialog);
+  dialog.setWindowIcon(windowIcon());
+  dialog.setWindowTitle(tr("QtChess: Select GNUChess Executable"));
+#ifdef Q_OS_ANDROID
+  dialog.showMaximized();
+#endif
+
+  if(dialog.exec() == QDialog::Accepted)
+    m_ui.gnu_chess->setText(dialog.selectedFiles().value(0));
 }
 
 void qtchess_setup::slot_set_caissa(void)

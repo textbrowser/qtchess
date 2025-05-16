@@ -120,6 +120,7 @@ class qtchess_setup: public QDialog
   void slot_protocol_changed(void);
   void slot_remote(bool state);
   void slot_reset(void);
+  void slot_select_gnuchess(void);
   void slot_set_caissa(void);
 };
 

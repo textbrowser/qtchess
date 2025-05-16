@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>QtChess: Connection Configuration</string>
+   <string>QtChess: Configuration</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../Images/images.qrc">
@@ -56,7 +56,7 @@
              <item>
               <widget class="QLineEdit" name="gnu_chess">
                <property name="placeholderText">
-                <string>GNU Chess Absolute Path</string>
+                <string>GNU Chess Executable Absolute Path</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
