@@ -123,6 +123,7 @@ QMAKE_CXXFLAGS += -Wall \
                   -std=c++11
 }
 } else:mac {
+QMAKE_APPLE_DEVICE_ARCHS = arm64 x86_64
 QMAKE_CXXFLAGS += -Wall \
                   -Wcast-align \
                   -Wcast-qual \
