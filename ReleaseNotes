@@ -4,6 +4,11 @@
 - New configuration option for selecting the GNUChess executable.
   The INI file is stored in the current path for Android and Windows.
   Otherwise, the location of the INI file is selected by QSettings.
+- Qt 6.8.3 LTS Android.
+- Qt 6.8.3 LTS MacOS.
+- Qt 6.8.3 LTS Windows.
+- The MacOS bundle was created on an Intel Mac Mini with
+  ARM64 and Intel support.
 
 2025.03.12
 
