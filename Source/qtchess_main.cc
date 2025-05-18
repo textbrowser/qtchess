@@ -25,6 +25,7 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QApplication>
 #if defined(Q_OS_ANDROID) || defined(Q_OS_WINDOWS)
 #include <QDir>
 #endif
