@@ -497,6 +497,8 @@ void qtchess_gui::initialize(void)
 	  return;
 	}
     }
+  else
+    m_setup->ui().gnu_chess->setText(QSettings().value("gnuchess").toString());
 
   delete m_ui.board_frame->layout();
   m_ui.action_New_GNUChess_Game->setEnabled
