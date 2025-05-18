@@ -910,6 +910,9 @@ void qtchess_promotion::setup(void)
 {
   m_ui.menu->setCurrentIndex(0);
   m_ui.menu->setFocus();
+#ifdef Q_OS_ANDROID
+  showMaximized();
+#endif
   exec();
 }
 
