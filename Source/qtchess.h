@@ -33,7 +33,7 @@
 #include "qtchess_definitions.h"
 #include "qtchess_validate.h"
 
-#define QTCHESS_VERSION "2025.03.12"
+#define QTCHESS_VERSION "2025.05.19"
 
 class qtchess: public QObject
 {
