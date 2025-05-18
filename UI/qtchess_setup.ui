@@ -559,7 +559,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="cancel">
+      <widget class="QPushButton" name="close">
        <property name="minimumSize">
         <size>
          <width>115</width>
@@ -573,6 +573,15 @@
        </property>
        <property name="text">
         <string>C&amp;lose</string>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+W</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -605,7 +614,7 @@
   <tabstop>remote_port</tabstop>
   <tabstop>connect</tabstop>
   <tabstop>reset</tabstop>
-  <tabstop>cancel</tabstop>
+  <tabstop>close</tabstop>
  </tabstops>
  <resources>
   <include location="../Images/images.qrc"/>

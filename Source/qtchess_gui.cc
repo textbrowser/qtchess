@@ -40,6 +40,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QScrollBar>
+#include <QSettings>
 #include <QStatusBar>
 
 extern QPointer<qtchess> chess;
@@ -622,7 +623,10 @@ void qtchess_gui::reset_move(void)
 void qtchess_gui::slot_new_game(void)
 {
   if(comm && comm->is_listening() == false && comm->is_ready() == false)
-    slot_setup();
+    {
+      m_setup->ui().tab->setCurrentIndex(1);
+      slot_setup();
+    }
   else if(new_game_prompt())
     initialize_board();
 }
@@ -774,7 +778,13 @@ void qtchess_gui::slot_setup(void)
 #else
       m_setup->resize(0.85 * size().width(), m_setup->size().height());
 #endif
+      m_setup->ui().close->setFocus();
+      m_ui.action_Configuration == sender() ?
+	m_setup->ui().tab->setCurrentIndex(0) :
+	m_setup->ui().tab->setCurrentIndex(1);
       m_setup->exec();
+      m_ui.action_New_GNUChess_Game->setEnabled
+	(QFileInfo(m_setup->ui().gnu_chess->text()).isExecutable());
     }
 }
 
@@ -923,7 +933,7 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	      SLOT(slot_disconnected_from_client(void)));
     }
 
-  connect(m_ui.cancel,
+  connect(m_ui.close,
 	  SIGNAL(clicked(void)),
 	  this,
 	  SLOT(slot_close(void)));
@@ -935,6 +945,10 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	  SIGNAL(clicked(void)),
 	  this,
 	  SLOT(slot_disconnect(void)));
+  connect(m_ui.gnu_chess,
+	  SIGNAL(editingFinished(void)),
+	  this,
+	  SLOT(slot_set_gnuchess(void)));
   connect(m_ui.listen,
 	  SIGNAL(clicked(void)),
 	  this,
@@ -1030,7 +1044,6 @@ void qtchess_setup::reset(void)
   m_ui.caissa->clear();
   m_ui.color->setCurrentIndex(0);
   m_ui.connect->setText(tr("&Connect"));
-  m_ui.gnu_chess->clear();
   m_ui.listen->setText(tr("&Listen"));
   m_ui.local->setChecked(true);
   m_ui.local_host->setReadOnly(false);
@@ -1222,6 +1235,8 @@ void qtchess_setup::slot_remote(bool state)
 
 void qtchess_setup::slot_reset(void)
 {
+  QSettings().remove("gnuchess");
+  m_ui.gnu_chess->clear();
   reset();
 }
 
@@ -1242,10 +1257,7 @@ void qtchess_setup::slot_select_gnuchess(void)
 
   if(dialog.exec() == QDialog::Accepted)
     {
-      gui ?
-	gui->ui().action_New_GNUChess_Game->setEnabled
-	(QFileInfo(dialog.selectedFiles().value(0)).isExecutable()) :
-	(void) 0;
+      QSettings().setValue("gnuchess", dialog.selectedFiles().value(0));
       m_ui.gnu_chess->setText(dialog.selectedFiles().value(0));
     }
 }
@@ -1257,6 +1269,12 @@ void qtchess_setup::slot_set_caissa(void)
       comm->set_caissa(m_ui.caissa->text());
       m_ui.caissa->selectAll();
     }
+}
+
+void qtchess_setup::slot_set_gnuchess(void)
+{
+  QSettings().setValue("gnuchess", m_ui.gnu_chess->text());
+  m_ui.gnu_chess->selectAll();
 }
 
 void qtchess_setup::stop(void)

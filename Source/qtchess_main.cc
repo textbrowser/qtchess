@@ -25,6 +25,10 @@
 ** QTCHESS, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#if defined(Q_OS_ANDROID) || defined(Q_OS_WINDOWS)
+#include <QDir>
+#endif
+#include <QSettings>
 #include <QtGlobal>
 
 #ifdef Q_OS_ANDROID
@@ -53,6 +57,15 @@ int main(int argc, char *argv[])
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 #endif
+#endif
+
+  QCoreApplication::setApplicationName("QtChess");
+  QCoreApplication::setOrganizationDomain("cobalt.org");
+  QCoreApplication::setOrganizationName("QtChess");
+  QSettings::setDefaultFormat(QSettings::IniFormat);
+#if defined(Q_OS_ANDROID) || defined(Q_OS_WINDOWS)
+  QSettings::setPath
+    (QSettings::IniFormat, QSettings::UserScope, QDir::currentPath());
 #endif
 
   QApplication application(argc, argv);

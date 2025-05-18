@@ -103,6 +103,11 @@ class qtchess_setup: public QDialog
     return m_ui.gnu_chess->text().trimmed();
   }
 
+  Ui_qtchess_setup ui(void) const
+  {
+    return m_ui;
+  }
+
   void reset(void);
   void stop(void);
 
@@ -122,6 +127,7 @@ class qtchess_setup: public QDialog
   void slot_reset(void);
   void slot_select_gnuchess(void);
   void slot_set_caissa(void);
+  void slot_set_gnuchess(void);
 };
 
 class qtchess_gui: public QMainWindow
