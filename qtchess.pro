@@ -179,7 +179,8 @@ DISTFILES += Android/AndroidManifest.xml \
              Android/gradle/wrapper/gradle-wrapper.properties \
              Android/gradlew \
              Android/gradlew.bat \
-             Android/res/values/libs.xml
+             Android/res/values/libs.xml \
+             Android/res/xml/qtprovider_paths.xml
 } else:mac {
 macdeployqt.path = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
