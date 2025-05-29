@@ -184,34 +184,23 @@ DISTFILES += Android/AndroidManifest.xml \
 } else:mac {
 macdeployqt.path = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
+
 INSTALLS = macdeployqt
 } else:win32 {
-plugins1.files = $$[QT_INSTALL_PLUGINS]\\*
-plugins1.path = release\\plugins\\.
-plugins2.files = $$[QT_INSTALL_PLUGINS]\\gamepads\\xinputgamepad.dll
-plugins2.path = release\\plugins\\gamepads\\.
-plugins3.files = $$[QT_INSTALL_PLUGINS]\\platforms\\qdirect2d.dll
-plugins3.path = release\\plugins\\platforms\\.
-plugins4.files = $$[QT_INSTALL_PLUGINS]\\renderplugins\\scene2d.dll
-plugins4.path = release\\plugins\\renderplugins\\.
-pluginspurge.extra = del /Q /S *d.dll
-pluginspurge.path = release\\plugins\\.
+plugins.files = $$[QT_INSTALL_PLUGINS]\\*
+plugins.path = release\\plugins\\.
 qt.files = Qt\\qt.conf
 qt.path = release\\.
-qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt6Core.dll \
-                    $$[QT_INSTALL_BINS]\\Qt6Gui.dll \
-                    $$[QT_INSTALL_BINS]\\Qt6Network.dll \
-                    $$[QT_INSTALL_BINS]\\Qt6Widgets.dll \
-                    $$[QT_INSTALL_BINS]\\libgcc_s_seh-1.dll \
-                    $$[QT_INSTALL_BINS]\\libstdc++-6.dll \
-                    $$[QT_INSTALL_BINS]\\libwinpthread-1.dll
+qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt*Core.dll \
+                    $$[QT_INSTALL_BINS]\\Qt*Gui.dll \
+                    $$[QT_INSTALL_BINS]\\Qt*Network.dll \
+                    $$[QT_INSTALL_BINS]\\Qt*Widgets.dll \
+                    $$[QT_INSTALL_BINS]\\libgcc_s_seh-&.dll \
+                    $$[QT_INSTALL_BINS]\\libstdc++-*.dll \
+                    $$[QT_INSTALL_BINS]\\libwinpthread-*.dll
 qtlibraries.path = release\\.
 
-INSTALLS = plugins1 \
-           pluginspurge \
-           plugins2 \
-           plugins3 \
-           plugins4 \
+INSTALLS = plugins \
            qt \
            qtlibraries
 }
