@@ -9,7 +9,7 @@ purge.commands = del *~ && del */*~
 purge.commands = rm -f *~ && rm -f */*~
 }
 
-CONFIG += qt release warn_on
+CONFIG  += qt release warn_on
 DEFINES	+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
 
 mac {
@@ -25,12 +25,12 @@ win32 {
 RC_FILE	= qtchess.win.rc
 }
 
-MOC_DIR = Temporary/moc
+MOC_DIR     = Temporary/moc
 OBJECTS_DIR = Temporary/obj
 QMAKE_CLEAN += QtChess
-RCC_DIR = Temporary/rcc
-TEMPLATE = app
-UI_DIR = Temporary/ui
+RCC_DIR     = Temporary/rcc
+TEMPLATE    = app
+UI_DIR      = Temporary/ui
 
 android {
 QMAKE_CXXFLAGS += -Wall \
@@ -123,7 +123,6 @@ QMAKE_CXXFLAGS += -Wall \
                   -std=c++11
 }
 } else:mac {
-QMAKE_APPLE_DEVICE_ARCHS = arm64 x86_64
 QMAKE_CXXFLAGS += -Wall \
                   -Wcast-align \
                   -Wcast-qual \
@@ -160,7 +159,7 @@ QMAKE_CXXFLAGS += -std=c++17
 QMAKE_CXXFLAGS -= -std=c++11
 }
 
-QMAKE_DISTCLEAN += -r .qmake.cache .qmake.stash Temporary
+QMAKE_DISTCLEAN     += -r .qmake.cache .qmake.stash Temporary
 QMAKE_EXTRA_TARGETS = purge
 
 mac {
@@ -168,37 +167,37 @@ QMAKE_EXTRA_TARGETS += dmg
 }
 
 PROJECTNAME = QtChess
-TARGET = QtChess
+TARGET      = QtChess
 
 android {
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/Android
-DISTFILES += Android/AndroidManifest.xml \
-             Android/build.gradle \
-             Android/gradle.properties \
-             Android/gradle/wrapper/gradle-wrapper.jar \
-             Android/gradle/wrapper/gradle-wrapper.properties \
-             Android/gradlew \
-             Android/gradlew.bat \
-             Android/res/values/libs.xml \
-             Android/res/xml/qtprovider_paths.xml
+DISTFILES                  += Android/AndroidManifest.xml \
+                           Android/build.gradle \
+                           Android/gradle.properties \
+                           Android/gradle/wrapper/gradle-wrapper.jar \
+                           Android/gradle/wrapper/gradle-wrapper.properties \
+                           Android/gradlew \
+                           Android/gradlew.bat \
+                           Android/res/values/libs.xml \
+                           Android/res/xml/qtprovider_paths.xml
 } else:mac {
-macdeployqt.path = QtChess.app
+macdeployqt.path  = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
 
 INSTALLS = macdeployqt
 } else:win32 {
-plugins.files = $$[QT_INSTALL_PLUGINS]\\*
-plugins.path = release\\plugins\\.
-qt.files = Qt\\qt.conf
-qt.path = release\\.
+plugins.files     = $$[QT_INSTALL_PLUGINS]\\*
+plugins.path      = release\\plugins\\.
+qt.files          = Qt\\qt.conf
+qt.path           = release\\.
 qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt*Core.dll \
                     $$[QT_INSTALL_BINS]\\Qt*Gui.dll \
                     $$[QT_INSTALL_BINS]\\Qt*Network.dll \
                     $$[QT_INSTALL_BINS]\\Qt*Widgets.dll \
-                    $$[QT_INSTALL_BINS]\\libgcc_s_seh-&.dll \
+                    $$[QT_INSTALL_BINS]\\libgcc_s_seh-*.dll \
                     $$[QT_INSTALL_BINS]\\libstdc++-*.dll \
                     $$[QT_INSTALL_BINS]\\libwinpthread-*.dll
-qtlibraries.path = release\\.
+qtlibraries.path  = release\\.
 
 INSTALLS = plugins \
            qt \
