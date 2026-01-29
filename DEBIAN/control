@@ -1,8 +1,8 @@
 Architecture: amd64
-Depends: libqt5core5a,
-         libqt5gui5,
-         libqt5network5,
-         libqt5widgets5
+Depends: libqt6core6t64,
+	 libqt6gui6t64,
+	 libqt6network6t64,
+	 libqt6widgets6t64
 Maintainer: f83043e79dc03a0abfbcbc376879a97d66f2cacb@protonmail.ch
 Package: QtChess
 Priority: optional
