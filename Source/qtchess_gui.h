@@ -172,6 +172,7 @@ class qtchess_gui: public QMainWindow
   void initialize(void);
   void initialize_clocks(void);
   void notify_connection(const QString &address, const quint16 port);
+  void reset(void);
   void reset_move(void);
   void set_status_text(const QString &str);
   void show_disconnect(void);
@@ -211,6 +212,7 @@ class qtchess_gui: public QMainWindow
 
  private slots:
   void slot_about(void);
+  void slot_about_to_show_file_menu(void);
   void slot_help(void);
   void slot_new_game(void);
   void slot_new_gnuchess_game(void);

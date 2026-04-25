@@ -50,13 +50,6 @@ extern QPointer<qtchess_gui> gui;
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
   m_ui.setupUi(this);
-  m_ui.action_New_GNUChess_Game->isEnabled() ?
-    m_ui.action_New_GNUChess_Game->
-    setText(m_ui.action_New_GNUChess_Game->text()) :
-    m_ui.action_New_GNUChess_Game->
-    setText(tr("New GNUChess Game (Missing GNUChess Program)"));
-  m_ui.action_Quit_GNUChess_Game->setEnabled
-    (m_ui.action_New_GNUChess_Game->isEnabled());
   m_ui.action_Undo_GNUChess_Move->setEnabled(false);
   m_ui.side->setVisible(false);
   m_ui.splitter->setStretchFactor(0, 1);
@@ -415,6 +408,10 @@ void qtchess_gui::initialize(void)
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_undo_gnuchess_move(void)));
+  connect(m_ui.menu_File,
+	  SIGNAL(aboutToShow(void)),
+	  this,
+	  SLOT(slot_about_to_show_file_menu(void)));
 
   if((m_board = new(std::nothrow) qtchess_gui_board(nullptr)) == nullptr)
     {
@@ -501,8 +498,6 @@ void qtchess_gui::initialize(void)
     m_setup->ui().gnu_chess->setText(QSettings().value("gnuchess").toString());
 
   delete m_ui.board_frame->layout();
-  m_ui.action_New_GNUChess_Game->setEnabled
-    (QFileInfo(m_setup->gnuChessPath()).isExecutable());
   m_ui.board_frame->setFocus();
   m_ui.board_frame->setLayout(new QGridLayout());
 
@@ -617,6 +612,11 @@ void qtchess_gui::notify_connection
     (tr("Status: Peer %1:%2 Connected").arg(address).arg(port));
 }
 
+void qtchess_gui::reset(void)
+{
+  slot_quit_gnuchess();
+}
+
 void qtchess_gui::reset_move(void)
 {
   m_board ? m_board->reset_move() : (void) 0;
@@ -642,7 +642,7 @@ void qtchess_gui::slot_new_gnuchess_game(void)
 
       if(comm && comm->is_connected_remotely())
 	{
-	  m_setup ? m_setup->reset() : (void) 0;
+	  m_setup->reset();
 	  m_ui.action_New_Game->setEnabled(false);
 	  chess ? chess->set_my_color(WHITE) : (void) 0;
 	  initialize_board();
@@ -762,6 +762,17 @@ void qtchess_gui::slot_about(void)
   mb.exec();
 }
 
+void qtchess_gui::slot_about_to_show_file_menu(void)
+{
+  m_ui.action_New_GNUChess_Game->setEnabled
+    (QFileInfo(m_setup->gnuChessPath()).isExecutable());
+  m_ui.action_New_GNUChess_Game->isEnabled() ?
+    m_ui.action_New_GNUChess_Game->setText(tr("New GNUChess Game")) :
+    m_ui.action_New_GNUChess_Game->setText(tr("New GNUChess Game "
+					      "(Missing GNUChess Program)"));
+  update();
+}
+
 void qtchess_gui::slot_help(void)
 {
   if(m_help)
@@ -785,8 +796,6 @@ void qtchess_gui::slot_setup(void)
 	m_setup->ui().tab->setCurrentIndex(0) :
 	m_setup->ui().tab->setCurrentIndex(1);
       m_setup->exec();
-      m_ui.action_New_GNUChess_Game->setEnabled
-	(QFileInfo(m_setup->ui().gnu_chess->text()).isExecutable());
     }
 }
 
@@ -1279,6 +1288,7 @@ void qtchess_setup::slot_set_caissa(void)
 void qtchess_setup::slot_set_gnuchess(void)
 {
   QSettings().setValue("gnuchess", m_ui.gnu_chess->text());
+  gui ? gui->reset() : (void) 0;
   m_ui.gnu_chess->selectAll();
 }
 
