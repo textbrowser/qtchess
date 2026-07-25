@@ -4,7 +4,7 @@
 
 set_qt_qpa_platformtheme()
 {
-    qt6=$(ldd "$1" | grep Qt6 2>/dev/null)
+    qt6=$(ldd "$1" 2>/dev/null | grep Qt6 2>/dev/null)
 
     if [ ! -z "$qt6" ]
     then
@@ -23,19 +23,23 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 export QT_X11_NO_MITSHM=1
 
-if [ -r ./QtChess ] && [ -x ./QtChess ]
+if [ -f ./QtChess ] && [ -r ./QtChess ] && [ -x ./QtChess ]
 then
     echo "Launching a local QtChess."
     set_qt_qpa_platformtheme "./QtChess"
     ./QtChess "$@"
     exit $?
-elif [ -r /opt/qtchess/QtChess ] && [ -x /opt/qtchess/QtChess ]
+fi
+
+if [ -f /opt/qtchess/QtChess ] && \
+   [ -r /opt/qtchess/QtChess ] && \
+   [ -x /opt/qtchess/QtChess ]
 then
-    echo "Launching an official QtChess."
+    echo "Launching an official QtChess (/opt/qtchess)."
     set_qt_qpa_platformtheme "/opt/qtchess/QtChess"
     /opt/qtchess/QtChess "$@"
     exit $?
-else
-    echo "Cannot locate QtChess."
-    exit 1
 fi
+
+echo "Cannot locate QtChess."
+exit 1
