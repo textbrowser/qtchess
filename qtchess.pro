@@ -1,6 +1,6 @@
 include(qtchess-source.qt-project)
 
-mac {
+macx {
 dmg.commands = make install && \
                hdiutil create QtChess.dmg -srcfolder QtChess.app
 } else:win32 {
@@ -12,7 +12,7 @@ purge.commands = rm -f *~ && rm -f */*~
 CONFIG  += qt release warn_on
 DEFINES	+= QT_DEPRECATED_WARNINGS QT_SHA3_KECCAK_COMPAT
 
-mac {
+macx {
 ICON = Images/chess.icns
 } else:win32 {
 ICON = Images/chess.png
@@ -122,7 +122,11 @@ QMAKE_CXXFLAGS += -Wall \
                   -pie \
                   -std=c++11
 }
-} else:mac {
+} else:macx {
+contains(QMAKE_HOST.arch, x86_64) {
+QMAKE_APPLE_DEVICE_ARCHS = arm64 x86_64
+}
+
 QMAKE_CXXFLAGS += -Wall \
                   -Wcast-align \
                   -Wcast-qual \
@@ -162,7 +166,7 @@ QMAKE_CXXFLAGS -= -std=c++11
 QMAKE_DISTCLEAN     += -r .qmake.cache .qmake.stash Temporary
 QMAKE_EXTRA_TARGETS = purge
 
-mac {
+macx {
 QMAKE_EXTRA_TARGETS += dmg
 }
 
@@ -180,7 +184,7 @@ DISTFILES                  += Android/AndroidManifest.xml \
                            Android/gradlew.bat \
                            Android/res/values/libs.xml \
                            Android/res/xml/qtprovider_paths.xml
-} else:mac {
+} else:macx {
 macdeployqt.path  = QtChess.app
 macdeployqt.extra = $$[QT_INSTALL_BINS]/macdeployqt ./QtChess.app
 
