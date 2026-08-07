@@ -1,8 +1,7 @@
 include(qtchess-source.qt-project)
 
 macx {
-dmg.commands = make install && \
-               hdiutil create QtChess.dmg -srcfolder QtChess.app
+dmg.commands = hdiutil create QtChess.dmg -srcfolder QtChess.app
 } else:win32 {
 purge.commands = del *~ && del */*~
 } else {

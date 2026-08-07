@@ -1,0 +1,7 @@
+Building Signed QtChess DMG
+
+qmake
+make -j 5
+make install
+codesign --deep --force -s "textbrowser" ./Qtchess.app
+make dmg
