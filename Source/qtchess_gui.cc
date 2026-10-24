@@ -1273,6 +1273,7 @@ void qtchess_setup::slot_reset(void)
 {
   QSettings().remove("gnuchess");
   QSettings().remove("style_override");
+  gui ? gui->reset() : (void) 0;
   m_ui.gnu_chess->clear();
   reset();
 }
