@@ -32,6 +32,7 @@
 #include "qtchess_validate.h"
 
 #include <QActionGroup>
+#include <QCompleter>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QGridLayout>
@@ -42,10 +43,19 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QStatusBar>
+#include <QStyleFactory>
 
 extern QPointer<qtchess> chess;
 extern QPointer<qtchess_communications> comm;
 extern QPointer<qtchess_gui> gui;
+
+static QStringList sort(const QStringList &list)
+{
+  auto sorted(list);
+
+  std::sort(sorted.begin(), sorted.end());
+  return sorted;
+}
 
 qtchess_gui::qtchess_gui(void):QMainWindow()
 {
@@ -934,6 +944,11 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
   m_ui.local_scope_id->setEnabled(false);
   m_ui.remote_host->setText(QHostAddress(QHostAddress::LocalHost).toString());
   m_ui.remote_scope_id->setEnabled(false);
+  m_ui.style_override->setCompleter
+    (new QCompleter(sort(QStyleFactory::keys()), this));
+  m_ui.style_override->completer()->setCaseSensitivity(Qt::CaseInsensitive);
+  m_ui.style_override->completer()->setCompletionMode
+    (QCompleter::UnfilteredPopupCompletion);
 
   if(comm)
     {
@@ -1003,6 +1018,10 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	  SIGNAL(clicked(void)),
 	  this,
 	  SLOT(slot_set_caissa(void)));
+  connect(m_ui.style_override,
+	  SIGNAL(returnPressed(void)),
+	  this,
+	  SLOT(slot_set_style_override(void)));
   m_ui.remote_gb->setEnabled(false);
 }
 
@@ -1290,6 +1309,12 @@ void qtchess_setup::slot_set_gnuchess(void)
   QSettings().setValue("gnuchess", m_ui.gnu_chess->text());
   gui ? gui->reset() : (void) 0;
   m_ui.gnu_chess->selectAll();
+}
+
+void qtchess_setup::slot_set_style_override(void)
+{
+  QSettings().setValue
+    ("style_override", m_ui.style_override->text().trimmed());
 }
 
 void qtchess_setup::stop(void)

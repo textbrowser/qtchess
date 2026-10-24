@@ -83,6 +83,33 @@
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="QLabel" name="label_20">
+               <property name="text">
+                <string>&amp;Style Override</string>
+               </property>
+               <property name="buddy">
+                <cstring>style_override</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="style_override">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the environment variable QT_STYLE_OVERRIDE to the specified value. May override QT_QPA_PLATFORMTHEME. Please restart QtChess if this value is saved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="placeholderText">
+                <string>QT_STYLE_OVERRIDE</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <spacer name="verticalSpacer_2">
              <property name="orientation">
               <enum>Qt::Orientation::Vertical</enum>
@@ -604,6 +631,7 @@
   <tabstop>tab</tabstop>
   <tabstop>gnu_chess</tabstop>
   <tabstop>select_gnu_chess</tabstop>
+  <tabstop>style_override</tabstop>
   <tabstop>caissa</tabstop>
   <tabstop>set_caissa</tabstop>
   <tabstop>local</tabstop>

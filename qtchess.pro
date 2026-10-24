@@ -133,6 +133,8 @@ QMAKE_CXXFLAGS += -Wall \
                   -Wextra \
                   -Wformat=2 \
                   -Woverloaded-virtual \
+                  -Wno-c++20-attribute-extensions \
+                  -Wno-gnu-include-next \
                   -Wpointer-arith \
                   -Wstack-protector \
                   -Wstrict-overflow=5 \
