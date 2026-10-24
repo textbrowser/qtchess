@@ -949,6 +949,8 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
   m_ui.style_override->completer()->setCaseSensitivity(Qt::CaseInsensitive);
   m_ui.style_override->completer()->setCompletionMode
     (QCompleter::UnfilteredPopupCompletion);
+  m_ui.style_override->setText
+    (QSettings().value("style_override").toString().trimmed());
 
   if(comm)
     {
@@ -1101,6 +1103,7 @@ void qtchess_setup::reset(void)
   m_ui.remote_scope_id->clear();
   m_ui.remote_scope_id->setEnabled(false);
   m_ui.remote_scope_id->setReadOnly(false);
+  m_ui.style_override->clear();
   m_ui.tab->setCurrentIndex(0);
 }
 
@@ -1269,6 +1272,7 @@ void qtchess_setup::slot_remote(bool state)
 void qtchess_setup::slot_reset(void)
 {
   QSettings().remove("gnuchess");
+  QSettings().remove("style_override");
   m_ui.gnu_chess->clear();
   reset();
 }

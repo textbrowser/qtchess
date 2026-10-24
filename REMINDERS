@@ -4,6 +4,7 @@ Completed Items
 - GNUChess, if available.
 - NAT IP addresses. Not required.
 - Prevent a king from moving onto a dangerous square.
+- QT_STYLE_OVERRIDE.
 - SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
 - Turn off GNUChess process.
 - Undo a move if GNUChess declares the move as invalid.
@@ -11,4 +12,3 @@ Completed Items
 Remaining Items
 
 - Enumerator classes.
-- QT_STYLE_OVERRIDE.

@@ -54,6 +54,8 @@ QPointer<qtchess_gui> gui;
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
+  QCoreApplication::setAttribute(Qt::AA_DontUseNativeDialogs, true);
+  QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
@@ -68,6 +70,11 @@ int main(int argc, char *argv[])
   QSettings::setPath
     (QSettings::IniFormat, QSettings::UserScope, QDir::currentPath());
 #endif
+
+  auto const variable
+    (QSettings().value("style_override").toByteArray().trimmed());
+
+  qputenv("QT_STYLE_OVERRIDE", variable);
 
   QApplication application(argc, argv);
 
