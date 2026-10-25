@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.cobalt.qtchess" android:installLocation="auto" android:versionCode="20250519" android:versionName="2025.05.19">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.cobalt.qtchess" android:installLocation="auto" android:versionCode="20261105" android:versionName="2026.11.05">
     <!-- %%INSERT_PERMISSIONS -->
     <!-- %%INSERT_FEATURES -->
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
