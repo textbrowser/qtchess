@@ -2,6 +2,7 @@
 
 - New QT_STYLE_OVERRIDE option.
 - Prefer Qt dialogs and menus.
+- Signed MacOS release.
 
 2025.05.19
 
