@@ -83,6 +83,33 @@
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QLabel" name="label_21">
+               <property name="text">
+                <string>GNU Chess Options</string>
+               </property>
+               <property name="buddy">
+                <cstring>style_override</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="gnu_chess_options">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please read https://www.gnu.org/software/chess/manual/gnuchess.html for instructions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="placeholderText">
+                <string>GNU Chess Options</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_11">
              <item>
               <widget class="QLabel" name="label_20">
@@ -631,6 +658,7 @@
   <tabstop>tab</tabstop>
   <tabstop>gnu_chess</tabstop>
   <tabstop>select_gnu_chess</tabstop>
+  <tabstop>gnu_chess_options</tabstop>
   <tabstop>style_override</tabstop>
   <tabstop>caissa</tabstop>
   <tabstop>set_caissa</tabstop>

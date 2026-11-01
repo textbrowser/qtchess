@@ -505,7 +505,12 @@ void qtchess_gui::initialize(void)
 	}
     }
   else
-    m_setup->ui().gnu_chess->setText(QSettings().value("gnuchess").toString());
+    {
+      m_setup->ui().gnu_chess->setText
+	(QSettings().value("gnuchess").toString());
+      m_setup->ui().gnu_chess_options->setText
+	(QSettings().value("gnuchess_options", "--easy").toString());
+    }
 
   delete m_ui.board_frame->layout();
   m_ui.board_frame->setFocus();
@@ -775,7 +780,7 @@ void qtchess_gui::slot_about(void)
 void qtchess_gui::slot_about_to_show_file_menu(void)
 {
   m_ui.action_New_GNUChess_Game->setEnabled
-    (QFileInfo(m_setup->gnuChessPath()).isExecutable());
+    (QFileInfo(m_setup->gnu_chess_path()).isExecutable());
   m_ui.action_New_GNUChess_Game->isEnabled() ?
     m_ui.action_New_GNUChess_Game->setText(tr("New GNUChess Game")) :
     m_ui.action_New_GNUChess_Game->setText(tr("New GNUChess Game "
@@ -1277,8 +1282,10 @@ void qtchess_setup::slot_reset(void)
 {
   QSettings().remove("gnuchess");
   QSettings().remove("style_override");
+  QSettings().setValue("gnuchess_options", "--easy");
   gui ? gui->reset() : (void) 0;
   m_ui.gnu_chess->clear();
+  m_ui.gnu_chess_options->setText("--easy");
   reset();
 }
 

@@ -98,9 +98,14 @@ class qtchess_setup: public QDialog
     return m_ui.color->currentText();
   }
 
-  QString gnuChessPath(void) const
+  QString gnu_chess_path(void) const
   {
     return m_ui.gnu_chess->text().trimmed();
+  }
+
+  QStringList gnu_chess_options(void) const
+  {
+    return m_ui.gnu_chess_options->text().trimmed().split(' ');
   }
 
   Ui_qtchess_setup ui(void) const
@@ -148,9 +153,14 @@ class qtchess_gui: public QMainWindow
       return "";
   }
 
-  QString gnuChessPath(void) const
+  QString gnu_chess_path(void) const
   {
-    return m_setup ? m_setup->gnuChessPath() : "";
+    return m_setup ? m_setup->gnu_chess_path() : "";
+  }
+
+  QStringList gnu_chess_options(void) const
+  {
+    return m_setup ? m_setup->gnu_chess_options() : QStringList() << "--easy";
   }
 
   Ui_qtchess_mainwindow ui(void) const

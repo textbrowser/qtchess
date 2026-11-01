@@ -1,5 +1,6 @@
 2026.11.05
 
+- New GNU Chess options setting.
 - New QT_STYLE_OVERRIDE option.
 - Prefer Qt dialogs and menus.
 - Signed MacOS release.
