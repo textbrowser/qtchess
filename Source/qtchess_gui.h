@@ -133,6 +133,7 @@ class qtchess_setup: public QDialog
   void slot_select_gnuchess(void);
   void slot_set_caissa(void);
   void slot_set_gnuchess(void);
+  void slot_set_gnuchess_options(void);
   void slot_set_style_override(const QString &text);
   void slot_set_style_override(void);
 };

@@ -985,6 +985,14 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	  SIGNAL(editingFinished(void)),
 	  this,
 	  SLOT(slot_set_gnuchess(void)));
+  connect(m_ui.gnu_chess_options,
+	  SIGNAL(returnPressed(void)),
+	  this,
+	  SLOT(slot_set_gnuchess_options(void)));
+  connect(m_ui.gnu_chess_options,
+	  SIGNAL(textChanged(const QString &)),
+	  this,
+	  SLOT(slot_set_gnuchess_options(void)));
   connect(m_ui.listen,
 	  SIGNAL(clicked(void)),
 	  this,
@@ -1325,6 +1333,13 @@ void qtchess_setup::slot_set_gnuchess(void)
   QSettings().setValue("gnuchess", m_ui.gnu_chess->text());
   gui ? gui->reset() : (void) 0;
   m_ui.gnu_chess->selectAll();
+}
+
+void qtchess_setup::slot_set_gnuchess_options(void)
+{
+  QSettings().setValue
+    ("gnuchess_options", m_ui.gnu_chess_options->text().trimmed());
+  gui ? gui->reset() : (void) 0;
 }
 
 void qtchess_setup::slot_set_style_override(const QString &text)
