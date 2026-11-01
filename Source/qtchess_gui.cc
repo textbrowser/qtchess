@@ -1021,6 +1021,10 @@ qtchess_setup::qtchess_setup(QWidget *parent):QDialog(parent)
 	  this,
 	  SLOT(slot_set_caissa(void)));
   connect(m_ui.style_override,
+	  SIGNAL(textChanged(const QString &)),
+	  this,
+	  SLOT(slot_set_style_override(const QString &)));
+  connect(m_ui.style_override,
 	  SIGNAL(returnPressed(void)),
 	  this,
 	  SLOT(slot_set_style_override(void)));
@@ -1314,6 +1318,11 @@ void qtchess_setup::slot_set_gnuchess(void)
   QSettings().setValue("gnuchess", m_ui.gnu_chess->text());
   gui ? gui->reset() : (void) 0;
   m_ui.gnu_chess->selectAll();
+}
+
+void qtchess_setup::slot_set_style_override(const QString &text)
+{
+  QSettings().setValue("style_override", text.trimmed());
 }
 
 void qtchess_setup::slot_set_style_override(void)
