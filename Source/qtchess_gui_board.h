@@ -41,7 +41,6 @@ class qtchess_piece: public QLabel
  public:
   qtchess_piece(const int i, const int j, QWidget *parent):QLabel(parent)
   {
-    Q_UNUSED(parent);
     m_i = i;
     m_j = j;
   };
