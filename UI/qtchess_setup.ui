@@ -97,7 +97,7 @@
              <item>
               <widget class="QLineEdit" name="gnu_chess_options">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please read https://www.gnu.org/software/chess/manual/gnuchess.html for instructions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please read https://www.gnu.org/software/chess/manual/gnuchess.html for instructions. Please do not include the --xboard option.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="placeholderText">
                 <string>GNU Chess Options</string>
