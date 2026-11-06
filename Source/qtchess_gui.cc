@@ -509,7 +509,7 @@ void qtchess_gui::initialize(void)
       m_setup->ui().gnu_chess->setText
 	(QSettings().value("gnuchess").toString());
       m_setup->ui().gnu_chess_options->setText
-	(QSettings().value("gnuchess_options", "--easy").toString());
+	(QSettings().value("gnuchess_options", "--easy").toString().trimmed());
     }
 
   delete m_ui.board_frame->layout();
@@ -1339,7 +1339,6 @@ void qtchess_setup::slot_set_gnuchess_options(void)
 {
   QSettings().setValue
     ("gnuchess_options", m_ui.gnu_chess_options->text().trimmed());
-  gui ? gui->reset() : (void) 0;
 }
 
 void qtchess_setup::slot_set_style_override(const QString &text)
