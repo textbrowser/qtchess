@@ -83,6 +83,16 @@
             </layout>
            </item>
            <item>
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Please restart an active GNUChess process after setting new options.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
              <item>
               <widget class="QLabel" name="label_21">
