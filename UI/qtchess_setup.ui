@@ -66,7 +66,7 @@
              <item>
               <widget class="QLineEdit" name="gnu_chess">
                <property name="placeholderText">
-                <string>GNU Chess Executable Absolute Path</string>
+                <string>GNUChess Executable Absolute Path</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
@@ -97,7 +97,7 @@
              <item>
               <widget class="QLabel" name="label_21">
                <property name="text">
-                <string>GNU Chess Options</string>
+                <string>GNUChess Options</string>
                </property>
                <property name="buddy">
                 <cstring>style_override</cstring>
@@ -110,7 +110,7 @@
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Please read https://www.gnu.org/software/chess/manual/gnuchess.html for instructions. Please do not include the --xboard option.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="placeholderText">
-                <string>GNU Chess Options</string>
+                <string>GNUChess Options</string>
                </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
