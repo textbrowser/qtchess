@@ -1,7 +1,9 @@
-2026.11.12
+2026.11.18
 
-- LTS release: Kubuntu 26.04 AMD64, MacOS 15 Universal,
-  PiOS 13 ARM64, Windows 11 AMD64.
+- LTS release: Kubuntu 26.04 AMD64,
+  MacOS 15 Universal,
+  PiOS 13 ARM64,
+  Windows 11 AMD64.
 - Signed MacOS bundle.
 
 2026.11.08
