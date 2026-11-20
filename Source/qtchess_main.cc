@@ -30,6 +30,7 @@
 #include <QDir>
 #endif
 #include <QSettings>
+#include <QStyleFactory>
 #include <QtGlobal>
 
 #ifdef Q_OS_ANDROID
@@ -74,9 +75,8 @@ int main(int argc, char *argv[])
   auto const variable
     (QSettings().value("style_override").toByteArray().trimmed());
 
-  qputenv("QT_STYLE_OVERRIDE", variable);
-
-  QApplication application(argc, argv);
+  if(QStyleFactory::keys().contains(variable))
+    qputenv("QT_STYLE_OVERRIDE", variable);
 
 #ifdef Q_OS_MACOS
 #if QT_VERSION >= 0x050000
@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
+  QApplication application(argc, argv);
   int rc = 0;
 
   {
@@ -108,7 +109,8 @@ int main(int argc, char *argv[])
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 1, 0))
   auto activity = QJniObject(QNativeInterface::QAndroidApplication::context());
 
-  activity.callMethod<void> ("finishAndRemoveTask");
+  if(activity.isValid())
+    activity.callMethod<void> ("finishAndRemoveTask");
 #endif
 #endif
   return rc;

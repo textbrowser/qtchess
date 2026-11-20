@@ -1,10 +1,14 @@
-2026.11.20
+2026.11.21
 
+- Android: issue QJniObject::callMethod() is the object is valid.
 - LTS release: Kubuntu 26.04 AMD64,
   MacOS 15 Universal,
   PiOS 13 ARM64,
   Windows 11 AMD64.
+- MacOS: create CocoaInitializer before QApplication.
 - Signed MacOS bundle.
+- Verify that style_override exists in QStyleFactory::keys()
+  before setting QT_STYLE_OVERRIDE.
 
 2026.11.08
 
