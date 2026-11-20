@@ -64,6 +64,6 @@ then
     exit 1
 fi
 
-mv QtChess.d.dmg QtChess-2026.11.20_Universal.dmg
+mv QtChess.d.dmg QtChess-2026.11.21_Universal.dmg
 make distclean 1>/dev/null 2>/dev/null
 rm -fr ./QtChess.d
