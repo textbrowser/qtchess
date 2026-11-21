@@ -5,7 +5,7 @@
   MacOS 15 Universal,
   PiOS 13 ARM64,
   Windows 11 AMD64.
-- MacOS: create CocoaInitializer before QApplication.
+- MacOS: removed CocoaInitializer.
 - New main window size 800 x 800.
 - Signed MacOS bundle.
 - Verify that style_override exists in QStyleFactory::keys()

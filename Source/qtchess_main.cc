@@ -39,11 +39,6 @@
 #endif
 #endif
 
-#ifdef Q_OS_MACOS
-#if QT_VERSION >= 0x050000
-#include "CocoaInitializer.h"
-#endif
-#endif
 #include "qtchess.h"
 #include "qtchess_communications.h"
 #include "qtchess_gui.h"
@@ -77,16 +72,6 @@ int main(int argc, char *argv[])
 
   if(QStyleFactory::keys().contains(variable))
     qputenv("QT_STYLE_OVERRIDE", variable);
-
-#ifdef Q_OS_MACOS
-#if QT_VERSION >= 0x050000
-  /*
-  ** Eliminate warnings.
-  */
-
-  CocoaInitializer ci;
-#endif
-#endif
 
   QApplication application(argc, argv);
   int rc = 0;
