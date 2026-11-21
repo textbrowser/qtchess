@@ -54,15 +54,15 @@ then
     exit 1
 fi
 
-echo "Building QtChess.d.dmg."
+echo "Building QtChess.dmg."
 make dmg 1>/dev/null 2>/dev/null
 
-if [ ! -r QtChess.d.dmg ]
+if [ ! -r QtChess.dmg ]
 then
-    echo "QtChess.d.dmg is not a readable file."
+    echo "QtChess.dmg is not a readable file."
     exit 1
 fi
 
-mv QtChess.d.dmg QtChess-2026.11.21_Universal.dmg
+mv QtChess.dmg QtChess-2026.11.21_Universal.dmg
 make distclean 1>/dev/null 2>/dev/null
 rm -fr ./QtChess.d
