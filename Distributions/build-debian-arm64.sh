@@ -23,7 +23,18 @@ fi
 # Prepare local files.
 
 mkdir -p ./opt/qtchess
-qmake6 -o Makefile qtchess.pro && make -j $(nproc)
+
+if [ ! -z "$(which qmake)" ]
+then
+    qmake -o Makefile
+elif [ ! -z "$(which qmake5)" ]
+then
+    qmake5 -o Makefile
+else
+    qmake6 -o Makefile
+fi
+
+make -j $(nproc)
 cp ./QtChess ./opt/qtchess/.
 cp ./qtchess.sh ./opt/qtchess/.
 find ./opt/qtchess -type f -exec chmod g+w {} \;
