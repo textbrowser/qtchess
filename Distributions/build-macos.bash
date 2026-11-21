@@ -65,4 +65,3 @@ fi
 
 mv QtChess.dmg QtChess-2026.11.21_Universal.dmg
 make distclean 1>/dev/null 2>/dev/null
-rm -fr ./QtChess.d
