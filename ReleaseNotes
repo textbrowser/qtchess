@@ -1,11 +1,12 @@
 2026.11.21
 
-- Android: issue QJniObject::callMethod() is the object is valid.
+- Android: issue QJniObject::callMethod() if the object is valid.
 - LTS release: Kubuntu 26.04 AMD64,
   MacOS 15 Universal,
   PiOS 13 ARM64,
   Windows 11 AMD64.
 - MacOS: create CocoaInitializer before QApplication.
+- New main window size 800 x 800.
 - Signed MacOS bundle.
 - Verify that style_override exists in QStyleFactory::keys()
   before setting QT_STYLE_OVERRIDE.
@@ -46,3 +47,7 @@
 - Non-native menu bar on MacOS.
 - Prevent king from moving onto a terminal square.
 - Reset the game state after a connection is terminated.
+
+2004.08.16
+
+- First version!
