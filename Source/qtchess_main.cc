@@ -67,6 +67,11 @@ int main(int argc, char *argv[])
     (QSettings::IniFormat, QSettings::UserScope, QDir::currentPath());
 #endif
 
+#if defined(Q_OS_MACOS) || defined(Q_OS_WINDOWS)
+  if(!QSettings().contains("style_override"))
+    QSettings().setValue("style_override", "Fusion");
+#endif
+
   auto const variable
     (QSettings().value("style_override").toByteArray().trimmed());
 
