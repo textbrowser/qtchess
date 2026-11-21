@@ -45,9 +45,8 @@ fi
 echo "Making QtChess."
 make -j $(sysctl -n hw.ncpu) 1>/dev/null 2>/dev/null
 make install 1>/dev/null 2>/dev/null
-echo "Signing ./QtChess.d/QtChess.app."
-codesign --deep --force -s "textbrowser" ./QtChess.d/QtChess.app \
-	 1>/dev/null 2>/dev/null
+echo "Signing ./QtChess.app."
+codesign --deep --force -s "textbrowser" ./QtChess.app 1>/dev/null 2>/dev/null
 
 if [ ! $? -eq 0 ]
 then
