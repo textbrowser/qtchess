@@ -1,5 +1,7 @@
 2026.11.25
 
+- Include the lengths of the original arrays in
+  qtchess_communications::memcmp().</li>
 - Validate GNUChess path. Must be an executable.
 - Verify that a row's size is properly bounded in qtchess::update_board().
 

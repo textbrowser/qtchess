@@ -157,11 +157,11 @@ bool qtchess_communications::memcmp
 (const QByteArray &a, const QByteArray &b) const
 {
   auto const length = qMax(a.length(), b.length());
-  quint64 rc = 0;
+  auto rc = static_cast<quint64> (a.length() ^ b.length());
 
   for(int i = 0; i < length; i++)
-    rc |= (i < a.length() ? static_cast<quint64> (a.at(i)) : 0ULL) ^
-      (i < b.length() ? static_cast<quint64> (b.at(i)) : 0ULL);
+    rc |= (i < a.length() ? static_cast<quint8> (a.at(i)) : 0) ^
+      (i < b.length() ? static_cast<quint8> (b.at(i)) : 0);
 
   return rc == 0;
 }
@@ -644,10 +644,10 @@ void qtchess_communications::slot_read_gnuchess_output(void)
 	else if(list.at(i).trimmed().startsWith("My move is : "))
 	  move = list.at(i);
 
-      if(state.size() > 8)
-	state = state.mid(8);
+      if(state.size() > NSQUARES)
+	state = state.mid(NSQUARES);
 
-      if(state.size() == 8)
+      if(state.size() == NSQUARES)
 	chess->update_board(move, state);
 
       m_gnuchess_data.clear();
