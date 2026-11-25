@@ -1,6 +1,7 @@
 2026.11.25
 
 - Validate GNUChess path. Must be an executable.
+- Verify that a row's size is properly bounded in qtchess::update_board().
 
 2026.11.21
 

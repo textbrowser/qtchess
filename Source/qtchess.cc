@@ -276,7 +276,10 @@ void qtchess::update_board(const QString &move, const QStringList &state)
 
       for(int i = 0; i < state.size(); i++)
 	{
-	  auto const row(state.at(i).split(' '));
+	  auto const row(state.at(i).simplified().split(' '));
+
+	  if(NSQUARES != row.size())
+	    continue;
 
 	  for(int j = 0; j < row.size(); j++)
 	    if(row[j] == ".")
