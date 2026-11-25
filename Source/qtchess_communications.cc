@@ -647,7 +647,7 @@ void qtchess_communications::slot_read_gnuchess_output(void)
       if(state.size() > NSQUARES)
 	state = state.mid(NSQUARES);
 
-      if(state.size() == NSQUARES)
+      if(chess && state.size() == NSQUARES)
 	chess->update_board(move, state);
 
       m_gnuchess_data.clear();
