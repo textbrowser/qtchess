@@ -167,6 +167,16 @@ bool qtchess_validate::is_king_checked
   if(!chess)
     return false;
 
+  if(a < 0 ||
+     a >= NSQUARES ||
+     b < 0 ||
+     b >= NSQUARES ||
+     x < 0 ||
+     x >= NSQUARES ||
+     y < 0 ||
+     y >= NSQUARES)
+    return false;
+
   const int color = chess->get_my_color() == BLACK ?
     static_cast<int> (WHITE) : static_cast<int> (BLACK);
   const int king = chess->get_my_color() == BLACK ?

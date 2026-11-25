@@ -4,6 +4,7 @@
   qtchess_communications::memcmp().
 - Inspect chess object in qtchess_communications::slot_read_gnuchess_output().
 - Validate GNUChess path. Must be an executable.
+- Verify correct indices in qtchess_validate::is_king_checked().
 - Verify that a row's size is properly bounded in qtchess::update_board().
 
 2026.11.21
