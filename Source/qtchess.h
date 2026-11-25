@@ -91,10 +91,10 @@ class qtchess: public QObject
     state &= m_board[3][7] == QUEEN_BLACK;
     state &= m_board[4][0] == KING_WHITE;
     state &= m_board[4][7] == KING_BLACK;
-    state &= qtchess_validate::is_rook(BLACK, m_board[7][7]);
-    state &= qtchess_validate::is_rook(WHITE, m_board[7][0]);
     state &= qtchess_validate::is_rook(BLACK, m_board[0][7]);
+    state &= qtchess_validate::is_rook(BLACK, m_board[7][7]);
     state &= qtchess_validate::is_rook(WHITE, m_board[0][0]);
+    state &= qtchess_validate::is_rook(WHITE, m_board[7][0]);
 
     for(int i = 0; i < NSQUARES; i++)
       {

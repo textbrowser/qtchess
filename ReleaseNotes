@@ -1,3 +1,7 @@
+2026.11.25
+
+- Validate GNUChess path. Must be an executable.
+
 2026.11.21
 
 - Android: issue QJniObject::callMethod() if the object is valid.

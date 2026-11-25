@@ -26,6 +26,7 @@
 */
 
 #include <QCryptographicHash>
+#include <QFileInfo>
 #include <QNetworkInterface>
 
 #include "qtchess.h"
@@ -704,13 +705,20 @@ void qtchess_communications::slot_update_board(void)
 
 void qtchess_communications::start_gnuchess(void)
 {
+  QString const path(gui ? gui->gnu_chess_path() : "");
+
+  if(!QFileInfo(path).isExecutable())
+    {
+      qDebug() << tr("The GNUChess path is not an executable.");
+      return;
+    }
+
   disconnect_remotely();
   stop_listening();
   m_gnuchess.kill();
   m_gnuchess.waitForFinished();
   m_gnuchess.start
-    (gui ? gui->gnu_chess_path() : "",
-     gui ? gui->gnu_chess_options() : QStringList() << "--easy");
+    (path, gui ? gui->gnu_chess_options() : QStringList() << "--easy");
   m_gnuchess.waitForStarted();
   m_gnuchess.write("depth 5\n");
   m_gnuchess_data.clear();
