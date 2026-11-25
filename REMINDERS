@@ -12,3 +12,6 @@ Completed Items
 Remaining Items
 
 - Enumerator classes.
+- Is it our turn (qtchess_communications::slot_update_board()).
+- The method qtchess_communications::slot_update_board() should abort the
+  connection if an overflow of data occurs.
