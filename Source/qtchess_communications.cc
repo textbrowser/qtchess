@@ -338,7 +338,8 @@ void qtchess_communications::send_move(const struct move_s &current_move)
 
   if(!m_client_connection)
     return;
-  else if(m_client_connection->state() != QAbstractSocket::ConnectedState)
+  else if(m_client_connection->bytesToWrite() > s_buffer_size ||
+	  m_client_connection->state() != QAbstractSocket::ConnectedState)
     return;
 
   QByteArray buffer;

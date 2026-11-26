@@ -1,9 +1,11 @@
-2026.11.25
+2026.11.30
 
+- Do not write on the TCP socket if QTcpSocket::bytesToWrite() exceeds
+  s_buffer_size.
 - Include the lengths of the original arrays in
   qtchess_communications::memcmp().
 - Inspect chess object in qtchess_communications::slot_read_gnuchess_output().
-- Validate GNUChess path. Must be an executable.
+- Validate GNUChess path. The path must represent an executable.
 - Verify correct indices in qtchess_validate::is_king_checked().
 - Verify that a row's size is properly bounded in qtchess::update_board().
 
