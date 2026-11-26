@@ -700,8 +700,9 @@ void qtchess_communications::slot_update_board(void)
       ntries += 1;
     }
 
-  if(m_client_connection)
-    m_client_connection->readAll();
+  if(m_client_connection &&
+     m_client_connection->bytesAvailable() > s_buffer_size)
+    m_client_connection->abort();
 }
 
 void qtchess_communications::start_gnuchess(void)

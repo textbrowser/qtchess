@@ -1,5 +1,8 @@
 2026.11.30
 
+- Close the TCP socket in qtchess_communications::slot_update_board() if
+  QTcpSocket::bytesAvailable() exceeds s_buffer_size after a data bundle
+  has been processed.
 - Do not write on the TCP socket if QTcpSocket::bytesToWrite() exceeds
   s_buffer_size.
 - Include the lengths of the original arrays in
