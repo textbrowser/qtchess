@@ -3,6 +3,8 @@
 - Close the TCP socket in qtchess_communications::slot_update_board() if
   QTcpSocket::bytesAvailable() exceeds s_buffer_size after a data bundle
   has been processed.
+- Close the TCP socket in qtchess_communications::slot_update_board() if
+  a data bundle arrives during our turn.
 - Do not write on the TCP socket if QTcpSocket::bytesToWrite() exceeds
   s_buffer_size.
 - Include the lengths of the original arrays in
@@ -11,6 +13,10 @@
 - Validate GNUChess path. The path must represent an executable.
 - Verify correct indices in qtchess_validate::is_king_checked().
 - Verify that a row's size is properly bounded in qtchess::update_board().
+- Yet another LTS release: Kubuntu 26.04 AMD64,
+  MacOS 15 Universal,
+  PiOS 13 ARM64,
+  Windows 11 AMD64.
 
 2026.11.21
 

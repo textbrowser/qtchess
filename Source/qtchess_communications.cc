@@ -663,6 +663,15 @@ void qtchess_communications::slot_show_board(void)
 
 void qtchess_communications::slot_update_board(void)
 {
+  if(chess && chess->get_turn() == MY_TURN)
+    {
+      if(m_client_connection)
+	m_client_connection->abort();
+
+      qDebug() << tr("Our turn! Abort!");
+      return;
+    }
+
   int ntries = 1;
   static const int s_shax_output_size = 128; // Hexadecimal.
 
@@ -702,7 +711,10 @@ void qtchess_communications::slot_update_board(void)
 
   if(m_client_connection &&
      m_client_connection->bytesAvailable() > s_buffer_size)
-    m_client_connection->abort();
+    {
+      m_client_connection->abort();
+      qDebug() << tr("Too much data! Abort!");
+    }
 }
 
 void qtchess_communications::start_gnuchess(void)

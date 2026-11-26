@@ -2,16 +2,16 @@ Completed Items
 
 - GNUChess undo move.
 - GNUChess, if available.
+- Is it our turn (qtchess_communications::slot_update_board()).
 - NAT IP addresses. Not required.
 - Prevent a king from moving onto a dangerous square.
 - QT_STYLE_OVERRIDE.
 - SHA3-512 HMAC (https://en.wikipedia.org/wiki/HMAC).
+- The method qtchess_communications::slot_update_board() should abort the
+  connection if an overflow of data occurs.
 - Turn off GNUChess process.
 - Undo a move if GNUChess declares the move as invalid.
 
 Remaining Items
 
 - Enumerator classes.
-- Is it our turn (qtchess_communications::slot_update_board()).
-- The method qtchess_communications::slot_update_board() should abort the
-  connection if an overflow of data occurs.
