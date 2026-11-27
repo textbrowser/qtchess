@@ -656,11 +656,11 @@ void qtchess_gui::slot_new_gnuchess_game(void)
 
       if(comm)
 	{
+	  comm->start_gnuchess();
 	  m_setup->enable_networking_page(false);
 	  m_setup->reset();
 	  m_ui.action_New_Game->setEnabled(false);
 	  chess ? chess->set_my_color(WHITE) : (void) 0;
-	  comm->start_gnuchess();
 	  initialize_board();
 	}
 
