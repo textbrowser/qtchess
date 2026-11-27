@@ -259,6 +259,10 @@ void qtchess::update_board(const QByteArray &buffer)
 
 void qtchess::update_board(const QString &move, const QStringList &state)
 {
+  /*
+  ** GNUChess.
+  */
+
   if(NSQUARES == state.size())
     {
       if(gui)
