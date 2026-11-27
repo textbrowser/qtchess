@@ -653,13 +653,14 @@ void qtchess_gui::slot_new_gnuchess_game(void)
   if(new_game_prompt())
     {
       QApplication::setOverrideCursor(Qt::WaitCursor);
-      comm ? comm->start_gnuchess() : (void) 0;
 
-      if(comm && comm->is_connected_remotely())
+      if(comm)
 	{
+	  m_setup->enable_networking_page(false);
 	  m_setup->reset();
 	  m_ui.action_New_Game->setEnabled(false);
 	  chess ? chess->set_my_color(WHITE) : (void) 0;
+	  comm->start_gnuchess();
 	  initialize_board();
 	}
 
@@ -697,6 +698,7 @@ void qtchess_gui::slot_quit_gnuchess(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   comm ? comm->stop_gnuchess() : (void) 0;
   initialize_board();
+  m_setup->enable_networking_page(true);
   m_ui.action_New_Game->setEnabled(true);
   m_ui.action_Undo_GNUChess_Move->setEnabled(false);
   QApplication::restoreOverrideCursor();
@@ -1087,6 +1089,11 @@ QSpinBox *qtchess_setup::get_local_port_field(void) const
 QSpinBox *qtchess_setup::get_remote_port_field(void) const
 {
   return m_ui.remote_port;
+}
+
+void qtchess_setup::enable_networking_page(const bool state)
+{
+  m_ui.tab->setTabEnabled(1, state);
 }
 
 void qtchess_setup::reset(void)

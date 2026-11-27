@@ -5,6 +5,8 @@
   has been processed.
 - Close the TCP socket in qtchess_communications::slot_update_board() if
   a data bundle arrives during our turn.
+- Disable the Configuration -> Network page if a GNUChess process is
+  initiated. This creates a consistent interface state.
 - Do not write on the TCP socket if QTcpSocket::bytesToWrite() exceeds
   s_buffer_size.
 - Include the lengths of the original arrays in

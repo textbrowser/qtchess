@@ -113,6 +113,7 @@ class qtchess_setup: public QDialog
     return m_ui;
   }
 
+  void enable_networking_page(const bool state);
   void reset(void);
   void stop(void);
 
